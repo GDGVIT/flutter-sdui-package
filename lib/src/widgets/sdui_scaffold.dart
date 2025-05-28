@@ -6,14 +6,39 @@ class SduiScaffold extends SduiWidget {
   final SduiWidget? appBar;
   final SduiWidget? body;
   final SduiWidget? floatingActionButton;
+  final SduiWidget? bottomNavigationBar;
+  final SduiWidget? drawer;
+  final SduiWidget? endDrawer;
+  final SduiWidget? bottomSheet;
   final Color? backgroundColor;
-  // Add other Scaffold properties as needed (e.g., bottomNavigationBar, drawer)
+  final bool? resizeToAvoidBottomInset;
+  final bool? primary;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final bool? extendBody;
+  final bool? extendBodyBehindAppBar;
+  final Color? drawerScrimColor;
+  final double? drawerEdgeDragWidth;
+  final bool? drawerEnableOpenDragGesture;
+  final bool? endDrawerEnableOpenDragGesture;
 
   SduiScaffold({
     this.appBar,
     this.body,
     this.floatingActionButton,
+    this.bottomNavigationBar,
+    this.drawer,
+    this.endDrawer,
+    this.bottomSheet,
     this.backgroundColor,
+    this.resizeToAvoidBottomInset,
+    this.primary,
+    this.floatingActionButtonLocation,
+    this.extendBody,
+    this.extendBodyBehindAppBar,
+    this.drawerScrimColor,
+    this.drawerEdgeDragWidth,
+    this.drawerEnableOpenDragGesture,
+    this.endDrawerEnableOpenDragGesture,
   });
 
   @override
@@ -41,7 +66,20 @@ class SduiScaffold extends SduiWidget {
       appBar: flutterAppBar as PreferredSizeWidget?,
       body: body?.toFlutterWidget(),
       floatingActionButton: floatingActionButton?.toFlutterWidget(),
+      bottomNavigationBar: bottomNavigationBar?.toFlutterWidget(),
+      drawer: drawer?.toFlutterWidget(),
+      endDrawer: endDrawer?.toFlutterWidget(),
+      bottomSheet: bottomSheet?.toFlutterWidget(),
       backgroundColor: backgroundColor,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      primary: primary ?? true,
+      floatingActionButtonLocation: floatingActionButtonLocation,
+      extendBody: extendBody ?? false,
+      extendBodyBehindAppBar: extendBodyBehindAppBar ?? false,
+      drawerScrimColor: drawerScrimColor,
+      drawerEdgeDragWidth: drawerEdgeDragWidth,
+      drawerEnableOpenDragGesture: drawerEnableOpenDragGesture ?? true,
+      endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture ?? true,
     );
   }
 }

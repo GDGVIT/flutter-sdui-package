@@ -28,7 +28,7 @@ message SduiWidgetData {
   // Complex nested attributes
   TextStyleData text_style = 6;
   EdgeInsetsData padding = 7;
-  EdgeInsetsData margin = 8; // Example, if we add margin later
+  EdgeInsetsData margin = 8; 
   ColorData color = 9; // General purpose color
   IconDataMessage icon = 10;
   BoxDecorationData box_decoration = 11;
@@ -42,6 +42,65 @@ message SduiWidgetData {
   SduiWidgetData body = 15; // Body can also be a single child
   SduiWidgetData floating_action_button = 16;
   ColorData background_color = 17; // For Scaffold background
+  
+  // New Scaffold attributes
+  SduiWidgetData bottom_navigation_bar = 18;
+  SduiWidgetData drawer = 19;
+  SduiWidgetData end_drawer = 20;
+  SduiWidgetData bottom_sheet = 21;
+  bool resize_to_avoid_bottom_inset = 22;
+  bool primary = 23;
+  FloatingActionButtonLocationProto floating_action_button_location = 24;
+  bool extend_body = 25;
+  bool extend_body_behind_app_bar = 26;
+  ColorData drawer_scrim_color = 27;
+  double drawer_edge_drag_width = 28;
+  bool drawer_enable_open_drag_gesture = 29;
+  bool end_drawer_enable_open_drag_gesture = 30;
+  
+  // Layout attributes for Row and Column
+  MainAxisAlignmentProto main_axis_alignment = 31;
+  CrossAxisAlignmentProto cross_axis_alignment = 32;
+  MainAxisSizeProto main_axis_size = 33;
+  TextDirectionProto text_direction = 34;
+  VerticalDirectionProto vertical_direction = 35;
+  TextBaselineProto text_baseline = 36;
+  
+  // Container specific attributes
+  AlignmentData alignment = 37;
+  BoxConstraintsData constraints = 38;
+  TransformData transform = 39;
+  AlignmentData transform_alignment = 40;
+  ClipProto clip_behavior = 41;
+  
+  // Text specific attributes
+  TextAlignProto text_align = 42;
+  TextOverflowProto overflow = 43;
+  int32 max_lines = 44;
+  bool soft_wrap = 45;
+  double letter_spacing = 46;
+  double word_spacing = 47;
+  double height = 48;
+  string font_family = 49;
+  
+  // Image specific attributes
+  ImageRepeatProto repeat = 50;
+  BlendModeProto color_blend_mode = 51;
+  RectData center_slice = 52;
+  bool match_text_direction = 53;
+  bool gapless_playback = 54;
+  FilterQualityProto filter_quality = 55;
+  int32 cache_width = 56;
+  int32 cache_height = 57;
+  double scale = 58;
+  string semantic_label = 59;
+  SduiWidgetData error_widget = 60;
+  SduiWidgetData loading_widget = 61;
+  
+  // Icon specific attributes
+  double opacity = 62;
+  bool apply_text_scaling = 63;
+  repeated ShadowData shadows = 64;
 }
 
 // Message for Color
@@ -68,6 +127,12 @@ message TextStyleData {
   optional ColorData color = 1;
   optional double font_size = 2;
   optional string font_weight = 3; // e.g., "bold", "w500"
+  optional TextDecorationProto decoration = 4;
+  optional double letter_spacing = 5;
+  optional double word_spacing = 6;
+  optional double height = 7;
+  optional string font_family = 8;
+  optional FontStyleProto font_style = 9;
   // Add other TextStyle properties: fontFamily, fontStyle, letterSpacing, etc.
 }
 
@@ -88,7 +153,7 @@ enum BoxFitProto {
   COVER = 3;
   FIT_WIDTH = 4;
   FIT_HEIGHT = 5;
-  NONE = 6;
+  NONE_BOX_FIT = 6;  // Renamed from NONE
   SCALE_DOWN = 7;
 }
 
@@ -173,7 +238,7 @@ message AlignmentData {
     BOTTOM_CENTER = 1;
     BOTTOM_LEFT = 2;
     BOTTOM_RIGHT = 3;
-    CENTER = 4;
+    CENTER_ALIGN = 4;  // Renamed from CENTER
     CENTER_LEFT = 5;
     CENTER_RIGHT = 6;
     TOP_CENTER = 7;
@@ -190,7 +255,6 @@ message XYAlignment {
   double x = 1;
   double y = 2;
 }
-
 
 // Enum for BoxShape
 enum BoxShapeProto {
@@ -231,7 +295,203 @@ enum FilterQualityProto {
   HIGH = 4;
 }
 
-// Service definition (optional for now, but good for future gRPC)
+// New enums for Row and Column properties
+enum MainAxisAlignmentProto {
+  MAIN_AXIS_ALIGNMENT_UNSPECIFIED = 0;
+  MAIN_AXIS_START = 1;  // Renamed from START
+  MAIN_AXIS_END = 2;    // Renamed from END
+  MAIN_AXIS_CENTER = 3; // Renamed from CENTER
+  SPACE_BETWEEN = 4;
+  SPACE_AROUND = 5;
+  SPACE_EVENLY = 6;
+}
+
+enum CrossAxisAlignmentProto {
+  CROSS_AXIS_ALIGNMENT_UNSPECIFIED = 0;
+  CROSS_AXIS_START = 1;  // Renamed from START
+  CROSS_AXIS_END = 2;    // Renamed from END
+  CROSS_AXIS_CENTER = 3; // Renamed from CENTER
+  STRETCH = 4;
+  BASELINE = 5;
+}
+
+enum MainAxisSizeProto {
+  MAIN_AXIS_SIZE_UNSPECIFIED = 0;
+  MIN = 1;
+  MAX = 2;
+}
+
+enum TextDirectionProto {
+  TEXT_DIRECTION_UNSPECIFIED = 0;
+  LTR = 1; // Left to right
+  RTL = 2; // Right to left
+}
+
+enum VerticalDirectionProto {
+  VERTICAL_DIRECTION_UNSPECIFIED = 0;
+  UP = 1;
+  DOWN = 2;
+}
+
+enum TextBaselineProto {
+  TEXT_BASELINE_UNSPECIFIED = 0;
+  ALPHABETIC = 1;
+  IDEOGRAPHIC = 2;
+}
+
+// New message for Box Constraints
+message BoxConstraintsData {
+  optional double min_width = 1;
+  optional double max_width = 2;
+  optional double min_height = 3;
+  optional double max_height = 4;
+}
+
+// New message for Transform
+message TransformData {
+  enum TransformType {
+    TRANSFORM_TYPE_UNSPECIFIED = 0;
+    MATRIX_4X4 = 1;
+    TRANSLATE = 2;
+    ROTATE = 3;
+    SCALE = 4;
+  }
+  
+  TransformType type = 1;
+  
+  // Matrix 4x4 (row-major order)
+  repeated double matrix_values = 2; // 16 values if using matrix type
+  
+  // Translation
+  optional double translate_x = 3;
+  optional double translate_y = 4;
+  optional double translate_z = 5;
+  
+  // Rotation
+  optional double rotation_angle = 6; // In radians
+  optional double rotation_x = 7;
+  optional double rotation_y = 8;
+  optional double rotation_z = 9;
+  
+  // Scale
+  optional double scale_x = 10;
+  optional double scale_y = 11;
+  optional double scale_z = 12;
+}
+
+// New enum for Clip behavior
+enum ClipProto {
+  CLIP_UNSPECIFIED = 0;
+  CLIP_NONE = 1;  // Renamed from NONE
+  HARD_EDGE = 2;
+  ANTI_ALIAS = 3;
+  ANTI_ALIAS_WITH_SAVE_LAYER = 4;
+}
+
+// New enums for Text properties
+enum TextAlignProto {
+  TEXT_ALIGN_UNSPECIFIED = 0;
+  LEFT = 1;
+  RIGHT = 2;
+  TEXT_ALIGN_CENTER = 3;  // Renamed from CENTER
+  JUSTIFY = 4;
+  TEXT_ALIGN_START = 5;   // Renamed from START
+  TEXT_ALIGN_END = 6;     // Renamed from END
+}
+
+enum TextOverflowProto {
+  TEXT_OVERFLOW_UNSPECIFIED = 0;
+  CLIP = 1;
+  ELLIPSIS = 2;
+  FADE = 3;
+  VISIBLE = 4;
+}
+
+enum TextDecorationProto {
+  TEXT_DECORATION_UNSPECIFIED = 0;
+  TEXT_DECORATION_NONE = 1;  // Renamed from NONE
+  UNDERLINE = 2;
+  OVERLINE = 3;
+  LINE_THROUGH = 4;
+}
+
+enum FontStyleProto {
+  FONT_STYLE_UNSPECIFIED = 0;
+  NORMAL = 1;
+  ITALIC = 2;
+}
+
+// New message for Rectangle data
+message RectData {
+  double left = 1;
+  double top = 2;
+  double right = 3;
+  double bottom = 4;
+}
+
+// New enum for Blend modes
+enum BlendModeProto {
+  BLEND_MODE_UNSPECIFIED = 0;
+  CLEAR = 1;
+  SRC = 2;
+  DST = 3;
+  SRC_OVER = 4;
+  DST_OVER = 5;
+  SRC_IN = 6;
+  DST_IN = 7;
+  SRC_OUT = 8;
+  DST_OUT = 9;
+  SRC_ATOP = 10;
+  DST_ATOP = 11;
+  XOR = 12;
+  PLUS = 13;
+  MODULATE = 14;
+  SCREEN = 15;
+  OVERLAY = 16;
+  DARKEN = 17;
+  LIGHTEN = 18;
+  COLOR_DODGE = 19;
+  COLOR_BURN = 20;
+  HARD_LIGHT = 21;
+  SOFT_LIGHT = 22;
+  DIFFERENCE = 23;
+  EXCLUSION = 24;
+  MULTIPLY = 25;
+  HUE = 26;
+  SATURATION = 27;
+  COLOR = 28;
+  LUMINOSITY = 29;
+}
+
+// New message for Shadow
+message ShadowData {
+  ColorData color = 1;
+  double offset_x = 2;
+  double offset_y = 3;
+  double blur_radius = 4;
+}
+
+// New enum for FloatingActionButtonLocation
+enum FloatingActionButtonLocationProto {
+  FAB_LOCATION_UNSPECIFIED = 0;
+  FAB_START_TOP = 1;         // Renamed from START_TOP
+  FAB_START = 2;             // Renamed from START
+  FAB_START_FLOAT = 3;       // Renamed from START_FLOAT
+  FAB_CENTER_TOP = 4;        // Renamed from CENTER_TOP
+  FAB_CENTER = 5;            // Renamed from CENTER
+  FAB_CENTER_FLOAT = 6;      // Renamed from CENTER_FLOAT
+  FAB_END_TOP = 7;           // Renamed from END_TOP
+  FAB_END = 8;               // Renamed from END
+  FAB_END_FLOAT = 9;         // Renamed from END_FLOAT
+  FAB_MINI_CENTER_TOP = 10;  // Renamed from MINI_CENTER_TOP
+  FAB_MINI_CENTER_FLOAT = 11;  // Renamed from MINI_CENTER_FLOAT
+  FAB_MINI_START_TOP = 12;     // Renamed from MINI_START_TOP
+  FAB_MINI_START_FLOAT = 13;   // Renamed from MINI_START_FLOAT
+  FAB_MINI_END_TOP = 14;       // Renamed from MINI_END_TOP
+  FAB_MINI_END_FLOAT = 15;     // Renamed from MINI_END_FLOAT
+}
+
+// Service definition
 service SduiService {
   rpc GetSduiWidget (SduiRequest) returns (SduiWidgetData);
 }

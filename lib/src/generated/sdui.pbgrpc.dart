@@ -19,7 +19,7 @@ import 'sdui.pb.dart' as $0;
 
 export 'sdui.pb.dart';
 
-/// Service definition (optional for now, but good for future gRPC)
+/// Service definition
 @$pb.GrpcServiceName('flutter_sdui.SduiService')
 class SduiServiceClient extends $grpc.Client {
   /// The hostname for this service.
@@ -30,14 +30,16 @@ class SduiServiceClient extends $grpc.Client {
     '',
   ];
 
-  static final _$getSduiWidget = $grpc.ClientMethod<$0.SduiRequest, $0.SduiWidgetData>(
-      '/flutter_sdui.SduiService/GetSduiWidget',
-      ($0.SduiRequest value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.SduiWidgetData.fromBuffer(value));
+  static final _$getSduiWidget =
+      $grpc.ClientMethod<$0.SduiRequest, $0.SduiWidgetData>(
+          '/flutter_sdui.SduiService/GetSduiWidget',
+          ($0.SduiRequest value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.SduiWidgetData.fromBuffer(value));
 
   SduiServiceClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$0.SduiWidgetData> getSduiWidget($0.SduiRequest request, {$grpc.CallOptions? options}) {
+  $grpc.ResponseFuture<$0.SduiWidgetData> getSduiWidget($0.SduiRequest request,
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getSduiWidget, request, options: options);
   }
 }
@@ -56,9 +58,11 @@ abstract class SduiServiceBase extends $grpc.Service {
         ($0.SduiWidgetData value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.SduiWidgetData> getSduiWidget_Pre($grpc.ServiceCall $call, $async.Future<$0.SduiRequest> $request) async {
+  $async.Future<$0.SduiWidgetData> getSduiWidget_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.SduiRequest> $request) async {
     return getSduiWidget($call, await $request);
   }
 
-  $async.Future<$0.SduiWidgetData> getSduiWidget($grpc.ServiceCall call, $0.SduiRequest request);
+  $async.Future<$0.SduiWidgetData> getSduiWidget(
+      $grpc.ServiceCall call, $0.SduiRequest request);
 }

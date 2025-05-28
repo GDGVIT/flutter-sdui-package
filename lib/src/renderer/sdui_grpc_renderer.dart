@@ -69,8 +69,7 @@ class _SduiGrpcRendererState extends State<SduiGrpcRenderer> {
         } else if (snapshot.hasData) {
           // Convert the protobuf data to a Flutter widget
           // This will use our SduiProtoParser to create the widget tree
-          final SduiWidget sduiWidget =
-              SduiProtoParser.parseProto(snapshot.data!);
+          final SduiWidget sduiWidget = SduiParser.parseProto(snapshot.data!);
           return sduiWidget.toFlutterWidget();
         } else {
           return const SizedBox.shrink();

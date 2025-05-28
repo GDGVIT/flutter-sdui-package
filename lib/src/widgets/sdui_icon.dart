@@ -6,13 +6,22 @@ class SduiIcon extends SduiWidget {
   final IconData? icon;
   final double? size;
   final Color? color;
-  // final String? semanticLabel; // Future enhancement
+  final String? semanticLabel;
+  final TextDirection? textDirection;
+  final double?
+      opacity; // Custom property for opacity - will use Opacity widget
+  final bool? applyTextScaling;
+  final List<Shadow>? shadows;
 
   SduiIcon({
-    required this.icon,
+    this.icon,
     this.size,
     this.color,
-    // this.semanticLabel,
+    this.semanticLabel,
+    this.textDirection,
+    this.opacity,
+    this.applyTextScaling,
+    this.shadows,
   });
 
   @override
@@ -21,11 +30,25 @@ class SduiIcon extends SduiWidget {
       // Return a placeholder or an empty widget if icon data is missing
       return const SizedBox.shrink();
     }
-    return Icon(
+
+    Widget iconWidget = Icon(
       icon,
       size: size,
       color: color,
-      // semanticLabel: semanticLabel,
+      semanticLabel: semanticLabel,
+      textDirection: textDirection,
+      shadows: shadows,
+      applyTextScaling: applyTextScaling,
     );
+
+    // Apply opacity if provided
+    if (opacity != null && opacity! < 1.0) {
+      iconWidget = Opacity(
+        opacity: opacity!,
+        child: iconWidget,
+      );
+    }
+
+    return iconWidget;
   }
 }

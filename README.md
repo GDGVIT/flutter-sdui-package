@@ -6,35 +6,39 @@
 	<h4 align="center">A Flutter package for implementing Server-Driven UI with both JSON and gRPC support<h4>
 </p>
 
----
-
 [![Join Us](https://img.shields.io/badge/Join%20Us-Developer%20Student%20Clubs-red)](https://dsc.community.dev/vellore-institute-of-technology/)
 [![Discord Chat](https://img.shields.io/discord/760928671698649098.svg)](https://discord.gg/498KVdSKWR)
-
 [![DOCS](https://img.shields.io/badge/Documentation-see%20docs-green?style=flat-square&logo=appveyor)](docs/grpc_support.md)
 [![UI ](https://img.shields.io/badge/Flutter-SDK-blue?style=flat-square&logo=flutter)](https://flutter.dev)
 
+A powerful Flutter package for implementing Server-Driven UI (SDUI) with both JSON and gRPC support.
+
+## What is SDUI?
+
+Server-Driven UI is an architectural pattern where the UI layout and content definitions come from a backend server rather than being hardcoded in the client application. This approach enables:
+
+- Dynamic UI updates without app store releases
+- A/B testing and feature flagging at the UI level
+- Consistent UI across platforms
+- Faster iteration cycles for UI changes
+
 ## Features
 
-- [x] Render UI from server-provided definitions
-- [x] Support for basic Flutter widgets (Text, Column, Row, Container, etc.)
-- [x] JSON parsing for server responses
-- [x] gRPC support for efficient communication
-- [x] Protocol Buffers for type-safe data exchange
-- [x] Easy-to-use client API
+- ✅ Render UI dynamically from server-provided definitions
+- ✅ Support for essential Flutter widgets (Text, Column, Row, Container, etc.)
+- ✅ JSON parsing for server responses
+- ✅ gRPC support for efficient, type-safe communication
+- ✅ Protocol Buffers for structured data exchange
+- ✅ Easy-to-use client API
+- ✅ Customizable error handling and loading states
 
-<br>
-
-## Installation & Setup
+## Installation
 
 Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
   flutter_sdui: ^0.0.1
-  flutter: ^3.0.0
-  protobuf: ^4.1.0
-  grpc: ^4.0.4
 ```
 
 Or use the Flutter CLI:
@@ -43,40 +47,45 @@ Or use the Flutter CLI:
 flutter pub add flutter_sdui
 ```
 
-Then import the package in your Dart code:
+Import the package in your Dart code:
 
 ```dart
 import 'package:flutter_sdui/flutter_sdui.dart';
 ```
 
-### Troubleshooting
+## Basic Usage
 
-#### Protocol Buffer Issues
+This package provides two approaches for implementing server-driven UI:
 
-If you encounter issues with the generated Protocol Buffer files:
+### 1. Using gRPC (Recommended)
 
-1. Make sure you have the correct versions of protobuf and grpc packages
-2. Install protoc locally and regenerate the files:
+For efficient, type-safe server communication:
 
-```powershell
-# Run the setup script to install protoc
-pwsh ./tool/setup_protoc.ps1
+```dart
+// Create a gRPC client
+final client = SduiGrpcClient(
+  host: 'your-server.com',
+  port: 50051,
+);
 
-# Generate the Protobuf files
-pwsh ./tool/generate_protos.ps1
+// Use the SduiGrpcRenderer widget
+SduiGrpcRenderer(
+  client: client,
+  screenId: 'home_screen',
+  loadingWidget: CircularProgressIndicator(),
+  errorBuilder: (context, error) => Text('Error: $error'),
+)
 ```
-## Usage
 
-There are two ways to use this package:
+### 2. Using JSON
 
-1. **JSON-based approach**: For simpler implementations where you fetch UI definitions as JSON
-2. **gRPC-based approach**: For more efficient, type-safe implementations using Protocol Buffers
+For simpler implementation with standard HTTP requests (coming soon).
 
-### Using the gRPC Client
+## Example
 
-To use the gRPC client for fetching server-driven UI:
+Here's a complete example of using the gRPC renderer:
 
-````dart
+```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_sdui/flutter_sdui.dart';
 
@@ -90,40 +99,38 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SDUI gRPC Demo',
+      title: 'SDUI Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const GrpcDemoScreen(),
+      home: const SDUIDemo(),
     );
   }
 }
 
-class GrpcDemoScreen extends StatefulWidget {
-  const GrpcDemoScreen({super.key});
+class SDUIDemo extends StatefulWidget {
+  const SDUIDemo({super.key});
 
   @override
-  State<GrpcDemoScreen> createState() => _GrpcDemoScreenState();
+  State<SDUIDemo> createState() => _SDUIDemoState();
 }
 
-class _GrpcDemoScreenState extends State<GrpcDemoScreen> {
+class _SDUIDemoState extends State<SDUIDemo> {
   late SduiGrpcClient _grpcClient;
   String _screenId = 'home';
 
   @override
   void initState() {
     super.initState();
-    // Connect to your gRPC server
     _grpcClient = SduiGrpcClient(
-      host: 'localhost', // Replace with your server address
-      port: 50051, // Replace with your server port
+      host: 'localhost',  // Replace with your server address
+      port: 50051,        // Replace with your server port
     );
   }
 
   @override
   void dispose() {
-    // Close the gRPC connection when done
     _grpcClient.dispose();
     super.dispose();
   }
@@ -132,77 +139,44 @@ class _GrpcDemoScreenState extends State<GrpcDemoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SDUI gRPC Demo'),
+        title: const Text('Server-Driven UI Demo'),
       ),
-      body: Column(
-        children: [
-          // Screen selector
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
+      body: SduiGrpcRenderer(
+        client: _grpcClient,
+        screenId: _screenId,
+        loadingWidget: const Center(
+          child: CircularProgressIndicator(),
+        ),
+        errorBuilder: (context, error) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Screen: '),
-                const SizedBox(width: 8),
-                DropdownButton<String>(
-                  value: _screenId,
-                  items: const [
-                    DropdownMenuItem(value: 'home', child: Text('Home')),
-                    DropdownMenuItem(value: 'profile', child: Text('Profile')),
-                    DropdownMenuItem(value: 'settings', child: Text('Settings')),
-                  ],
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _screenId = value;
-                      });
-                    }
-                  },
+                Icon(Icons.error, color: Colors.red, size: 48),
+                SizedBox(height: 16),
+                Text('Error: $error'),
+                SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => setState(() {}),
+                  child: Text('Retry'),
                 ),
               ],
             ),
-          ),
-
-          // SDUI Renderer that fetches UI from gRPC server
-          Expanded(
-            child: SduiGrpcRenderer(
-              client: _grpcClient,
-              screenId: _screenId,
-              loadingWidget: const Center(
-                child: CircularProgressIndicator(),
-              ),
-              errorBuilder: (context, error) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.error, color: Colors.red, size: 48),
-                      const SizedBox(height: 16),
-                      Text('Error: $error'),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () => setState(() {}),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 }
+```
 
 ## Server Implementation
 
 ### Setting Up a gRPC Server
 
-To create a server that provides UI definitions via gRPC:
+Here's a basic example of a Dart server that provides UI definitions via gRPC:
 
 ```dart
-// Server implementation example
 import 'package:grpc/grpc.dart';
 import 'package:flutter_sdui/src/generated/sdui.pb.dart';
 import 'package:flutter_sdui/src/generated/sdui.pbgrpc.dart';
@@ -214,62 +188,26 @@ Future<void> main() async {
     ],
   );
 
-  final port = 50051;
-  await server.serve(port: port);
-  print('Server listening on port $port...');
-  print('Press Ctrl+C to stop');
+  await server.serve(port: 50051);
+  print('Server listening on port 50051...');
 }
 
-// Implementation of the SDUI service
 class SduiServiceImpl extends SduiServiceBase {
   @override
   Future<SduiWidgetData> getSduiWidget(
       ServiceCall call, SduiRequest request) async {
-    print('Received request for screen: ${request.screenId}');
-
-    // Based on the requested screen, return different UI definitions
+    // Return different UI based on the screenId
     switch (request.screenId) {
       case 'home':
         return _createHomeScreen();
-      case 'profile':
-        return _createProfileScreen();
-      case 'settings':
-        return _createSettingsScreen();
       default:
-        // Default or error screen
-        print('Warning: Unknown screen ID requested: ${request.screenId}');
         return _createErrorScreen();
     }
   }
 
-  // Example screen definition
   SduiWidgetData _createHomeScreen() {
-    final homeScreen = SduiWidgetData()
+    return SduiWidgetData()
       ..type = WidgetType.SCAFFOLD
-      ..appBar = (SduiWidgetData()
-        ..type = WidgetType.CONTAINER
-        ..boxDecoration = (BoxDecorationData()
-          ..color = (ColorData()
-            ..red = 25
-            ..green = 118
-            ..blue = 210
-            ..alpha = 255))
-        ..padding = (EdgeInsetsData()
-          ..top = 8
-          ..left = 16
-          ..right = 16
-          ..bottom = 8)
-        ..child = (SduiWidgetData()
-          ..type = WidgetType.TEXT
-          ..stringAttributes['text'] = 'Home Screen'
-          ..textStyle = (TextStyleData()
-            ..fontSize = 20
-            ..fontWeight = 'bold'
-            ..color = (ColorData()
-              ..red = 255
-              ..green = 255
-              ..blue = 255
-              ..alpha = 255))))
       ..body = (SduiWidgetData()
         ..type = WidgetType.COLUMN
         ..children.addAll([
@@ -286,141 +224,84 @@ class SduiServiceImpl extends SduiServiceBase {
             ..type = WidgetType.TEXT
             ..stringAttributes['text'] = 'This UI is rendered from gRPC data'
         ]));
-
-    return homeScreen;
   }
-
-  // Implement other screen methods similarly...
-}
-````
-
-### Testing the gRPC Connection
-
-You can test the connection using a simple command-line client:
-
-```dart
-// Simple client for testing gRPC connection
-import 'dart:io';
-import 'package:flutter_sdui/src/service/sdui_grpc_client.dart';
-
-Future<void> main(List<String> args) async {
-  final screenId = args.isNotEmpty ? args[0] : 'home';
-
-  print('Testing gRPC SDUI client...');
-  print('Connecting to server at localhost:50051');
-  print('Requesting screen: $screenId');
-
-  final client = SduiGrpcClient(
-    host: 'localhost',
-    port: 50051,
-  );
-
-  try {
-    print('Sending request...');
-    final widget = await client.getWidget(screenId);
-    print('Response received!');
-    print('Widget type: ${widget.type}');
-
-    if (widget.hasAppBar()) {
-      print('Has app bar: yes');
-    }
-
-    if (widget.hasBody()) {
-      print('Has body: yes');
-    }
-
-    print('Success!');
-  } catch (e) {
-    print('Error: $e');
-  } finally {
-    await client.dispose();
-  }
-
-  print('Test completed');
-  exit(0);
 }
 ```
+
+## Supported Widgets
+
+The package currently supports these Flutter widgets:
+
+- `Scaffold`
+- `Container`
+- `Column`
+- `Row`
+- `Text`
+- `Image`
+- `SizedBox`
+- `Spacer`
+- `Icon`
 
 ## Advanced Usage
 
 ### Protobuf Definitions
 
-The package uses Protocol Buffers to define the data structures for gRPC communication. The main message types are:
+The package uses Protocol Buffers to define the data structures for gRPC communication. Here's a simplified version of the main message types:
 
 ```protobuf
-// Generic Widget message
 message SduiWidgetData {
   WidgetType type = 1;
-  map<string, string> string_attributes = 2; // For simple string attributes like text content, image src
-  map<string, double> double_attributes = 3; // For numerical attributes like width, height, flex
-  map<string, bool> bool_attributes = 4;     // For boolean attributes
-  map<string, int32> int_attributes = 5;     // For integer attributes like flex
+  map<string, string> string_attributes = 2;
+  map<string, double> double_attributes = 3;
+  map<string, bool> bool_attributes = 4;
 
   // Complex nested attributes
   TextStyleData text_style = 6;
   EdgeInsetsData padding = 7;
-  EdgeInsetsData margin = 8;
-  ColorData color = 9;
-  IconDataMessage icon = 10;
-  BoxDecorationData box_decoration = 11;
 
   // Children widgets
   repeated SduiWidgetData children = 12;
-  SduiWidgetData child = 13; // For widgets that take a single child
+  SduiWidgetData child = 13;
 
   // Scaffold specific parts
   SduiWidgetData app_bar = 14;
   SduiWidgetData body = 15;
-  SduiWidgetData floating_action_button = 16;
-  ColorData background_color = 17;
 }
 
-// Service definition
 service SduiService {
   rpc GetSduiWidget (SduiRequest) returns (SduiWidgetData);
 }
-
-message SduiRequest {
-  string screen_id = 1; // Identifier for which UI to fetch
-}
 ```
 
-### Custom Widget Support
+### Working with Protocol Buffers
 
-The package supports various Flutter widgets out of the box, but you can also extend it to support custom widgets by:
+If you need to regenerate the Dart files from the proto definitions:
 
-1. Adding new widget types to the `WidgetType` enum in the proto file
-2. Extending the `SduiProtoParser` class to handle the new widget type
-
-```dart
-// Extend the parser to support custom widgets
-class MySduiProtoParser extends SduiProtoParser {
-  @override
-  SduiWidget parseProto(SduiWidgetData data) {
-    if (data.type == WidgetType.MY_CUSTOM_WIDGET) {
-      // Parse custom widget from proto data
-      return MyCustomSduiWidget(
-        // Extract attributes from data
-      );
-    }
-
-    // Fall back to parent implementation for standard widgets
-    return super.parseProto(data);
-  }
-}
-```
-
-### Regenerating Proto Files
-
-If you modify the proto definitions, you need to regenerate the Dart files:
-
-1. Install the Protocol Buffer compiler (protoc)
-2. Run the generator script:
+1. Install the Protocol Buffer compiler using the provided scripts:
 
 ```bash
-cd your_package_directory
+# Windows
+pwsh ./tool/setup_protoc.ps1
+
+# Generate the Protobuf files
 pwsh ./tool/generate_protos.ps1
 ```
+
+## Roadmap
+
+- [x] Basic widget support
+- [x] gRPC implementation
+- [ ] JSON implementation
+- [ ] Interactive widgets (buttons, forms)
+- [ ] More advanced widget support
+
+## Contributing
+
+We welcome contributions! Please see our [contributing guidelines](contributing.md) for details.
+
+## License
+
+This project is licensed under the [LICENSE](LICENSE) file in the repository.
 
 ## Contributors
 

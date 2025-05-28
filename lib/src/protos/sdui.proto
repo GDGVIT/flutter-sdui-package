@@ -1,0 +1,242 @@
+syntax = "proto3";
+
+package flutter_sdui;
+
+// Enum for Widget Types
+enum WidgetType {
+  WIDGET_TYPE_UNSPECIFIED = 0;
+  COLUMN = 1;
+  ROW = 2;
+  TEXT = 3;
+  IMAGE = 4;
+  SIZED_BOX = 5;
+  CONTAINER = 6;
+  SCAFFOLD = 7;
+  SPACER = 8;
+  ICON = 9;
+  // Add other widget types here
+}
+
+// Generic Widget message
+message SduiWidgetData {
+  WidgetType type = 1;
+  map<string, string> string_attributes = 2; // For simple string attributes like text content, image src
+  map<string, double> double_attributes = 3; // For numerical attributes like width, height, flex
+  map<string, bool> bool_attributes = 4;     // For boolean attributes
+  map<string, int32> int_attributes = 5;     // For integer attributes like flex
+
+  // Complex nested attributes
+  TextStyleData text_style = 6;
+  EdgeInsetsData padding = 7;
+  EdgeInsetsData margin = 8; // Example, if we add margin later
+  ColorData color = 9; // General purpose color
+  IconDataMessage icon = 10;
+  BoxDecorationData box_decoration = 11;
+
+  // Children widgets
+  repeated SduiWidgetData children = 12;
+  SduiWidgetData child = 13; // For widgets that take a single child (e.g. SizedBox, Container)
+
+  // Scaffold specific parts
+  SduiWidgetData app_bar = 14;
+  SduiWidgetData body = 15; // Body can also be a single child
+  SduiWidgetData floating_action_button = 16;
+  ColorData background_color = 17; // For Scaffold background
+}
+
+// Message for Color
+message ColorData {
+  int32 alpha = 1;
+  int32 red = 2;
+  int32 green = 3;
+  int32 blue = 4;
+  // Or alternatively, a hex string
+  // string hex = 5;
+}
+
+// Message for EdgeInsets (for padding, margin)
+message EdgeInsetsData {
+  optional double left = 1;
+  optional double top = 2;
+  optional double right = 3;
+  optional double bottom = 4;
+  optional double all = 5;
+}
+
+// Message for TextStyle
+message TextStyleData {
+  optional ColorData color = 1;
+  optional double font_size = 2;
+  optional string font_weight = 3; // e.g., "bold", "w500"
+  // Add other TextStyle properties: fontFamily, fontStyle, letterSpacing, etc.
+}
+
+// Message for IconData
+message IconDataMessage {
+  optional string name = 1; // e.g., "settings", "home"
+  optional int32 code_point = 2;
+  optional string font_family = 3;
+  optional ColorData color = 4;
+  optional double size = 5;
+}
+
+// Message for BoxFit
+enum BoxFitProto {
+  BOX_FIT_UNSPECIFIED = 0;
+  FILL = 1;
+  CONTAIN = 2;
+  COVER = 3;
+  FIT_WIDTH = 4;
+  FIT_HEIGHT = 5;
+  NONE = 6;
+  SCALE_DOWN = 7;
+}
+
+// Message for BoxDecoration
+message BoxDecorationData {
+  optional ColorData color = 1;
+  optional BorderRadiusData border_radius = 2;
+  optional BorderData border = 3;
+  repeated BoxShadowData box_shadow = 4;
+  optional GradientData gradient = 5;
+  optional BoxShapeProto shape = 6; // ENUM: RECTANGLE, CIRCLE
+  optional DecorationImageData image = 7;
+}
+
+// Message for BorderRadius
+message BorderRadiusData {
+  optional double all = 1; // For BorderRadius.circular(all)
+  // For BorderRadius.only or .vertical/.horizontal if needed later
+  optional double top_left = 2;
+  optional double top_right = 3;
+  optional double bottom_left = 4;
+  optional double bottom_right = 5;
+  // Specific types like vertical/horizontal can be handled by how these are set
+}
+
+// Message for BorderSide
+message BorderSideData {
+  optional ColorData color = 1;
+  optional double width = 2;
+  optional BorderStyleProto style = 3; // ENUM: SOLID, NONE
+}
+
+// Message for Border
+message BorderData {
+  optional BorderSideData top = 1;
+  optional BorderSideData right = 2;
+  optional BorderSideData bottom = 3;
+  optional BorderSideData left = 4;
+  optional BorderSideData all = 5; // For Border.all
+}
+
+// Enum for BorderStyle
+enum BorderStyleProto {
+  BORDER_STYLE_UNSPECIFIED = 0;
+  SOLID = 1;
+  NONE_BORDER = 2; // Renamed to avoid conflict with NONE in ImageRepeatProto
+}
+
+// Message for BoxShadow
+message BoxShadowData {
+  optional ColorData color = 1;
+  optional double offset_x = 2;
+  optional double offset_y = 3;
+  optional double blur_radius = 4;
+  optional double spread_radius = 5;
+}
+
+// Message for Gradient
+message GradientData {
+  enum GradientType {
+    GRADIENT_TYPE_UNSPECIFIED = 0;
+    LINEAR = 1;
+    RADIAL = 2;
+    SWEEP = 3;
+  }
+  GradientType type = 1;
+  repeated ColorData colors = 2;
+  repeated double stops = 3;
+  optional AlignmentData begin = 4; // For LinearGradient
+  optional AlignmentData end = 5;   // For LinearGradient
+  optional AlignmentData center = 6; // For RadialGradient, SweepGradient
+  optional double radius = 7;      // For RadialGradient
+  optional double start_angle = 8; // For SweepGradient
+  optional double end_angle = 9;   // For SweepGradient
+}
+
+// Message for Alignment (used in Gradient, DecorationImage)
+message AlignmentData {
+  // Predefined alignments
+  enum PredefinedAlignment {
+    PREDEFINED_ALIGNMENT_UNSPECIFIED = 0;
+    BOTTOM_CENTER = 1;
+    BOTTOM_LEFT = 2;
+    BOTTOM_RIGHT = 3;
+    CENTER = 4;
+    CENTER_LEFT = 5;
+    CENTER_RIGHT = 6;
+    TOP_CENTER = 7;
+    TOP_LEFT = 8;
+    TOP_RIGHT = 9;
+  }
+  oneof alignment_type {
+    PredefinedAlignment predefined = 1;
+    XYAlignment xy = 2;
+  }
+}
+
+message XYAlignment {
+  double x = 1;
+  double y = 2;
+}
+
+
+// Enum for BoxShape
+enum BoxShapeProto {
+  BOX_SHAPE_UNSPECIFIED = 0;
+  RECTANGLE = 1;
+  CIRCLE = 2;
+}
+
+// Message for DecorationImage
+message DecorationImageData {
+  string src = 1; // Network image URL
+  optional BoxFitProto fit = 2;
+  optional AlignmentData alignment = 3;
+  optional ImageRepeatProto repeat = 4;
+  optional bool match_text_direction = 5;
+  optional double scale = 6;
+  optional double opacity = 7;
+  optional FilterQualityProto filter_quality = 8;
+  optional bool invert_colors = 9;
+  optional bool is_anti_alias = 10;
+}
+
+// Enum for ImageRepeat
+enum ImageRepeatProto {
+  IMAGE_REPEAT_UNSPECIFIED = 0;
+  REPEAT = 1;
+  REPEAT_X = 2;
+  REPEAT_Y = 3;
+  NO_REPEAT = 4;
+}
+
+// Enum for FilterQuality
+enum FilterQualityProto {
+  FILTER_QUALITY_UNSPECIFIED = 0;
+  NONE_FQ = 1; // NONE is a keyword in proto3 for enums, so NONE_FQ
+  LOW = 2;
+  MEDIUM = 3;
+  HIGH = 4;
+}
+
+// Service definition (optional for now, but good for future gRPC)
+service SduiService {
+  rpc GetSduiWidget (SduiRequest) returns (SduiWidgetData);
+}
+
+message SduiRequest {
+  string screen_id = 1; // Example: identifier for which UI to fetch
+}
+

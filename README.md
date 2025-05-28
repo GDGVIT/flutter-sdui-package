@@ -24,13 +24,13 @@ Server-Driven UI is an architectural pattern where the UI layout and content def
 
 ## Features
 
-- ✅ Render UI dynamically from server-provided definitions
-- ✅ Support for essential Flutter widgets (Text, Column, Row, Container, etc.)
-- ✅ JSON parsing for server responses
-- ✅ gRPC support for efficient, type-safe communication
-- ✅ Protocol Buffers for structured data exchange
-- ✅ Easy-to-use client API
-- ✅ Customizable error handling and loading states
+- [x] Render UI dynamically from server-provided definitions
+- [x] Support for essential Flutter widgets (Text, Column, Row, Container, etc.)
+- [x] JSON parsing for server responses
+- [x] gRPC support for efficient, type-safe communication
+- [x] Protocol Buffers for structured data exchange
+- [x] Easy-to-use client API
+- [x] Customizable error handling and loading states
 
 ## Installation
 
@@ -39,6 +39,13 @@ Add the package to your `pubspec.yaml`:
 ```yaml
 dependencies:
   flutter_sdui: ^0.0.1
+```
+
+```yaml
+# For devs
+dependencies:
+  flutter_sdui:
+    path: path/to/flutter_sdui
 ```
 
 Or use the Flutter CLI:

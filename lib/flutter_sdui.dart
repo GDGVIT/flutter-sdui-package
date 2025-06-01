@@ -4,8 +4,9 @@
 library;
 
 // Export the core parser and widget base
-export 'src/parser/sdui_proto_parser.dart'; // New proto parser
+export 'src/parser/sdui_proto_parser.dart'; 
 export 'src/widgets/sdui_widget.dart';
+
 
 // Export individual widget models
 export 'src/widgets/sdui_column.dart';
@@ -27,3 +28,9 @@ export 'src/generated/sdui.pb.dart';
 export 'src/generated/sdui.pbgrpc.dart';
 export 'src/generated/sdui.pbenum.dart';
 export 'src/generated/sdui.pbjson.dart';
+
+// Export JSON parser and models
+export 'src/parser/sdui_json_parser.dart';
+export 'src/parser/sdui_json_model.dart';
+
+

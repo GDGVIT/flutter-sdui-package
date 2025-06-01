@@ -18,11 +18,11 @@ import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 class SduiParser {
   // Parse method for JSON data
   static SduiWidget parseJSON(Map<String, dynamic> data) {
-    // TODO: Implement JSON parsing logic
+   
     throw UnimplementedError('JSON parser not fully implemented');
   }
 
-  // Parse from Protobuf data model
+  
   static SduiWidget parseProto(SduiWidgetData data) {
     switch (data.type) {
       case WidgetType.COLUMN:
@@ -49,7 +49,7 @@ class SduiParser {
     }
   }
 
-  // Helper methods to parse specific widget types from protobuf
+ 
   static SduiColumn _parseProtoColumn(SduiWidgetData data) {
     List<SduiWidget> children =
         data.children.map((child) => SduiParser.parseProto(child)).toList();
@@ -87,7 +87,7 @@ class SduiParser {
     TextStyle? style =
         data.hasTextStyle() ? _parseProtoTextStyle(data.textStyle) : null;
 
-    // Parse additional text properties
+  
     TextAlign? textAlign = _parseProtoTextAlign(data.textAlign);
     TextOverflow? overflow = _parseProtoTextOverflow(data.overflow);
     int? maxLines = data.hasMaxLines() ? data.maxLines : null;
@@ -119,7 +119,7 @@ class SduiParser {
     double? height = data.doubleAttributes['height'];
     BoxFit? fit = _parseProtoBoxFit(data.stringAttributes['fit']);
 
-    // Parse additional image properties
+    
     Alignment? alignment = _parseProtoAlignment(data.alignment);
     ImageRepeat? repeat = _parseProtoImageRepeat(data.repeat);
     Color? color = data.hasColor() ? _parseProtoColor(data.color) : null;
@@ -136,7 +136,7 @@ class SduiParser {
     double? scale = data.hasScale() ? data.scale : null;
     String? semanticLabel = data.hasSemanticLabel() ? data.semanticLabel : null;
 
-    // Parse error and loading widgets
+   
     Widget? errorWidget = data.hasErrorWidget()
         ? SduiParser.parseProto(data.errorWidget).toFlutterWidget()
         : null;
@@ -188,7 +188,7 @@ class SduiParser {
     double? height = data.doubleAttributes['height'];
     Color? color = data.hasColor() ? _parseProtoColor(data.color) : null;
 
-    // Parse additional container properties
+   
     Alignment? alignment = _parseProtoAlignment(data.alignment);
     BoxConstraints? constraints = data.hasConstraints()
         ? _parseProtoBoxConstraints(data.constraints)
@@ -227,7 +227,7 @@ class SduiParser {
         ? _parseProtoColor(data.backgroundColor)
         : null;
 
-    // Parse additional scaffold properties
+   
     SduiWidget? bottomNavigationBar = data.hasBottomNavigationBar()
         ? SduiParser.parseProto(data.bottomNavigationBar)
         : null;
@@ -293,7 +293,7 @@ class SduiParser {
     Color? color =
         data.icon.hasColor() ? _parseProtoColor(data.icon.color) : null;
 
-    // Parse additional icon properties
+    
     String? semanticLabel = data.hasSemanticLabel() ? data.semanticLabel : null;
     TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
     double? opacity = data.hasOpacity() ? data.opacity : null;
@@ -315,7 +315,7 @@ class SduiParser {
     );
   }
 
-  // Helper methods for parsing protobuf attribute types
+
 
   static BoxFit? _parseProtoBoxFit(String? value) {
     if (value == null) return null;
@@ -417,7 +417,7 @@ class SduiParser {
 
   static IconData? _parseProtoIconData(IconDataMessage data) {
     if (data.hasName()) {
-      // Map common icon names to Material icons (expand as needed)
+    
       switch (data.name.toLowerCase()) {
         case 'settings':
           return Icons.settings;
@@ -434,7 +434,7 @@ class SduiParser {
       }
     }
 
-    // Fallback to codePoint if available
+
     if (data.hasCodePoint()) {
       return IconData(
         data.codePoint,
@@ -451,7 +451,7 @@ class SduiParser {
       borderRadius: data.hasBorderRadius()
           ? _parseProtoBorderRadius(data.borderRadius)
           : null,
-      // Add more properties as needed
+   
     );
   }
 
@@ -486,10 +486,10 @@ class SduiParser {
       );
     }
 
-    return BorderRadius.circular(8.0); // Example default value
+    return BorderRadius.circular(8.0); 
   }
 
-  // New helper methods for parsing new property types
+  
 
   static MainAxisAlignment? _parseProtoMainAxisAlignment(
       MainAxisAlignmentProto proto) {
@@ -606,7 +606,7 @@ class SduiParser {
   }
 
   static AlignmentGeometry? _parseProtoAlignmentGeometry(AlignmentData? data) {
-    // For now, just use the same alignment parsing
+   
     return _parseProtoAlignment(data);
   }
 

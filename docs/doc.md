@@ -53,6 +53,7 @@ class SduiServiceImpl extends SduiServiceBase {
     }
   }
 }
+
 ```
 
 ## Creating Screens
@@ -121,6 +122,8 @@ SduiWidgetData()
 Display text with styling:
 ```dart
 SduiWidgetData()
+
+
   ..type = WidgetType.TEXT
   ..stringAttributes['text'] = 'Hello World'
   ..textStyle = (TextStyleData()

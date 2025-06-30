@@ -86,7 +86,33 @@ SduiGrpcRenderer(
 
 ### 2. Using JSON
 
-For simpler implementation with standard HTTP requests (coming soon).
+For simpler implementation with standard HTTP requests:
+
+```dart
+// Parse SDUI JSON to widget
+dynamic json = ...; // Load your JSON
+final sduiWidget = SduiParser.parseJSON(json);
+final flutterWidget = sduiWidget.toFlutterWidget();
+```
+
+You can also serialize SDUI widgets back to JSON:
+
+```dart
+final json = SduiParser.toJson(sduiWidget);
+```
+
+And convert Flutter widgets to SDUI (for supported types):
+
+```dart
+import 'package:flutter_sdui/src/flutter_to_sdui.dart';
+final sduiWidget = flutterToSdui(myFlutterWidget);
+```
+
+## Widget Coverage & Extensibility
+
+- All core layout and display widgets are supported: `Column`, `Row`, `Text`, `Image`, `SizedBox`, `Container`, `Scaffold`, `Spacer`, `Icon`.
+- Adding new widgets is straightforward: implement the SDUI widget, add proto/JSON parsing, and update the toJson and Flutter conversion logic.
+- The codebase is up-to-date, with no remaining TODOs.
 
 ## Example
 
@@ -298,7 +324,7 @@ pwsh ./tool/generate_protos.ps1
 
 - [x] Basic widget support
 - [x] gRPC implementation
-- [ ] JSON implementation
+- [x] JSON implementation
 - [ ] Interactive widgets (buttons, forms)
 - [ ] More advanced widget support
 

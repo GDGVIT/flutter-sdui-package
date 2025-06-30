@@ -18,8 +18,29 @@ import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 class SduiParser {
   // Parse method for JSON data
   static SduiWidget parseJSON(Map<String, dynamic> data) {
-    // TODO: Implement JSON parsing logic
-    throw UnimplementedError('JSON parser not fully implemented');
+    final String? type = data['type']?.toString().toLowerCase();
+    switch (type) {
+      case 'column':
+        return _parseJsonColumn(data);
+      case 'row':
+        return _parseJsonRow(data);
+      case 'text':
+        return _parseJsonText(data);
+      case 'image':
+        return _parseJsonImage(data);
+      case 'sized_box':
+        return _parseJsonSizedBox(data);
+      case 'container':
+        return _parseJsonContainer(data);
+      case 'scaffold':
+        return _parseJsonScaffold(data);
+      case 'spacer':
+        return _parseJsonSpacer(data);
+      case 'icon':
+        return _parseJsonIcon(data);
+      default:
+        return SduiContainer();
+    }
   }
 
   // Parse from Protobuf data model
@@ -888,5 +909,908 @@ class SduiParser {
       default:
         return null;
     }
+  }
+
+  static SduiColumn _parseJsonColumn(Map<String, dynamic> data) {
+    final children = (data['children'] as List<dynamic>? ?? [])
+        .map((child) => parseJSON(child as Map<String, dynamic>))
+        .toList();
+    return SduiColumn(
+      children: children,
+      mainAxisAlignment: _parseJsonMainAxisAlignment(data['mainAxisAlignment']),
+      crossAxisAlignment: _parseJsonCrossAxisAlignment(data['crossAxisAlignment']),
+      mainAxisSize: _parseJsonMainAxisSize(data['mainAxisSize']),
+      textDirection: _parseJsonTextDirection(data['textDirection']),
+      verticalDirection: _parseJsonVerticalDirection(data['verticalDirection']),
+      textBaseline: _parseJsonTextBaseline(data['textBaseline']),
+    );
+  }
+
+  static MainAxisAlignment? _parseJsonMainAxisAlignment(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'start':
+        return MainAxisAlignment.start;
+      case 'end':
+        return MainAxisAlignment.end;
+      case 'center':
+        return MainAxisAlignment.center;
+      case 'spacebetween':
+      case 'space_between':
+        return MainAxisAlignment.spaceBetween;
+      case 'spacearound':
+      case 'space_around':
+        return MainAxisAlignment.spaceAround;
+      case 'spaceevenly':
+      case 'space_evenly':
+        return MainAxisAlignment.spaceEvenly;
+      default:
+        return null;
+    }
+  }
+
+  static CrossAxisAlignment? _parseJsonCrossAxisAlignment(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'start':
+        return CrossAxisAlignment.start;
+      case 'end':
+        return CrossAxisAlignment.end;
+      case 'center':
+        return CrossAxisAlignment.center;
+      case 'stretch':
+        return CrossAxisAlignment.stretch;
+      case 'baseline':
+        return CrossAxisAlignment.baseline;
+      default:
+        return null;
+    }
+  }
+
+  static MainAxisSize? _parseJsonMainAxisSize(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'min':
+        return MainAxisSize.min;
+      case 'max':
+        return MainAxisSize.max;
+      default:
+        return null;
+    }
+  }
+
+  static TextDirection? _parseJsonTextDirection(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'ltr':
+        return TextDirection.ltr;
+      case 'rtl':
+        return TextDirection.rtl;
+      default:
+        return null;
+    }
+  }
+
+  static VerticalDirection? _parseJsonVerticalDirection(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'up':
+        return VerticalDirection.up;
+      case 'down':
+        return VerticalDirection.down;
+      default:
+        return null;
+    }
+  }
+
+  static TextBaseline? _parseJsonTextBaseline(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'alphabetic':
+        return TextBaseline.alphabetic;
+      case 'ideographic':
+        return TextBaseline.ideographic;
+      default:
+        return null;
+    }
+  }
+
+  static SduiRow _parseJsonRow(Map<String, dynamic> data) {
+    final children = (data['children'] as List<dynamic>? ?? [])
+        .map((child) => parseJSON(child as Map<String, dynamic>))
+        .toList();
+    return SduiRow(
+      children: children,
+      mainAxisAlignment: _parseJsonMainAxisAlignment(data['mainAxisAlignment']),
+      crossAxisAlignment: _parseJsonCrossAxisAlignment(data['crossAxisAlignment']),
+      mainAxisSize: _parseJsonMainAxisSize(data['mainAxisSize']),
+      textDirection: _parseJsonTextDirection(data['textDirection']),
+      verticalDirection: _parseJsonVerticalDirection(data['verticalDirection']),
+      textBaseline: _parseJsonTextBaseline(data['textBaseline']),
+    );
+  }
+
+  static SduiText _parseJsonText(Map<String, dynamic> data) {
+    return SduiText(
+      data['text']?.toString() ?? '',
+      style: _parseJsonTextStyle(data['style']),
+      textAlign: _parseJsonTextAlign(data['textAlign']),
+      overflow: _parseJsonTextOverflow(data['overflow']),
+      maxLines: data['maxLines'] is int ? data['maxLines'] : int.tryParse(data['maxLines']?.toString() ?? ''),
+      softWrap: data['softWrap'] is bool ? data['softWrap'] : null,
+      letterSpacing: (data['letterSpacing'] is num) ? (data['letterSpacing'] as num).toDouble() : null,
+      wordSpacing: (data['wordSpacing'] is num) ? (data['wordSpacing'] as num).toDouble() : null,
+      height: (data['height'] is num) ? (data['height'] as num).toDouble() : null,
+      fontFamily: data['fontFamily']?.toString(),
+      textDirection: _parseJsonTextDirection(data['textDirection']),
+    );
+  }
+
+  static SduiImage _parseJsonImage(Map<String, dynamic> data) {
+    SduiWidget? errorSduiWidget = data['errorWidget'] is Map<String, dynamic> ? parseJSON(data['errorWidget']) : null;
+    SduiWidget? loadingSduiWidget = data['loadingWidget'] is Map<String, dynamic> ? parseJSON(data['loadingWidget']) : null;
+    return SduiImage(
+      data['src']?.toString() ?? '',
+      width: (data['width'] is num) ? (data['width'] as num).toDouble() : null,
+      height: (data['height'] is num) ? (data['height'] as num).toDouble() : null,
+      fit: _parseJsonBoxFit(data['fit']),
+      alignment: _parseJsonAlignment(data['alignment']),
+      repeat: _parseJsonImageRepeat(data['repeat']),
+      color: _parseJsonColor(data['color']),
+      colorBlendMode: _parseJsonBlendMode(data['colorBlendMode']),
+      centerSlice: _parseJsonRect(data['centerSlice']),
+      matchTextDirection: data['matchTextDirection'] is bool ? data['matchTextDirection'] : null,
+      gaplessPlayback: data['gaplessPlayback'] is bool ? data['gaplessPlayback'] : null,
+      filterQuality: _parseJsonFilterQuality(data['filterQuality']),
+      cacheWidth: data['cacheWidth'] is int ? data['cacheWidth'] : int.tryParse(data['cacheWidth']?.toString() ?? ''),
+      cacheHeight: data['cacheHeight'] is int ? data['cacheHeight'] : int.tryParse(data['cacheHeight']?.toString() ?? ''),
+      scale: (data['scale'] is num) ? (data['scale'] as num).toDouble() : null,
+      semanticLabel: data['semanticLabel']?.toString(),
+      errorWidget: errorSduiWidget != null ? errorSduiWidget.toFlutterWidget() : null,
+      loadingWidget: loadingSduiWidget != null ? loadingSduiWidget.toFlutterWidget() : null,
+    );
+  }
+
+  static SduiSizedBox _parseJsonSizedBox(Map<String, dynamic> data) {
+    return SduiSizedBox(
+      width: (data['width'] is num) ? (data['width'] as num).toDouble() : null,
+      height: (data['height'] is num) ? (data['height'] as num).toDouble() : null,
+      child: data['child'] is Map<String, dynamic> ? parseJSON(data['child']) : null,
+    );
+  }
+
+  static SduiContainer _parseJsonContainer(Map<String, dynamic> data) {
+    return SduiContainer(
+      child: data['child'] is Map<String, dynamic> ? parseJSON(data['child']) : null,
+      padding: _parseJsonEdgeInsets(data['padding']),
+      margin: _parseJsonEdgeInsets(data['margin']),
+      decoration: _parseJsonBoxDecoration(data['decoration']),
+      width: (data['width'] is num) ? (data['width'] as num).toDouble() : null,
+      height: (data['height'] is num) ? (data['height'] as num).toDouble() : null,
+      color: _parseJsonColor(data['color']),
+      alignment: _parseJsonAlignment(data['alignment']),
+      constraints: _parseJsonBoxConstraints(data['constraints']),
+      transform: _parseJsonTransform(data['transform']),
+      transformAlignment: _parseJsonAlignmentGeometry(data['transformAlignment']),
+      clipBehavior: _parseJsonClip(data['clipBehavior']),
+    );
+  }
+
+  static SduiScaffold _parseJsonScaffold(Map<String, dynamic> data) {
+    return SduiScaffold(
+      appBar: data['appBar'] is Map<String, dynamic> ? parseJSON(data['appBar']) : null,
+      body: data['body'] is Map<String, dynamic> ? parseJSON(data['body']) : null,
+      floatingActionButton: data['floatingActionButton'] is Map<String, dynamic> ? parseJSON(data['floatingActionButton']) : null,
+      bottomNavigationBar: data['bottomNavigationBar'] is Map<String, dynamic> ? parseJSON(data['bottomNavigationBar']) : null,
+      drawer: data['drawer'] is Map<String, dynamic> ? parseJSON(data['drawer']) : null,
+      endDrawer: data['endDrawer'] is Map<String, dynamic> ? parseJSON(data['endDrawer']) : null,
+      bottomSheet: data['bottomSheet'] is Map<String, dynamic> ? parseJSON(data['bottomSheet']) : null,
+      backgroundColor: _parseJsonColor(data['backgroundColor']),
+      resizeToAvoidBottomInset: data['resizeToAvoidBottomInset'] is bool ? data['resizeToAvoidBottomInset'] : null,
+      primary: data['primary'] is bool ? data['primary'] : null,
+      floatingActionButtonLocation: _parseJsonFabLocation(data['floatingActionButtonLocation']),
+      extendBody: data['extendBody'] is bool ? data['extendBody'] : null,
+      extendBodyBehindAppBar: data['extendBodyBehindAppBar'] is bool ? data['extendBodyBehindAppBar'] : null,
+      drawerScrimColor: _parseJsonColor(data['drawerScrimColor']),
+      drawerEdgeDragWidth: (data['drawerEdgeDragWidth'] is num) ? (data['drawerEdgeDragWidth'] as num).toDouble() : null,
+      drawerEnableOpenDragGesture: data['drawerEnableOpenDragGesture'] is bool ? data['drawerEnableOpenDragGesture'] : null,
+      endDrawerEnableOpenDragGesture: data['endDrawerEnableOpenDragGesture'] is bool ? data['endDrawerEnableOpenDragGesture'] : null,
+    );
+  }
+
+  static SduiSpacer _parseJsonSpacer(Map<String, dynamic> data) {
+    return SduiSpacer(
+      flex: data['flex'] is int ? data['flex'] : int.tryParse(data['flex']?.toString() ?? '') ?? 1,
+    );
+  }
+
+  static SduiIcon _parseJsonIcon(Map<String, dynamic> data) {
+    return SduiIcon(
+      icon: _parseJsonIconData(data['icon']),
+      size: (data['size'] is num) ? (data['size'] as num).toDouble() : null,
+      color: _parseJsonColor(data['color']),
+      semanticLabel: data['semanticLabel']?.toString(),
+      textDirection: _parseJsonTextDirection(data['textDirection']),
+      opacity: (data['opacity'] is num) ? (data['opacity'] as num).toDouble() : null,
+      applyTextScaling: data['applyTextScaling'] is bool ? data['applyTextScaling'] : null,
+      shadows: _parseJsonShadows(data['shadows']),
+    );
+  }
+
+  // --- JSON attribute helpers (implement as needed, similar to proto helpers) ---
+  static TextStyle? _parseJsonTextStyle(dynamic value) {
+    if (value is! Map<String, dynamic>) return null;
+    return TextStyle(
+      color: _parseJsonColor(value['color']),
+      fontSize: (value['fontSize'] is num) ? (value['fontSize'] as num).toDouble() : null,
+      fontWeight: _parseJsonFontWeight(value['fontWeight']),
+      decoration: _parseJsonTextDecoration(value['decoration']),
+      letterSpacing: (value['letterSpacing'] is num) ? (value['letterSpacing'] as num).toDouble() : null,
+      wordSpacing: (value['wordSpacing'] is num) ? (value['wordSpacing'] as num).toDouble() : null,
+      height: (value['height'] is num) ? (value['height'] as num).toDouble() : null,
+      fontFamily: value['fontFamily']?.toString(),
+      fontStyle: _parseJsonFontStyle(value['fontStyle']),
+    );
+  }
+
+  static TextAlign? _parseJsonTextAlign(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'left':
+        return TextAlign.left;
+      case 'right':
+        return TextAlign.right;
+      case 'center':
+        return TextAlign.center;
+      case 'justify':
+        return TextAlign.justify;
+      case 'start':
+        return TextAlign.start;
+      case 'end':
+        return TextAlign.end;
+      default:
+        return null;
+    }
+  }
+
+  static TextOverflow? _parseJsonTextOverflow(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'clip':
+        return TextOverflow.clip;
+      case 'ellipsis':
+        return TextOverflow.ellipsis;
+      case 'fade':
+        return TextOverflow.fade;
+      case 'visible':
+        return TextOverflow.visible;
+      default:
+        return null;
+    }
+  }
+
+  static TextDecoration? _parseJsonTextDecoration(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'none':
+        return TextDecoration.none;
+      case 'underline':
+        return TextDecoration.underline;
+      case 'overline':
+        return TextDecoration.overline;
+      case 'line_through':
+      case 'linethrough':
+        return TextDecoration.lineThrough;
+      default:
+        return null;
+    }
+  }
+
+  static FontWeight? _parseJsonFontWeight(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'bold':
+        return FontWeight.bold;
+      case 'normal':
+        return FontWeight.normal;
+      case 'w100':
+        return FontWeight.w100;
+      case 'w200':
+        return FontWeight.w200;
+      case 'w300':
+        return FontWeight.w300;
+      case 'w400':
+        return FontWeight.w400;
+      case 'w500':
+        return FontWeight.w500;
+      case 'w600':
+        return FontWeight.w600;
+      case 'w700':
+        return FontWeight.w700;
+      case 'w800':
+        return FontWeight.w800;
+      case 'w900':
+        return FontWeight.w900;
+      default:
+        return null;
+    }
+  }
+
+  static FontStyle? _parseJsonFontStyle(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'italic':
+        return FontStyle.italic;
+      case 'normal':
+        return FontStyle.normal;
+      default:
+        return null;
+    }
+  }
+
+  static BoxFit? _parseJsonBoxFit(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'fill':
+        return BoxFit.fill;
+      case 'contain':
+        return BoxFit.contain;
+      case 'cover':
+        return BoxFit.cover;
+      case 'fitwidth':
+      case 'fit_width':
+        return BoxFit.fitWidth;
+      case 'fitheight':
+      case 'fit_height':
+        return BoxFit.fitHeight;
+      case 'none':
+        return BoxFit.none;
+      case 'scaledown':
+      case 'scale_down':
+        return BoxFit.scaleDown;
+      default:
+        return null;
+    }
+  }
+
+  static Alignment? _parseJsonAlignment(dynamic value) {
+    if (value == null) return null;
+    if (value is String) {
+      switch (value.toLowerCase()) {
+        case 'bottomcenter':
+        case 'bottom_center':
+          return Alignment.bottomCenter;
+        case 'bottomleft':
+        case 'bottom_left':
+          return Alignment.bottomLeft;
+        case 'bottomright':
+        case 'bottom_right':
+          return Alignment.bottomRight;
+        case 'center':
+          return Alignment.center;
+        case 'centerleft':
+        case 'center_left':
+          return Alignment.centerLeft;
+        case 'centerright':
+        case 'center_right':
+          return Alignment.centerRight;
+        case 'topcenter':
+        case 'top_center':
+          return Alignment.topCenter;
+        case 'topleft':
+        case 'top_left':
+          return Alignment.topLeft;
+        case 'topright':
+        case 'top_right':
+          return Alignment.topRight;
+        default:
+          return Alignment.center;
+      }
+    } else if (value is Map<String, dynamic>) {
+      if (value.containsKey('x') && value.containsKey('y')) {
+        return Alignment(
+          (value['x'] is num) ? (value['x'] as num).toDouble() : 0.0,
+          (value['y'] is num) ? (value['y'] as num).toDouble() : 0.0,
+        );
+      }
+    }
+    return null;
+  }
+
+  static ImageRepeat? _parseJsonImageRepeat(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'repeat':
+        return ImageRepeat.repeat;
+      case 'repeatx':
+      case 'repeat_x':
+        return ImageRepeat.repeatX;
+      case 'repeaty':
+      case 'repeat_y':
+        return ImageRepeat.repeatY;
+      case 'norepeat':
+      case 'no_repeat':
+        return ImageRepeat.noRepeat;
+      default:
+        return null;
+    }
+  }
+
+  static Color? _parseJsonColor(dynamic value) {
+    if (value == null) return null;
+    if (value is String) {
+      // Accept hex string: #RRGGBB or #AARRGGBB
+      String hex = value.replaceAll('#', '');
+      if (hex.length == 6) {
+        hex = 'FF$hex';
+      }
+      if (hex.length == 8) {
+        return Color(int.parse(hex, radix: 16));
+      }
+    } else if (value is Map<String, dynamic>) {
+      int a = value['alpha'] ?? 255;
+      int r = value['red'] ?? 0;
+      int g = value['green'] ?? 0;
+      int b = value['blue'] ?? 0;
+      return Color.fromARGB(a, r, g, b);
+    }
+    return null;
+  }
+
+  static BlendMode? _parseJsonBlendMode(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'clear': return BlendMode.clear;
+      case 'src': return BlendMode.src;
+      case 'dst': return BlendMode.dst;
+      case 'srcover':
+      case 'src_over': return BlendMode.srcOver;
+      case 'dstover':
+      case 'dst_over': return BlendMode.dstOver;
+      case 'srcin':
+      case 'src_in': return BlendMode.srcIn;
+      case 'dstin':
+      case 'dst_in': return BlendMode.dstIn;
+      case 'srcout':
+      case 'src_out': return BlendMode.srcOut;
+      case 'dstout':
+      case 'dst_out': return BlendMode.dstOut;
+      case 'srcatop':
+      case 'src_atop': return BlendMode.srcATop;
+      case 'dstatop':
+      case 'dst_atop': return BlendMode.dstATop;
+      case 'xor': return BlendMode.xor;
+      case 'plus': return BlendMode.plus;
+      case 'modulate': return BlendMode.modulate;
+      case 'screen': return BlendMode.screen;
+      case 'overlay': return BlendMode.overlay;
+      case 'darken': return BlendMode.darken;
+      case 'lighten': return BlendMode.lighten;
+      case 'colordodge':
+      case 'color_dodge': return BlendMode.colorDodge;
+      case 'colorburn':
+      case 'color_burn': return BlendMode.colorBurn;
+      case 'hardlight':
+      case 'hard_light': return BlendMode.hardLight;
+      case 'softlight':
+      case 'soft_light': return BlendMode.softLight;
+      case 'difference': return BlendMode.difference;
+      case 'exclusion': return BlendMode.exclusion;
+      case 'multiply': return BlendMode.multiply;
+      case 'hue': return BlendMode.hue;
+      case 'saturation': return BlendMode.saturation;
+      case 'color': return BlendMode.color;
+      case 'luminosity': return BlendMode.luminosity;
+      default: return null;
+    }
+  }
+
+  static Rect? _parseJsonRect(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return Rect.fromLTRB(
+        (value['left'] is num) ? (value['left'] as num).toDouble() : 0.0,
+        (value['top'] is num) ? (value['top'] as num).toDouble() : 0.0,
+        (value['right'] is num) ? (value['right'] as num).toDouble() : 0.0,
+        (value['bottom'] is num) ? (value['bottom'] as num).toDouble() : 0.0,
+      );
+    }
+    return null;
+  }
+
+  static FilterQuality? _parseJsonFilterQuality(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'none': return FilterQuality.none;
+      case 'low': return FilterQuality.low;
+      case 'medium': return FilterQuality.medium;
+      case 'high': return FilterQuality.high;
+      default: return null;
+    }
+  }
+
+  static EdgeInsets? _parseJsonEdgeInsets(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      if (value.containsKey('all')) {
+        return EdgeInsets.all((value['all'] as num).toDouble());
+      }
+      return EdgeInsets.only(
+        left: (value['left'] is num) ? (value['left'] as num).toDouble() : 0.0,
+        top: (value['top'] is num) ? (value['top'] as num).toDouble() : 0.0,
+        right: (value['right'] is num) ? (value['right'] as num).toDouble() : 0.0,
+        bottom: (value['bottom'] is num) ? (value['bottom'] as num).toDouble() : 0.0,
+      );
+    }
+    return null;
+  }
+
+  static BoxDecoration? _parseJsonBoxDecoration(dynamic value) {
+    if (value is! Map<String, dynamic>) return null;
+    return BoxDecoration(
+      color: _parseJsonColor(value['color']),
+      borderRadius: _parseJsonBorderRadius(value['borderRadius']),
+      // Add more as needed
+    );
+  }
+
+  static BorderRadius? _parseJsonBorderRadius(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      if (value.containsKey('all')) {
+        return BorderRadius.all(Radius.circular((value['all'] as num).toDouble()));
+      }
+      return BorderRadius.only(
+        topLeft: value['topLeft'] != null ? Radius.circular((value['topLeft'] as num).toDouble()) : Radius.zero,
+        topRight: value['topRight'] != null ? Radius.circular((value['topRight'] as num).toDouble()) : Radius.zero,
+        bottomLeft: value['bottomLeft'] != null ? Radius.circular((value['bottomLeft'] as num).toDouble()) : Radius.zero,
+        bottomRight: value['bottomRight'] != null ? Radius.circular((value['bottomRight'] as num).toDouble()) : Radius.zero,
+      );
+    }
+    return null;
+  }
+
+  static BoxConstraints? _parseJsonBoxConstraints(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return BoxConstraints(
+        minWidth: (value['minWidth'] is num) ? (value['minWidth'] as num).toDouble() : 0.0,
+        maxWidth: (value['maxWidth'] is num) ? (value['maxWidth'] as num).toDouble() : double.infinity,
+        minHeight: (value['minHeight'] is num) ? (value['minHeight'] as num).toDouble() : 0.0,
+        maxHeight: (value['maxHeight'] is num) ? (value['maxHeight'] as num).toDouble() : double.infinity,
+      );
+    }
+    return null;
+  }
+
+  static Matrix4? _parseJsonTransform(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      if (value['type'] == 'matrix4' && value['matrixValues'] is List) {
+        final vals = value['matrixValues'] as List;
+        if (vals.length == 16) {
+          return Matrix4(
+            (vals[0] as num).toDouble(), (vals[1] as num).toDouble(), (vals[2] as num).toDouble(), (vals[3] as num).toDouble(),
+            (vals[4] as num).toDouble(), (vals[5] as num).toDouble(), (vals[6] as num).toDouble(), (vals[7] as num).toDouble(),
+            (vals[8] as num).toDouble(), (vals[9] as num).toDouble(), (vals[10] as num).toDouble(), (vals[11] as num).toDouble(),
+            (vals[12] as num).toDouble(), (vals[13] as num).toDouble(), (vals[14] as num).toDouble(), (vals[15] as num).toDouble(),
+          );
+        }
+      } else if (value['type'] == 'translate') {
+        return Matrix4.translationValues(
+          (value['x'] as num?)?.toDouble() ?? 0.0,
+          (value['y'] as num?)?.toDouble() ?? 0.0,
+          (value['z'] as num?)?.toDouble() ?? 0.0,
+        );
+      } else if (value['type'] == 'rotate') {
+        return Matrix4.rotationZ((value['angle'] as num?)?.toDouble() ?? 0.0);
+      } else if (value['type'] == 'scale') {
+        return Matrix4.diagonal3Values(
+          (value['x'] as num?)?.toDouble() ?? 1.0,
+          (value['y'] as num?)?.toDouble() ?? 1.0,
+          (value['z'] as num?)?.toDouble() ?? 1.0,
+        );
+      }
+    }
+    return null;
+  }
+
+  static AlignmentGeometry? _parseJsonAlignmentGeometry(dynamic value) {
+    return _parseJsonAlignment(value);
+  }
+
+  static Clip? _parseJsonClip(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'none': return Clip.none;
+      case 'hardedge':
+      case 'hard_edge': return Clip.hardEdge;
+      case 'antialias': return Clip.antiAlias;
+      case 'antialiaswithsavelayer':
+      case 'antialias_with_save_layer': return Clip.antiAliasWithSaveLayer;
+      default: return null;
+    }
+  }
+
+  static FloatingActionButtonLocation? _parseJsonFabLocation(dynamic value) {
+    if (value == null) return null;
+    switch (value.toString().toLowerCase()) {
+      case 'starttop':
+      case 'start_top': return FloatingActionButtonLocation.startTop;
+      case 'start':
+      case 'startfloat':
+      case 'start_float': return FloatingActionButtonLocation.startFloat;
+      case 'centertop':
+      case 'center_top': return FloatingActionButtonLocation.centerTop;
+      case 'center':
+      case 'centerfloat':
+      case 'center_float': return FloatingActionButtonLocation.centerFloat;
+      case 'endtop':
+      case 'end_top': return FloatingActionButtonLocation.endTop;
+      case 'end':
+      case 'endfloat':
+      case 'end_float': return FloatingActionButtonLocation.endFloat;
+      case 'minicentertop':
+      case 'mini_center_top': return FloatingActionButtonLocation.miniCenterTop;
+      case 'minicenterfloat':
+      case 'mini_center_float': return FloatingActionButtonLocation.miniCenterFloat;
+      case 'ministarttop':
+      case 'mini_start_top': return FloatingActionButtonLocation.miniStartTop;
+      case 'ministartfloat':
+      case 'mini_start_float': return FloatingActionButtonLocation.miniStartFloat;
+      case 'miniendtop':
+      case 'mini_end_top': return FloatingActionButtonLocation.miniEndTop;
+      case 'miniendfloat':
+      case 'mini_end_float': return FloatingActionButtonLocation.miniEndFloat;
+      default: return null;
+    }
+  }
+
+  static IconData? _parseJsonIconData(dynamic value) {
+    if (value == null) return null;
+    if (value is String) {
+      switch (value.toLowerCase()) {
+        case 'settings': return Icons.settings;
+        case 'home': return Icons.home;
+        case 'search': return Icons.search;
+        case 'add': return Icons.add;
+        case 'edit': return Icons.edit;
+        default: break;
+      }
+    } else if (value is Map<String, dynamic>) {
+      if (value['name'] != null) {
+        switch (value['name'].toString().toLowerCase()) {
+          case 'settings': return Icons.settings;
+          case 'home': return Icons.home;
+          case 'search': return Icons.search;
+          case 'add': return Icons.add;
+          case 'edit': return Icons.edit;
+          default: break;
+        }
+      }
+      if (value['codePoint'] != null) {
+        return IconData(
+          value['codePoint'] is int ? value['codePoint'] : int.tryParse(value['codePoint'].toString()) ?? 0,
+          fontFamily: value['fontFamily']?.toString() ?? 'MaterialIcons',
+        );
+      }
+    }
+    return null;
+  }
+
+  static List<Shadow>? _parseJsonShadows(dynamic value) {
+    if (value is List) {
+      return value.map((v) {
+        if (v is Map<String, dynamic>) {
+          return Shadow(
+            color: _parseJsonColor(v['color']) ?? Colors.black,
+            offset: Offset(
+              (v['offsetX'] is num) ? (v['offsetX'] as num).toDouble() : 0.0,
+              (v['offsetY'] is num) ? (v['offsetY'] as num).toDouble() : 0.0,
+            ),
+            blurRadius: (v['blurRadius'] is num) ? (v['blurRadius'] as num).toDouble() : 0.0,
+          );
+        }
+        return const Shadow();
+      }).toList();
+    }
+    return null;
+  }
+
+  static Map<String, dynamic> toJson(SduiWidget widget) {
+    if (widget is SduiColumn) {
+      return _toJsonColumn(widget);
+    } else if (widget is SduiRow) {
+      return _toJsonRow(widget);
+    } else if (widget is SduiText) {
+      return _toJsonText(widget);
+    } else if (widget is SduiImage) {
+      return _toJsonImage(widget);
+    } else if (widget is SduiSizedBox) {
+      return _toJsonSizedBox(widget);
+    } else if (widget is SduiContainer) {
+      return _toJsonContainer(widget);
+    } else if (widget is SduiScaffold) {
+      return _toJsonScaffold(widget);
+    } else if (widget is SduiSpacer) {
+      return _toJsonSpacer(widget);
+    } else if (widget is SduiIcon) {
+      return _toJsonIcon(widget);
+    }
+    return {};
+  }
+
+  static Map<String, dynamic> _toJsonColumn(SduiColumn widget) {
+    return {
+      'type': 'column',
+      if (widget.mainAxisAlignment != null) 'mainAxisAlignment': widget.mainAxisAlignment.toString().split('.').last,
+      if (widget.crossAxisAlignment != null) 'crossAxisAlignment': widget.crossAxisAlignment.toString().split('.').last,
+      if (widget.mainAxisSize != null) 'mainAxisSize': widget.mainAxisSize.toString().split('.').last,
+      if (widget.textDirection != null) 'textDirection': widget.textDirection.toString().split('.').last,
+      if (widget.verticalDirection != null) 'verticalDirection': widget.verticalDirection.toString().split('.').last,
+      if (widget.textBaseline != null) 'textBaseline': widget.textBaseline.toString().split('.').last,
+      'children': widget.children.map(toJson).toList(),
+    };
+  }
+
+  static Map<String, dynamic> _toJsonRow(SduiRow widget) {
+    return {
+      'type': 'row',
+      if (widget.mainAxisAlignment != null) 'mainAxisAlignment': widget.mainAxisAlignment.toString().split('.').last,
+      if (widget.crossAxisAlignment != null) 'crossAxisAlignment': widget.crossAxisAlignment.toString().split('.').last,
+      if (widget.mainAxisSize != null) 'mainAxisSize': widget.mainAxisSize.toString().split('.').last,
+      if (widget.textDirection != null) 'textDirection': widget.textDirection.toString().split('.').last,
+      if (widget.verticalDirection != null) 'verticalDirection': widget.verticalDirection.toString().split('.').last,
+      if (widget.textBaseline != null) 'textBaseline': widget.textBaseline.toString().split('.').last,
+      'children': widget.children.map(toJson).toList(),
+    };
+  }
+
+  static Map<String, dynamic> _toJsonText(SduiText widget) {
+    return {
+      'type': 'text',
+      'text': widget.text,
+      if (widget.style != null) 'style': _toJsonTextStyle(widget.style!),
+      if (widget.textAlign != null) 'textAlign': widget.textAlign.toString().split('.').last,
+      if (widget.overflow != null) 'overflow': widget.overflow.toString().split('.').last,
+      if (widget.maxLines != null) 'maxLines': widget.maxLines,
+      if (widget.softWrap != null) 'softWrap': widget.softWrap,
+      if (widget.letterSpacing != null) 'letterSpacing': widget.letterSpacing,
+      if (widget.wordSpacing != null) 'wordSpacing': widget.wordSpacing,
+      if (widget.height != null) 'height': widget.height,
+      if (widget.fontFamily != null) 'fontFamily': widget.fontFamily,
+      if (widget.textDirection != null) 'textDirection': widget.textDirection.toString().split('.').last,
+    };
+  }
+
+  static Map<String, dynamic> _toJsonTextStyle(TextStyle style) {
+    return {
+      if (style.color != null) 'color': '#${style.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (style.fontSize != null) 'fontSize': style.fontSize,
+      if (style.fontWeight != null) 'fontWeight': style.fontWeight.toString().split('.').last,
+      if (style.decoration != null) 'decoration': style.decoration.toString().split('.').last,
+      if (style.letterSpacing != null) 'letterSpacing': style.letterSpacing,
+      if (style.wordSpacing != null) 'wordSpacing': style.wordSpacing,
+      if (style.height != null) 'height': style.height,
+      if (style.fontFamily != null) 'fontFamily': style.fontFamily,
+      if (style.fontStyle != null) 'fontStyle': style.fontStyle.toString().split('.').last,
+    };
+  }
+
+  static Map<String, dynamic> _toJsonImage(SduiImage widget) {
+    return {
+      'type': 'image',
+      'src': widget.src,
+      if (widget.width != null) 'width': widget.width,
+      if (widget.height != null) 'height': widget.height,
+      if (widget.fit != null) 'fit': widget.fit.toString().split('.').last,
+      if (widget.alignment != null) 'alignment': widget.alignment.toString(),
+      if (widget.repeat != null) 'repeat': widget.repeat.toString().split('.').last,
+      if (widget.color != null) 'color': '#${widget.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.colorBlendMode != null) 'colorBlendMode': widget.colorBlendMode.toString().split('.').last,
+      if (widget.centerSlice != null) 'centerSlice': widget.centerSlice.toString(),
+      if (widget.matchTextDirection != null) 'matchTextDirection': widget.matchTextDirection,
+      if (widget.gaplessPlayback != null) 'gaplessPlayback': widget.gaplessPlayback,
+      if (widget.filterQuality != null) 'filterQuality': widget.filterQuality.toString().split('.').last,
+      if (widget.cacheWidth != null) 'cacheWidth': widget.cacheWidth,
+      if (widget.cacheHeight != null) 'cacheHeight': widget.cacheHeight,
+      if (widget.scale != null) 'scale': widget.scale,
+      if (widget.semanticLabel != null) 'semanticLabel': widget.semanticLabel,
+    };
+  }
+
+  static Map<String, dynamic> _toJsonSizedBox(SduiSizedBox widget) {
+    return {
+      'type': 'sized_box',
+      if (widget.width != null) 'width': widget.width,
+      if (widget.height != null) 'height': widget.height,
+      if (widget.child != null) 'child': toJson(widget.child!),
+    };
+  }
+
+  static Map<String, dynamic> _toJsonContainer(SduiContainer widget) {
+    return {
+      'type': 'container',
+      if (widget.child != null) 'child': toJson(widget.child!),
+      if (widget.padding != null) 'padding': _toJsonEdgeInsets(widget.padding!),
+      if (widget.margin != null) 'margin': _toJsonEdgeInsets(widget.margin!),
+      if (widget.decoration != null) 'decoration': _toJsonBoxDecoration(widget.decoration!),
+      if (widget.width != null) 'width': widget.width,
+      if (widget.height != null) 'height': widget.height,
+      if (widget.color != null) 'color': '#${widget.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.alignment != null) 'alignment': widget.alignment.toString(),
+      if (widget.constraints != null) 'constraints': _toJsonBoxConstraints(widget.constraints!),
+      if (widget.transform != null) 'transform': widget.transform.toString(),
+      if (widget.transformAlignment != null) 'transformAlignment': widget.transformAlignment.toString(),
+      if (widget.clipBehavior != null) 'clipBehavior': widget.clipBehavior.toString().split('.').last,
+    };
+  }
+
+  static Map<String, dynamic> _toJsonScaffold(SduiScaffold widget) {
+    return {
+      'type': 'scaffold',
+      if (widget.appBar != null) 'appBar': toJson(widget.appBar!),
+      if (widget.body != null) 'body': toJson(widget.body!),
+      if (widget.floatingActionButton != null) 'floatingActionButton': toJson(widget.floatingActionButton!),
+      if (widget.bottomNavigationBar != null) 'bottomNavigationBar': toJson(widget.bottomNavigationBar!),
+      if (widget.drawer != null) 'drawer': toJson(widget.drawer!),
+      if (widget.endDrawer != null) 'endDrawer': toJson(widget.endDrawer!),
+      if (widget.bottomSheet != null) 'bottomSheet': toJson(widget.bottomSheet!),
+      if (widget.backgroundColor != null) 'backgroundColor': '#${widget.backgroundColor!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.resizeToAvoidBottomInset != null) 'resizeToAvoidBottomInset': widget.resizeToAvoidBottomInset,
+      if (widget.primary != null) 'primary': widget.primary,
+      if (widget.floatingActionButtonLocation != null) 'floatingActionButtonLocation': widget.floatingActionButtonLocation.toString().split('.').last,
+      if (widget.extendBody != null) 'extendBody': widget.extendBody,
+      if (widget.extendBodyBehindAppBar != null) 'extendBodyBehindAppBar': widget.extendBodyBehindAppBar,
+      if (widget.drawerScrimColor != null) 'drawerScrimColor': '#${widget.drawerScrimColor!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.drawerEdgeDragWidth != null) 'drawerEdgeDragWidth': widget.drawerEdgeDragWidth,
+      if (widget.drawerEnableOpenDragGesture != null) 'drawerEnableOpenDragGesture': widget.drawerEnableOpenDragGesture,
+      if (widget.endDrawerEnableOpenDragGesture != null) 'endDrawerEnableOpenDragGesture': widget.endDrawerEnableOpenDragGesture,
+    };
+  }
+
+  static Map<String, dynamic> _toJsonSpacer(SduiSpacer widget) {
+    return {
+      'type': 'spacer',
+      'flex': widget.flex,
+    };
+  }
+
+  static Map<String, dynamic> _toJsonIcon(SduiIcon widget) {
+    return {
+      'type': 'icon',
+      if (widget.icon != null) 'icon': widget.icon!.codePoint,
+      if (widget.size != null) 'size': widget.size,
+      if (widget.color != null) 'color': '#${widget.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.semanticLabel != null) 'semanticLabel': widget.semanticLabel,
+      if (widget.textDirection != null) 'textDirection': widget.textDirection.toString().split('.').last,
+      if (widget.opacity != null) 'opacity': widget.opacity,
+      if (widget.applyTextScaling != null) 'applyTextScaling': widget.applyTextScaling,
+      if (widget.shadows != null) 'shadows': widget.shadows!.map((s) => s.toString()).toList(),
+    };
+  }
+
+  static Map<String, dynamic> _toJsonEdgeInsets(EdgeInsets edge) {
+    if (edge.left == edge.right && edge.left == edge.top && edge.left == edge.bottom) {
+      return {'all': edge.left};
+    }
+    return {
+      'left': edge.left,
+      'top': edge.top,
+      'right': edge.right,
+      'bottom': edge.bottom,
+    };
+  }
+
+  static Map<String, dynamic> _toJsonBoxDecoration(BoxDecoration decoration) {
+    return {
+      if (decoration.color != null) 'color': '#${decoration.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (decoration.borderRadius != null) 'borderRadius': decoration.borderRadius.toString(),
+      // Add more as needed
+    };
+  }
+
+  static Map<String, dynamic> _toJsonBoxConstraints(BoxConstraints constraints) {
+    return {
+      'minWidth': constraints.minWidth,
+      'maxWidth': constraints.maxWidth,
+      'minHeight': constraints.minHeight,
+      'maxHeight': constraints.maxHeight,
+    };
   }
 }

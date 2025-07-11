@@ -119,6 +119,22 @@ class SduiParser {
     String? fontFamily = data.hasFontFamily() ? data.fontFamily : null;
     TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
 
+    // Extract from style if present
+    double? fontSize = style?.fontSize;
+    FontWeight? fontWeight = style?.fontWeight;
+    Color? color = style?.color;
+    TextDecoration? decoration = style?.decoration;
+    if (data.hasTextStyle()) {
+      if (data.textStyle.hasFontSize()) fontSize = data.textStyle.fontSize;
+      if (data.textStyle.hasFontWeight()) fontWeight = _parseProtoFontWeight(data.textStyle.fontWeight);
+      if (data.textStyle.hasColor()) color = _parseProtoColor(data.textStyle.color);
+      if (data.textStyle.hasDecoration()) decoration = _parseProtoTextDecoration(data.textStyle.decoration);
+      if (data.textStyle.hasLetterSpacing()) letterSpacing = data.textStyle.letterSpacing;
+      if (data.textStyle.hasWordSpacing()) wordSpacing = data.textStyle.wordSpacing;
+      if (data.textStyle.hasHeight()) height = data.textStyle.height;
+      if (data.textStyle.hasFontFamily()) fontFamily = data.textStyle.fontFamily;
+    }
+
     return SduiText(
       text,
       style: style,
@@ -131,6 +147,10 @@ class SduiParser {
       height: height,
       fontFamily: fontFamily,
       textDirection: textDirection,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      decoration: decoration,
     );
   }
 
@@ -780,71 +800,6 @@ class SduiParser {
         return ImageRepeat.repeatY;
       case ImageRepeatProto.NO_REPEAT:
         return ImageRepeat.noRepeat;
-      default:
-        return null;
-    }
-  }
-
-  static BlendMode? _parseProtoBlendMode(BlendModeProto proto) {
-    switch (proto) {
-      case BlendModeProto.CLEAR:
-        return BlendMode.clear;
-      case BlendModeProto.SRC:
-        return BlendMode.src;
-      case BlendModeProto.DST:
-        return BlendMode.dst;
-      case BlendModeProto.SRC_OVER:
-        return BlendMode.srcOver;
-      case BlendModeProto.DST_OVER:
-        return BlendMode.dstOver;
-      case BlendModeProto.SRC_IN:
-        return BlendMode.srcIn;
-      case BlendModeProto.DST_IN:
-        return BlendMode.dstIn;
-      case BlendModeProto.SRC_OUT:
-        return BlendMode.srcOut;
-      case BlendModeProto.DST_OUT:
-        return BlendMode.dstOut;
-      case BlendModeProto.SRC_ATOP:
-        return BlendMode.srcATop;
-      case BlendModeProto.DST_ATOP:
-        return BlendMode.dstATop;
-      case BlendModeProto.XOR:
-        return BlendMode.xor;
-      case BlendModeProto.PLUS:
-        return BlendMode.plus;
-      case BlendModeProto.MODULATE:
-        return BlendMode.modulate;
-      case BlendModeProto.SCREEN:
-        return BlendMode.screen;
-      case BlendModeProto.OVERLAY:
-        return BlendMode.overlay;
-      case BlendModeProto.DARKEN:
-        return BlendMode.darken;
-      case BlendModeProto.LIGHTEN:
-        return BlendMode.lighten;
-      case BlendModeProto.COLOR_DODGE:
-        return BlendMode.colorDodge;
-      case BlendModeProto.COLOR_BURN:
-        return BlendMode.colorBurn;
-      case BlendModeProto.HARD_LIGHT:
-        return BlendMode.hardLight;
-      case BlendModeProto.SOFT_LIGHT:
-        return BlendMode.softLight;
-      case BlendModeProto.DIFFERENCE:
-        return BlendMode.difference;
-      case BlendModeProto.EXCLUSION:
-        return BlendMode.exclusion;
-      case BlendModeProto.MULTIPLY:
-        return BlendMode.multiply;
-      case BlendModeProto.HUE:
-        return BlendMode.hue;
-      case BlendModeProto.SATURATION:
-        return BlendMode.saturation;
-      case BlendModeProto.COLOR:
-        return BlendMode.color;
-      case BlendModeProto.LUMINOSITY:
-        return BlendMode.luminosity;
       default:
         return null;
     }
@@ -1812,5 +1767,845 @@ class SduiParser {
       'minHeight': constraints.minHeight,
       'maxHeight': constraints.maxHeight,
     };
+  }
+
+  static MainAxisAlignmentProto _mainAxisAlignmentToProto(MainAxisAlignment value) {
+    switch (value) {
+      case MainAxisAlignment.start:
+        return MainAxisAlignmentProto.MAIN_AXIS_START;
+      case MainAxisAlignment.end:
+        return MainAxisAlignmentProto.MAIN_AXIS_END;
+      case MainAxisAlignment.center:
+        return MainAxisAlignmentProto.MAIN_AXIS_CENTER;
+      case MainAxisAlignment.spaceBetween:
+        return MainAxisAlignmentProto.SPACE_BETWEEN;
+      case MainAxisAlignment.spaceAround:
+        return MainAxisAlignmentProto.SPACE_AROUND;
+      case MainAxisAlignment.spaceEvenly:
+        return MainAxisAlignmentProto.SPACE_EVENLY;
+      default:
+        return MainAxisAlignmentProto.MAIN_AXIS_START;
+    }
+  }
+
+  static CrossAxisAlignmentProto _crossAxisAlignmentToProto(CrossAxisAlignment value) {
+    switch (value) {
+      case CrossAxisAlignment.start:
+        return CrossAxisAlignmentProto.CROSS_AXIS_START;
+      case CrossAxisAlignment.end:
+        return CrossAxisAlignmentProto.CROSS_AXIS_END;
+      case CrossAxisAlignment.center:
+        return CrossAxisAlignmentProto.CROSS_AXIS_CENTER;
+      case CrossAxisAlignment.stretch:
+        return CrossAxisAlignmentProto.STRETCH;
+      case CrossAxisAlignment.baseline:
+        return CrossAxisAlignmentProto.BASELINE;
+      default:
+        return CrossAxisAlignmentProto.CROSS_AXIS_CENTER;
+    }
+  }
+
+  static MainAxisSizeProto _mainAxisSizeToProto(MainAxisSize value) {
+    switch (value) {
+      case MainAxisSize.min:
+        return MainAxisSizeProto.MIN;
+      case MainAxisSize.max:
+        return MainAxisSizeProto.MAX;
+      default:
+        return MainAxisSizeProto.MAX;
+    }
+  }
+
+  static TextDirectionProto _textDirectionToProto(TextDirection value) {
+    switch (value) {
+      case TextDirection.ltr:
+        return TextDirectionProto.LTR;
+      case TextDirection.rtl:
+        return TextDirectionProto.RTL;
+      default:
+        return TextDirectionProto.LTR;
+    }
+  }
+
+  static VerticalDirectionProto _verticalDirectionToProto(VerticalDirection value) {
+    switch (value) {
+      case VerticalDirection.up:
+        return VerticalDirectionProto.UP;
+      case VerticalDirection.down:
+        return VerticalDirectionProto.DOWN;
+      default:
+        return VerticalDirectionProto.DOWN;
+    }
+  }
+
+  static TextBaselineProto _textBaselineToProto(TextBaseline value) {
+    switch (value) {
+      case TextBaseline.alphabetic:
+        return TextBaselineProto.ALPHABETIC;
+      case TextBaseline.ideographic:
+        return TextBaselineProto.IDEOGRAPHIC;
+      default:
+        return TextBaselineProto.ALPHABETIC;
+    }
+  }
+
+  static BlendMode? _parseProtoBlendMode(BlendModeProto proto) {
+    switch (proto) {
+      case BlendModeProto.CLEAR:
+        return BlendMode.clear;
+      case BlendModeProto.SRC:
+        return BlendMode.src;
+      case BlendModeProto.DST:
+        return BlendMode.dst;
+      case BlendModeProto.SRC_OVER:
+        return BlendMode.srcOver;
+      case BlendModeProto.DST_OVER:
+        return BlendMode.dstOver;
+      case BlendModeProto.SRC_IN:
+        return BlendMode.srcIn;
+      case BlendModeProto.DST_IN:
+        return BlendMode.dstIn;
+      case BlendModeProto.SRC_OUT:
+        return BlendMode.srcOut;
+      case BlendModeProto.DST_OUT:
+        return BlendMode.dstOut;
+      case BlendModeProto.SRC_ATOP:
+        return BlendMode.srcATop;
+      case BlendModeProto.DST_ATOP:
+        return BlendMode.dstATop;
+      case BlendModeProto.XOR:
+        return BlendMode.xor;
+      case BlendModeProto.PLUS:
+        return BlendMode.plus;
+      case BlendModeProto.MODULATE:
+        return BlendMode.modulate;
+      case BlendModeProto.SCREEN:
+        return BlendMode.screen;
+      case BlendModeProto.OVERLAY:
+        return BlendMode.overlay;
+      case BlendModeProto.DARKEN:
+        return BlendMode.darken;
+      case BlendModeProto.LIGHTEN:
+        return BlendMode.lighten;
+      case BlendModeProto.COLOR_DODGE:
+        return BlendMode.colorDodge;
+      case BlendModeProto.COLOR_BURN:
+        return BlendMode.colorBurn;
+      case BlendModeProto.HARD_LIGHT:
+        return BlendMode.hardLight;
+      case BlendModeProto.SOFT_LIGHT:
+        return BlendMode.softLight;
+      case BlendModeProto.DIFFERENCE:
+        return BlendMode.difference;
+      case BlendModeProto.EXCLUSION:
+        return BlendMode.exclusion;
+      case BlendModeProto.MULTIPLY:
+        return BlendMode.multiply;
+      case BlendModeProto.HUE:
+        return BlendMode.hue;
+      case BlendModeProto.SATURATION:
+        return BlendMode.saturation;
+      case BlendModeProto.COLOR:
+        return BlendMode.color;
+      case BlendModeProto.LUMINOSITY:
+        return BlendMode.luminosity;
+      default:
+        return null;
+    }
+  }
+
+  static SduiWidgetData columnToProto(SduiColumn col) {
+    final data = SduiWidgetData()..type = WidgetType.COLUMN;
+    data.children.addAll(col.children.map((c) => SduiParser.toProto(c)));
+    if (col.mainAxisAlignment != null) {
+      data.mainAxisAlignment = _mainAxisAlignmentToProto(col.mainAxisAlignment!);
+    }
+    if (col.crossAxisAlignment != null) {
+      data.crossAxisAlignment = _crossAxisAlignmentToProto(col.crossAxisAlignment!);
+    }
+    if (col.mainAxisSize != null) {
+      data.mainAxisSize = _mainAxisSizeToProto(col.mainAxisSize!);
+    }
+    if (col.textDirection != null) {
+      data.textDirection = _textDirectionToProto(col.textDirection!);
+    }
+    if (col.verticalDirection != null) {
+      data.verticalDirection = _verticalDirectionToProto(col.verticalDirection!);
+    }
+    if (col.textBaseline != null) {
+      data.textBaseline = _textBaselineToProto(col.textBaseline!);
+    }
+    return data;
+  }
+
+  static SduiColumn columnFromProto(SduiWidgetData data) {
+    return SduiColumn(
+      children: data.children.map((c) => SduiParser.parseProto(c)).toList(),
+      mainAxisAlignment: _parseProtoMainAxisAlignment(data.mainAxisAlignment),
+      crossAxisAlignment: _parseProtoCrossAxisAlignment(data.crossAxisAlignment),
+      mainAxisSize: _parseProtoMainAxisSize(data.mainAxisSize),
+      textDirection: _parseProtoTextDirection(data.textDirection),
+      verticalDirection: _parseProtoVerticalDirection(data.verticalDirection),
+      textBaseline: _parseProtoTextBaseline(data.textBaseline),
+    );
+  }
+
+  static SduiWidgetData toProto(SduiWidget widget) {
+    if (widget is SduiColumn) {
+      return columnToProto(widget);
+    } else if (widget is SduiRow) {
+      return rowToProto(widget);
+    } else if (widget is SduiText) {
+      return textToProto(widget);
+    } else if (widget is SduiImage) {
+      return imageToProto(widget);
+    } else if (widget is SduiSizedBox) {
+      return sizedBoxToProto(widget);
+    } else if (widget is SduiContainer) {
+      return containerToProto(widget);
+    } else if (widget is SduiScaffold) {
+      return scaffoldToProto(widget);
+    } else if (widget is SduiSpacer) {
+      return spacerToProto(widget);
+    } else if (widget is SduiIcon) {
+      return iconToProto(widget);
+    }
+    throw UnimplementedError('toProto not implemented for [38;5;9m${widget.runtimeType}[0m');
+  }
+
+  static SduiWidget fromProto(SduiWidgetData data) {
+    switch (data.type) {
+      case WidgetType.COLUMN:
+        return columnFromProto(data);
+      case WidgetType.ROW:
+        return rowFromProto(data);
+      case WidgetType.TEXT:
+        return textFromProto(data);
+      case WidgetType.IMAGE:
+        return imageFromProto(data);
+      case WidgetType.SIZED_BOX:
+        return sizedBoxFromProto(data);
+      case WidgetType.CONTAINER:
+        return containerFromProto(data);
+      case WidgetType.SCAFFOLD:
+        return scaffoldFromProto(data);
+      case WidgetType.SPACER:
+        return spacerFromProto(data);
+      case WidgetType.ICON:
+        return iconFromProto(data);
+      default:
+        return SduiContainer();
+    }
+  }
+
+  // --- SduiRow ---
+  static SduiWidgetData rowToProto(SduiRow row) {
+    final data = SduiWidgetData()..type = WidgetType.ROW;
+    data.children.addAll(row.children.map((c) => SduiParser.toProto(c)));
+    if (row.mainAxisAlignment != null) data.mainAxisAlignment = _mainAxisAlignmentToProto(row.mainAxisAlignment!);
+    if (row.crossAxisAlignment != null) data.crossAxisAlignment = _crossAxisAlignmentToProto(row.crossAxisAlignment!);
+    if (row.mainAxisSize != null) data.mainAxisSize = _mainAxisSizeToProto(row.mainAxisSize!);
+    if (row.textDirection != null) data.textDirection = _textDirectionToProto(row.textDirection!);
+    if (row.verticalDirection != null) data.verticalDirection = _verticalDirectionToProto(row.verticalDirection!);
+    if (row.textBaseline != null) data.textBaseline = _textBaselineToProto(row.textBaseline!);
+    return data;
+  }
+
+  static SduiRow rowFromProto(SduiWidgetData data) {
+    List<SduiWidget> children = data.children.map((c) => SduiParser.parseProto(c)).toList();
+    MainAxisAlignment mainAxisAlignment = _parseProtoMainAxisAlignment(data.mainAxisAlignment) ?? MainAxisAlignment.start;
+    CrossAxisAlignment crossAxisAlignment = _parseProtoCrossAxisAlignment(data.crossAxisAlignment) ?? CrossAxisAlignment.center;
+    MainAxisSize mainAxisSize = _parseProtoMainAxisSize(data.mainAxisSize) ?? MainAxisSize.max;
+    TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
+    VerticalDirection verticalDirection = _parseProtoVerticalDirection(data.verticalDirection) ?? VerticalDirection.down;
+    TextBaseline? textBaseline = _parseProtoTextBaseline(data.textBaseline);
+    return SduiRow(
+      children: children,
+      mainAxisAlignment: mainAxisAlignment,
+      crossAxisAlignment: crossAxisAlignment,
+      mainAxisSize: mainAxisSize,
+      textDirection: textDirection,
+      verticalDirection: verticalDirection,
+      textBaseline: textBaseline,
+    );
+  }
+
+  // --- SduiText ---
+  static SduiWidgetData textToProto(SduiText text) {
+    final data = SduiWidgetData()..type = WidgetType.TEXT;
+    data.stringAttributes['text'] = text.text;
+    if (text.style != null) data.textStyle = _textStyleToProto(text.style!);
+    if (text.textAlign != null) data.textAlign = _textAlignToProto(text.textAlign!);
+    if (text.overflow != null) data.overflow = _textOverflowToProto(text.overflow!);
+    if (text.maxLines != null) data.maxLines = text.maxLines!;
+    if (text.softWrap != null) data.softWrap = text.softWrap!;
+    if (text.letterSpacing != null) data.letterSpacing = text.letterSpacing!;
+    if (text.wordSpacing != null) data.wordSpacing = text.wordSpacing!;
+    if (text.height != null) data.height = text.height!;
+    if (text.fontFamily != null) data.fontFamily = text.fontFamily!;
+    if (text.textDirection != null) data.textDirection = _textDirectionToProto(text.textDirection!);
+    // Individual style overrides
+    if (text.decoration != null) data.textStyle.decoration = _textDecorationToProto(text.decoration!);
+    if (text.fontSize != null) data.textStyle.fontSize = text.fontSize!;
+    if (text.fontWeight != null) data.textStyle.fontWeight = text.fontWeight.toString().split('.').last;
+    if (text.color != null) data.textStyle.color = _colorToProto(text.color!);
+    return data;
+  }
+
+  static SduiText textFromProto(SduiWidgetData data) {
+    String text = data.stringAttributes['text'] ?? '';
+    TextStyle? style = data.hasTextStyle() ? _parseProtoTextStyle(data.textStyle) : null;
+    TextAlign? textAlign = _parseProtoTextAlign(data.textAlign);
+    TextOverflow? overflow = _parseProtoTextOverflow(data.overflow);
+    int? maxLines = data.hasMaxLines() ? data.maxLines : null;
+    bool? softWrap = data.hasSoftWrap() ? data.softWrap : null;
+    double? letterSpacing = data.hasLetterSpacing() ? data.letterSpacing : null;
+    double? wordSpacing = data.hasWordSpacing() ? data.wordSpacing : null;
+    double? height = data.hasHeight() ? data.height : null;
+    String? fontFamily = data.hasFontFamily() ? data.fontFamily : null;
+    TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
+    // Individual style overrides
+    TextDecoration? decoration = data.hasTextStyle() && data.textStyle.hasDecoration() ? _parseProtoTextDecoration(data.textStyle.decoration) : null;
+    double? fontSize = data.hasTextStyle() && data.textStyle.hasFontSize() ? data.textStyle.fontSize : null;
+    FontWeight? fontWeight = data.hasTextStyle() && data.textStyle.fontWeight.isNotEmpty ? _parseProtoFontWeight(data.textStyle.fontWeight) : null;
+    Color? color = data.hasTextStyle() && data.textStyle.hasColor() ? _parseProtoColor(data.textStyle.color) : null;
+    return SduiText(
+      text,
+      style: style,
+      textAlign: textAlign,
+      overflow: overflow,
+      maxLines: maxLines,
+      decoration: decoration,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      color: color,
+      softWrap: softWrap,
+      letterSpacing: letterSpacing,
+      wordSpacing: wordSpacing,
+      height: height,
+      fontFamily: fontFamily,
+      textDirection: textDirection,
+    );
+  }
+
+  // --- SduiImage ---
+  static SduiWidgetData imageToProto(SduiImage image) {
+    final data = SduiWidgetData()..type = WidgetType.IMAGE;
+    data.stringAttributes['src'] = image.src;
+    if (image.width != null) data.doubleAttributes['width'] = image.width!;
+    if (image.height != null) data.doubleAttributes['height'] = image.height!;
+    if (image.fit != null) data.stringAttributes['fit'] = image.fit.toString().split('.').last;
+    if (image.alignment != null) data.alignment = _alignmentToProto(image.alignment!);
+    if (image.repeat != null) data.repeat = _imageRepeatToProto(image.repeat!);
+    if (image.color != null) data.color = _colorToProto(image.color!);
+    if (image.colorBlendMode != null) data.colorBlendMode = _blendModeToProto(image.colorBlendMode!);
+    if (image.centerSlice != null) data.centerSlice = _rectToProto(image.centerSlice!);
+    if (image.matchTextDirection != null) data.matchTextDirection = image.matchTextDirection!;
+    if (image.gaplessPlayback != null) data.gaplessPlayback = image.gaplessPlayback!;
+    if (image.filterQuality != null) data.filterQuality = _filterQualityToProto(image.filterQuality!);
+    if (image.cacheWidth != null) data.cacheWidth = image.cacheWidth!;
+    if (image.cacheHeight != null) data.cacheHeight = image.cacheHeight!;
+    if (image.scale != null) data.scale = image.scale!;
+    if (image.semanticLabel != null) data.semanticLabel = image.semanticLabel!;
+    // errorWidget and loadingWidget are not mapped (Widget, not SduiWidget)
+    return data;
+  }
+
+  static SduiImage imageFromProto(SduiWidgetData data) {
+    String src = data.stringAttributes['src'] ?? '';
+    double? width = data.doubleAttributes['width'];
+    double? height = data.doubleAttributes['height'];
+    BoxFit? fit = _parseProtoBoxFit(data.stringAttributes['fit']);
+    Alignment alignment = _parseProtoAlignment(data.alignment) ?? Alignment.center;
+    ImageRepeat repeat = _parseProtoImageRepeat(data.repeat) ?? ImageRepeat.noRepeat;
+    Color? color = data.hasColor() ? _parseProtoColor(data.color) : null;
+    BlendMode? colorBlendMode = _parseProtoBlendMode(data.colorBlendMode);
+    Rect? centerSlice = data.hasCenterSlice() ? _parseProtoRect(data.centerSlice) : null;
+    bool matchTextDirection = data.hasMatchTextDirection() ? data.matchTextDirection : false;
+    bool gaplessPlayback = data.hasGaplessPlayback() ? data.gaplessPlayback : false;
+    FilterQuality filterQuality = _parseProtoFilterQuality(data.filterQuality) ?? FilterQuality.low;
+    int? cacheWidth = data.hasCacheWidth() ? data.cacheWidth : null;
+    int? cacheHeight = data.hasCacheHeight() ? data.cacheHeight : null;
+    double scale = data.hasScale() ? data.scale : 1.0;
+    String? semanticLabel = data.hasSemanticLabel() ? data.semanticLabel : null;
+    // errorWidget and loadingWidget are not mapped (Widget, not SduiWidget)
+    return SduiImage(
+      src,
+      width: width,
+      height: height,
+      fit: fit,
+      alignment: alignment,
+      repeat: repeat,
+      color: color,
+      colorBlendMode: colorBlendMode,
+      centerSlice: centerSlice,
+      matchTextDirection: matchTextDirection,
+      gaplessPlayback: gaplessPlayback,
+      filterQuality: filterQuality,
+      cacheWidth: cacheWidth,
+      cacheHeight: cacheHeight,
+      scale: scale,
+      semanticLabel: semanticLabel,
+    );
+  }
+
+  static ImageRepeatProto _imageRepeatToProto(ImageRepeat repeat) {
+    switch (repeat) {
+      case ImageRepeat.repeat:
+        return ImageRepeatProto.REPEAT;
+      case ImageRepeat.repeatX:
+        return ImageRepeatProto.REPEAT_X;
+      case ImageRepeat.repeatY:
+        return ImageRepeatProto.REPEAT_Y;
+      case ImageRepeat.noRepeat:
+        return ImageRepeatProto.NO_REPEAT;
+    }
+  }
+
+  static BlendModeProto _blendModeToProto(BlendMode mode) {
+    switch (mode) {
+      case BlendMode.clear:
+        return BlendModeProto.CLEAR;
+      case BlendMode.src:
+        return BlendModeProto.SRC;
+      case BlendMode.dst:
+        return BlendModeProto.DST;
+      case BlendMode.srcOver:
+        return BlendModeProto.SRC_OVER;
+      case BlendMode.dstOver:
+        return BlendModeProto.DST_OVER;
+      case BlendMode.srcIn:
+        return BlendModeProto.SRC_IN;
+      case BlendMode.dstIn:
+        return BlendModeProto.DST_IN;
+      case BlendMode.srcOut:
+        return BlendModeProto.SRC_OUT;
+      case BlendMode.dstOut:
+        return BlendModeProto.DST_OUT;
+      case BlendMode.srcATop:
+        return BlendModeProto.SRC_ATOP;
+      case BlendMode.dstATop:
+        return BlendModeProto.DST_ATOP;
+      case BlendMode.xor:
+        return BlendModeProto.XOR;
+      case BlendMode.plus:
+        return BlendModeProto.PLUS;
+      case BlendMode.modulate:
+        return BlendModeProto.MODULATE;
+      case BlendMode.screen:
+        return BlendModeProto.SCREEN;
+      case BlendMode.overlay:
+        return BlendModeProto.OVERLAY;
+      case BlendMode.darken:
+        return BlendModeProto.DARKEN;
+      case BlendMode.lighten:
+        return BlendModeProto.LIGHTEN;
+      case BlendMode.colorDodge:
+        return BlendModeProto.COLOR_DODGE;
+      case BlendMode.colorBurn:
+        return BlendModeProto.COLOR_BURN;
+      case BlendMode.hardLight:
+        return BlendModeProto.HARD_LIGHT;
+      case BlendMode.softLight:
+        return BlendModeProto.SOFT_LIGHT;
+      case BlendMode.difference:
+        return BlendModeProto.DIFFERENCE;
+      case BlendMode.exclusion:
+        return BlendModeProto.EXCLUSION;
+      case BlendMode.multiply:
+        return BlendModeProto.MULTIPLY;
+      case BlendMode.hue:
+        return BlendModeProto.HUE;
+      case BlendMode.saturation:
+        return BlendModeProto.SATURATION;
+      case BlendMode.color:
+        return BlendModeProto.COLOR;
+      case BlendMode.luminosity:
+        return BlendModeProto.LUMINOSITY;
+    }
+  }
+
+  static RectData _rectToProto(Rect rect) {
+    return RectData(
+      left: rect.left,
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
+    );
+  }
+
+  static FilterQualityProto _filterQualityToProto(FilterQuality fq) {
+    switch (fq) {
+      case FilterQuality.none:
+        return FilterQualityProto.NONE_FQ;
+      case FilterQuality.low:
+        return FilterQualityProto.LOW;
+      case FilterQuality.medium:
+        return FilterQualityProto.MEDIUM;
+      case FilterQuality.high:
+        return FilterQualityProto.HIGH;
+    }
+  }
+
+  // --- SduiSizedBox ---
+  static SduiWidgetData sizedBoxToProto(SduiSizedBox box) {
+    final data = SduiWidgetData()..type = WidgetType.SIZED_BOX;
+    if (box.width != null) data.doubleAttributes['width'] = box.width!;
+    if (box.height != null) data.doubleAttributes['height'] = box.height!;
+    if (box.child != null) data.child = toProto(box.child!);
+    return data;
+  }
+
+  static SduiSizedBox sizedBoxFromProto(SduiWidgetData data) {
+    double? width = data.doubleAttributes['width'];
+    double? height = data.doubleAttributes['height'];
+    SduiWidget? child = data.hasChild() ? SduiParser.parseProto(data.child) : null;
+    return SduiSizedBox(width: width, height: height, child: child);
+  }
+
+  // --- SduiContainer ---
+  static SduiWidgetData containerToProto(SduiContainer c) {
+    final data = SduiWidgetData()..type = WidgetType.CONTAINER;
+    if (c.child != null) data.child = toProto(c.child!);
+    if (c.padding != null) data.padding = _edgeInsetsToProto(c.padding!);
+    if (c.margin != null) data.margin = _edgeInsetsToProto(c.margin!);
+    if (c.decoration != null) data.boxDecoration = _boxDecorationToProto(c.decoration!);
+    if (c.width != null) data.doubleAttributes['width'] = c.width!;
+    if (c.height != null) data.doubleAttributes['height'] = c.height!;
+    // Only set color if decoration is null
+    if (c.decoration == null && c.color != null) data.color = _colorToProto(c.color!);
+    if (c.alignment != null) data.alignment = _alignmentToProto(c.alignment!);
+    if (c.constraints != null) data.constraints = _boxConstraintsToProto(c.constraints!);
+    if (c.transform != null) data.transform = _matrix4ToProto(c.transform!);
+    if (c.transformAlignment != null) data.transformAlignment = _alignmentGeometryToProto(c.transformAlignment!);
+    if (c.clipBehavior != null && c.clipBehavior != Clip.none) data.clipBehavior = _clipToProto(c.clipBehavior!);
+    return data;
+  }
+
+  static SduiContainer containerFromProto(SduiWidgetData data) {
+    SduiWidget? child = data.hasChild() ? SduiParser.parseProto(data.child) : null;
+    EdgeInsets? padding = data.hasPadding() ? _parseProtoEdgeInsets(data.padding) : null;
+    EdgeInsets? margin = data.hasMargin() ? _parseProtoEdgeInsets(data.margin) : null;
+    BoxDecoration? decoration = data.hasBoxDecoration() ? _parseProtoBoxDecoration(data.boxDecoration) : null;
+    double? width = data.doubleAttributes['width'];
+    double? height = data.doubleAttributes['height'];
+    // Only use color if decoration is null
+    Color? color = (decoration == null && data.hasColor()) ? _parseProtoColor(data.color) : null;
+    Alignment? alignment = _parseProtoAlignment(data.alignment);
+    BoxConstraints? constraints = data.hasConstraints() ? _parseProtoBoxConstraints(data.constraints) : null;
+    Matrix4? transform = data.hasTransform() ? _parseProtoTransform(data.transform) : null;
+    AlignmentGeometry? transformAlignment = data.hasTransformAlignment() ? _parseProtoAlignmentGeometry(data.transformAlignment) : null;
+    Clip? clipBehavior = data.hasClipBehavior() ? _parseProtoClip(data.clipBehavior) : Clip.none;
+    return SduiContainer(
+      child: child,
+      padding: padding,
+      margin: margin,
+      decoration: decoration,
+      width: width,
+      height: height,
+      color: color,
+      alignment: alignment,
+      constraints: constraints,
+      transform: transform,
+      transformAlignment: transformAlignment,
+      clipBehavior: clipBehavior,
+    );
+  }
+
+  static EdgeInsetsData _edgeInsetsToProto(EdgeInsets edge) {
+    final data = EdgeInsetsData();
+    if (edge.left == edge.right && edge.left == edge.top && edge.left == edge.bottom) {
+      data.all = edge.left;
+    } else {
+      data.left = edge.left;
+      data.top = edge.top;
+      data.right = edge.right;
+      data.bottom = edge.bottom;
+    }
+    return data;
+  }
+
+  static BoxDecorationData _boxDecorationToProto(BoxDecoration decoration) {
+    final data = BoxDecorationData();
+    if (decoration.color != null) data.color = _colorToProto(decoration.color!);
+    if (decoration.borderRadius != null && decoration.borderRadius is BorderRadius) {
+      data.borderRadius = _borderRadiusToProto(decoration.borderRadius as BorderRadius);
+    }
+    // Add more as needed
+    return data;
+  }
+
+  static BorderRadiusData _borderRadiusToProto(BorderRadius borderRadius) {
+    final data = BorderRadiusData();
+    // Only handle BorderRadius.all and BorderRadius.only for now
+    if (borderRadius.topLeft == borderRadius.topRight &&
+        borderRadius.topLeft == borderRadius.bottomLeft &&
+        borderRadius.topLeft == borderRadius.bottomRight) {
+      data.all = borderRadius.topLeft.x;
+    } else {
+      data.topLeft = borderRadius.topLeft.x;
+      data.topRight = borderRadius.topRight.x;
+      data.bottomLeft = borderRadius.bottomLeft.x;
+      data.bottomRight = borderRadius.bottomRight.x;
+    }
+    return data;
+  }
+
+  static AlignmentData _alignmentToProto(Alignment alignment) {
+    final data = AlignmentData();
+    data.xy = XYAlignment(x: alignment.x, y: alignment.y);
+    return data;
+  }
+
+  static BoxConstraintsData _boxConstraintsToProto(BoxConstraints constraints) {
+    final data = BoxConstraintsData();
+    data.minWidth = constraints.minWidth;
+    data.maxWidth = constraints.maxWidth;
+    data.minHeight = constraints.minHeight;
+    data.maxHeight = constraints.maxHeight;
+    return data;
+  }
+
+  static TransformData _matrix4ToProto(Matrix4 matrix) {
+    final data = TransformData();
+    data.type = TransformData_TransformType.MATRIX_4X4;
+    data.matrixValues.addAll(matrix.storage);
+    return data;
+  }
+
+  static AlignmentData _alignmentGeometryToProto(AlignmentGeometry alignment) {
+    // For now, only handle Alignment
+    if (alignment is Alignment) {
+      return _alignmentToProto(alignment);
+    }
+    // Fallback: center
+    return AlignmentData()..predefined = AlignmentData_PredefinedAlignment.CENTER_ALIGN;
+  }
+
+  static ClipProto _clipToProto(Clip clip) {
+    switch (clip) {
+      case Clip.none:
+        return ClipProto.CLIP_NONE;
+      case Clip.hardEdge:
+        return ClipProto.HARD_EDGE;
+      case Clip.antiAlias:
+        return ClipProto.ANTI_ALIAS;
+      case Clip.antiAliasWithSaveLayer:
+        return ClipProto.ANTI_ALIAS_WITH_SAVE_LAYER;
+    }
+  }
+
+  // --- SduiScaffold ---
+  static SduiWidgetData scaffoldToProto(SduiScaffold s) {
+    final data = SduiWidgetData()..type = WidgetType.SCAFFOLD;
+    if (s.appBar != null) data.appBar = toProto(s.appBar!);
+    if (s.body != null) data.body = toProto(s.body!);
+    if (s.floatingActionButton != null) data.floatingActionButton = toProto(s.floatingActionButton!);
+    if (s.bottomNavigationBar != null) data.bottomNavigationBar = toProto(s.bottomNavigationBar!);
+    if (s.drawer != null) data.drawer = toProto(s.drawer!);
+    if (s.endDrawer != null) data.endDrawer = toProto(s.endDrawer!);
+    if (s.bottomSheet != null) data.bottomSheet = toProto(s.bottomSheet!);
+    if (s.backgroundColor != null) data.backgroundColor = _colorToProto(s.backgroundColor!);
+    if (s.resizeToAvoidBottomInset != null) data.resizeToAvoidBottomInset = s.resizeToAvoidBottomInset!;
+    if (s.primary != null) data.primary = s.primary!;
+    if (s.floatingActionButtonLocation != null) data.floatingActionButtonLocation = _fabLocationToProto(s.floatingActionButtonLocation!);
+    if (s.extendBody != null) data.extendBody = s.extendBody!;
+    if (s.extendBodyBehindAppBar != null) data.extendBodyBehindAppBar = s.extendBodyBehindAppBar!;
+    if (s.drawerScrimColor != null) data.drawerScrimColor = _colorToProto(s.drawerScrimColor!);
+    if (s.drawerEdgeDragWidth != null) data.drawerEdgeDragWidth = s.drawerEdgeDragWidth!;
+    if (s.drawerEnableOpenDragGesture != null) data.drawerEnableOpenDragGesture = s.drawerEnableOpenDragGesture!;
+    if (s.endDrawerEnableOpenDragGesture != null) data.endDrawerEnableOpenDragGesture = s.endDrawerEnableOpenDragGesture!;
+    return data;
+  }
+
+  static SduiScaffold scaffoldFromProto(SduiWidgetData data) {
+    SduiWidget? appBar = data.hasAppBar() ? SduiParser.parseProto(data.appBar) : null;
+    SduiWidget? body = data.hasBody() ? SduiParser.parseProto(data.body) : null;
+    SduiWidget? floatingActionButton = data.hasFloatingActionButton() ? SduiParser.parseProto(data.floatingActionButton) : null;
+    SduiWidget? bottomNavigationBar = data.hasBottomNavigationBar() ? SduiParser.parseProto(data.bottomNavigationBar) : null;
+    SduiWidget? drawer = data.hasDrawer() ? SduiParser.parseProto(data.drawer) : null;
+    SduiWidget? endDrawer = data.hasEndDrawer() ? SduiParser.parseProto(data.endDrawer) : null;
+    SduiWidget? bottomSheet = data.hasBottomSheet() ? SduiParser.parseProto(data.bottomSheet) : null;
+    Color? backgroundColor = data.hasBackgroundColor() ? _parseProtoColor(data.backgroundColor) : null;
+    bool? resizeToAvoidBottomInset = data.hasResizeToAvoidBottomInset() ? data.resizeToAvoidBottomInset : null;
+    bool primary = data.hasPrimary() ? data.primary : true;
+    FloatingActionButtonLocation? floatingActionButtonLocation = data.hasFloatingActionButtonLocation() ? _parseProtoFabLocation(data.floatingActionButtonLocation) : null;
+    bool extendBody = data.hasExtendBody() ? data.extendBody : false;
+    bool extendBodyBehindAppBar = data.hasExtendBodyBehindAppBar() ? data.extendBodyBehindAppBar : false;
+    Color? drawerScrimColor = data.hasDrawerScrimColor() ? _parseProtoColor(data.drawerScrimColor) : null;
+    double? drawerEdgeDragWidth = data.hasDrawerEdgeDragWidth() ? data.drawerEdgeDragWidth : null;
+    bool drawerEnableOpenDragGesture = data.hasDrawerEnableOpenDragGesture() ? data.drawerEnableOpenDragGesture : true;
+    bool endDrawerEnableOpenDragGesture = data.hasEndDrawerEnableOpenDragGesture() ? data.endDrawerEnableOpenDragGesture : true;
+    return SduiScaffold(
+      appBar: appBar,
+      body: body,
+      floatingActionButton: floatingActionButton,
+      bottomNavigationBar: bottomNavigationBar,
+      drawer: drawer,
+      endDrawer: endDrawer,
+      bottomSheet: bottomSheet,
+      backgroundColor: backgroundColor,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      primary: primary,
+      floatingActionButtonLocation: floatingActionButtonLocation,
+      extendBody: extendBody,
+      extendBodyBehindAppBar: extendBodyBehindAppBar,
+      drawerScrimColor: drawerScrimColor,
+      drawerEdgeDragWidth: drawerEdgeDragWidth,
+      drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+      endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
+    );
+  }
+
+  static FloatingActionButtonLocationProto _fabLocationToProto(FloatingActionButtonLocation loc) {
+    // Use the same mapping as _parseProtoFabLocation, but reversed
+    if (loc == FloatingActionButtonLocation.startTop) return FloatingActionButtonLocationProto.FAB_START_TOP;
+    if (loc == FloatingActionButtonLocation.startFloat) return FloatingActionButtonLocationProto.FAB_START_FLOAT;
+    if (loc == FloatingActionButtonLocation.centerTop) return FloatingActionButtonLocationProto.FAB_CENTER_TOP;
+    if (loc == FloatingActionButtonLocation.centerFloat) return FloatingActionButtonLocationProto.FAB_CENTER_FLOAT;
+    if (loc == FloatingActionButtonLocation.endTop) return FloatingActionButtonLocationProto.FAB_END_TOP;
+    if (loc == FloatingActionButtonLocation.endFloat) return FloatingActionButtonLocationProto.FAB_END_FLOAT;
+    if (loc == FloatingActionButtonLocation.miniCenterTop) return FloatingActionButtonLocationProto.FAB_MINI_CENTER_TOP;
+    if (loc == FloatingActionButtonLocation.miniCenterFloat) return FloatingActionButtonLocationProto.FAB_MINI_CENTER_FLOAT;
+    if (loc == FloatingActionButtonLocation.miniStartTop) return FloatingActionButtonLocationProto.FAB_MINI_START_TOP;
+    if (loc == FloatingActionButtonLocation.miniStartFloat) return FloatingActionButtonLocationProto.FAB_MINI_START_FLOAT;
+    if (loc == FloatingActionButtonLocation.miniEndTop) return FloatingActionButtonLocationProto.FAB_MINI_END_TOP;
+    if (loc == FloatingActionButtonLocation.miniEndFloat) return FloatingActionButtonLocationProto.FAB_MINI_END_FLOAT;
+    return FloatingActionButtonLocationProto.FAB_CENTER_FLOAT;
+  }
+
+  // --- SduiSpacer ---
+  static SduiWidgetData spacerToProto(SduiSpacer s) {
+    final data = SduiWidgetData()..type = WidgetType.SPACER;
+    data.intAttributes['flex'] = s.flex;
+    return data;
+  }
+
+  static SduiSpacer spacerFromProto(SduiWidgetData data) {
+    int flex = data.intAttributes['flex'] ?? 1;
+    return SduiSpacer(flex: flex);
+  }
+
+  // --- SduiIcon ---
+  static SduiWidgetData iconToProto(SduiIcon icon) {
+    final data = SduiWidgetData()..type = WidgetType.ICON;
+    if (icon.icon != null) {
+      data.icon = IconDataMessage()
+        ..codePoint = icon.icon!.codePoint
+        ..fontFamily = icon.icon!.fontFamily ?? 'MaterialIcons';
+    }
+    if (icon.size != null) data.icon.size = icon.size!;
+    if (icon.color != null) data.icon.color = _colorToProto(icon.color!);
+    if (icon.semanticLabel != null) data.semanticLabel = icon.semanticLabel!;
+    if (icon.textDirection != null) data.textDirection = _textDirectionToProto(icon.textDirection!);
+    if (icon.opacity != null) data.opacity = icon.opacity!;
+    if (icon.applyTextScaling != null) data.applyTextScaling = icon.applyTextScaling!;
+    if (icon.shadows != null) data.shadows.addAll(icon.shadows!.map(_shadowToProto));
+    return data;
+  }
+
+  static SduiIcon iconFromProto(SduiWidgetData data) {
+    IconData? iconData = data.hasIcon() ? _parseProtoIconData(data.icon) : null;
+    double? size = data.icon.size;
+    Color? color = data.icon.hasColor() ? _parseProtoColor(data.icon.color) : null;
+    String? semanticLabel = data.hasSemanticLabel() ? data.semanticLabel : null;
+    TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
+    double? opacity = data.hasOpacity() ? data.opacity : null;
+    bool? applyTextScaling = data.hasApplyTextScaling() ? data.applyTextScaling : null;
+    List<Shadow>? shadows = data.shadows.isNotEmpty ? data.shadows.map((s) => _parseProtoShadow(s)).toList() : null;
+    return SduiIcon(
+      icon: iconData,
+      size: size,
+      color: color,
+      semanticLabel: semanticLabel,
+      textDirection: textDirection,
+      opacity: opacity,
+      applyTextScaling: applyTextScaling,
+      shadows: shadows,
+    );
+  }
+
+  static ShadowData _shadowToProto(Shadow shadow) {
+    final data = ShadowData();
+    data.color = _colorToProto(shadow.color);
+    data.offsetX = shadow.offset.dx;
+    data.offsetY = shadow.offset.dy;
+    data.blurRadius = shadow.blurRadius;
+    return data;
+  }
+
+  static TextStyleData _textStyleToProto(TextStyle style) {
+    final data = TextStyleData();
+    if (style.color != null) data.color = _colorToProto(style.color!);
+    if (style.fontSize != null) data.fontSize = style.fontSize!;
+    if (style.fontWeight != null) data.fontWeight = style.fontWeight.toString().split('.').last;
+    if (style.decoration != null) data.decoration = _textDecorationToProto(style.decoration!);
+    if (style.letterSpacing != null) data.letterSpacing = style.letterSpacing!;
+    if (style.wordSpacing != null) data.wordSpacing = style.wordSpacing!;
+    if (style.height != null) data.height = style.height!;
+    if (style.fontFamily != null) data.fontFamily = style.fontFamily!;
+    if (style.fontStyle != null) data.fontStyle = _fontStyleToProto(style.fontStyle!);
+    return data;
+  }
+
+  static TextAlignProto _textAlignToProto(TextAlign align) {
+    switch (align) {
+      case TextAlign.left:
+        return TextAlignProto.LEFT;
+      case TextAlign.right:
+        return TextAlignProto.RIGHT;
+      case TextAlign.center:
+        return TextAlignProto.TEXT_ALIGN_CENTER;
+      case TextAlign.justify:
+        return TextAlignProto.JUSTIFY;
+      case TextAlign.start:
+        return TextAlignProto.TEXT_ALIGN_START;
+      case TextAlign.end:
+        return TextAlignProto.TEXT_ALIGN_END;
+      default:
+        return TextAlignProto.LEFT;
+    }
+  }
+
+  static TextOverflowProto _textOverflowToProto(TextOverflow overflow) {
+    switch (overflow) {
+      case TextOverflow.clip:
+        return TextOverflowProto.CLIP;
+      case TextOverflow.ellipsis:
+        return TextOverflowProto.ELLIPSIS;
+      case TextOverflow.fade:
+        return TextOverflowProto.FADE;
+      case TextOverflow.visible:
+        return TextOverflowProto.VISIBLE;
+      default:
+        return TextOverflowProto.CLIP;
+    }
+  }
+
+  static ColorData _colorToProto(Color color) {
+    return ColorData()
+      ..alpha = color.alpha
+      ..red = color.red
+      ..green = color.green
+      ..blue = color.blue;
+  }
+
+  static TextDecorationProto _textDecorationToProto(TextDecoration decoration) {
+    if (decoration == TextDecoration.none) return TextDecorationProto.TEXT_DECORATION_NONE;
+    if (decoration == TextDecoration.underline) return TextDecorationProto.UNDERLINE;
+    if (decoration == TextDecoration.overline) return TextDecorationProto.OVERLINE;
+    if (decoration == TextDecoration.lineThrough) return TextDecorationProto.LINE_THROUGH;
+    return TextDecorationProto.TEXT_DECORATION_NONE;
+  }
+
+  static FontStyleProto _fontStyleToProto(FontStyle style) {
+    switch (style) {
+      case FontStyle.normal:
+        return FontStyleProto.NORMAL;
+      case FontStyle.italic:
+        return FontStyleProto.ITALIC;
+      default:
+        return FontStyleProto.NORMAL;
+    }
   }
 }

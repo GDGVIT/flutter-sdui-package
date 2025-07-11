@@ -330,7 +330,7 @@ pwsh ./tool/generate_protos.ps1
 
 ## Contributing
 
-We welcome contributions! Please see our [contributing guidelines](contributing.md) for details.
+See [ADDING_WIDGET.md](./ADDING_WIDGET.md) for instructions on how to add a new widget to the SDUI package.
 
 ## License
 

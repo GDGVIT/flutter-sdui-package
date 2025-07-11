@@ -24,10 +24,25 @@ class SduiIcon extends SduiWidget {
     this.shadows,
   });
 
+  String? get iconName {
+    if (icon == null) return null;
+    
+    const codePointToName = <int, String>{
+      0xe8b8: 'settings',
+      0xe88a: 'home',
+      0xe8b6: 'search',
+      0xe145: 'add',
+      0xe3c9: 'edit',
+      0xe88e: 'info',
+      0xe318: 'home',
+    };
+    print(codePointToName);
+    return codePointToName[icon!.codePoint];
+  }
+
   @override
   Widget toFlutterWidget() {
     if (icon == null) {
-      // Return a placeholder or an empty widget if icon data is missing
       return const SizedBox.shrink();
     }
 

@@ -1,0 +1,35 @@
+{
+  "type": "scaffold",
+  "appBar": {
+    "type": "container",
+    "padding": { "all": 16 },
+    "child": {
+      "type": "text",
+      "text": "Sample SDUI App",
+      "style": { "fontSize": 20, "fontWeight": "bold" }
+    }
+  },
+  "body": {
+    "type": "column",
+    "mainAxisAlignment": "center",
+    "crossAxisAlignment": "center",
+    "children": [
+      {
+        "type": "text",
+        "text": "Welcome to Server-Driven UI!",
+        "style": { "fontSize": 22, "fontWeight": "bold" }
+      },
+      {
+        "type": "sized_box",
+        "height": 24
+      },
+      {
+        "type": "image",
+        "src": "https://storage.googleapis.com/cms-storage-bucket/c823e53b3a1a7b0d36a9.png",
+        "width": 120,
+        "height": 120,
+        "fit": "contain"
+      }
+    ]
+  }
+} 

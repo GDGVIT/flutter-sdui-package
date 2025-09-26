@@ -1,8 +1,8 @@
 name: flutter_sdui
 description: "A Flutter package for Server-Driven UI with JSON and gRPC support. Build dynamic UIs updated from the server without app releases."
 version: 0.0.1
-homepage: https://github.com/JothishKamal/flutter-sdui-package-JothishKamal
-repository: https://github.com/JothishKamal/flutter-sdui-package-JothishKamal
+homepage: https://github.com/GDGVIT/flutter-sdui-package
+repository: https://github.com/GDGVIT/flutter-sdui-package
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

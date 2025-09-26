@@ -42,30 +42,6 @@ class SduiServiceImpl extends SduiServiceBase {
   SduiWidgetData _createHomeScreen() {
     final homeScreen = SduiWidgetData()
       ..type = WidgetType.SCAFFOLD
-      ..appBar = (SduiWidgetData()
-        ..type = WidgetType.CONTAINER
-        ..boxDecoration = (BoxDecorationData()
-          ..color = (ColorData()
-            ..red = 25
-            ..green = 118
-            ..blue = 210
-            ..alpha = 255))
-        ..padding = (EdgeInsetsData()
-          ..top = 8
-          ..left = 16
-          ..right = 16
-          ..bottom = 8)
-        ..child = (SduiWidgetData()
-          ..type = WidgetType.TEXT
-          ..stringAttributes['text'] = 'Home Screen'
-          ..textStyle = (TextStyleData()
-            ..fontSize = 20
-            ..fontWeight = 'bold'
-            ..color = (ColorData()
-              ..red = 255
-              ..green = 255
-              ..blue = 255
-              ..alpha = 255))))
       ..body = (SduiWidgetData()
         ..type = WidgetType.COLUMN
         ..children.addAll([
@@ -106,7 +82,7 @@ class SduiServiceImpl extends SduiServiceBase {
                 SduiWidgetData()
                   ..type = WidgetType.ICON
                   ..icon = (IconDataMessage()
-                    ..name = 'info'
+                    ..name = 'home'
                     ..color = (ColorData()
                       ..red = 25
                       ..green = 118

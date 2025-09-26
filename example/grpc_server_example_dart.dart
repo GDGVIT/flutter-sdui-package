@@ -1,9 +1,25 @@
-// Server implementation example (Dart)
-// Note: This is a standalone Dart server, not a Flutter application
-// Run with: dart run example/grpc_server_example.dart
+/// Example gRPC server implementation for Flutter SDUI.
+///
+/// This is a standalone Dart server that provides server-driven UI definitions
+/// through gRPC. It demonstrates how to:
+/// * Set up a gRPC server with SDUI service
+/// * Handle different screen requests
+/// * Create widget definitions using protobuf
+/// * Return complex UI structures
+///
+/// To run this server:
+/// ```bash
+/// dart run example/grpc_server_example_dart.dart
+/// ```
+///
+/// The server listens on port 50051 by default.
 import 'package:grpc/grpc.dart';
 import 'package:flutter_sdui/src/generated/sdui.pbgrpc.dart';
 
+/// Entry point for the gRPC server.
+///
+/// Initializes the server with the SDUI service implementation
+/// and starts listening for client connections.
 Future<void> main() async {
   final server = Server.create(
     services: [
@@ -11,19 +27,22 @@ Future<void> main() async {
     ],
   );
 
-  final port = 50051;
+  const port = 50051;
   await server.serve(port: port);
   print('Server listening on port $port...');
   print('Press Ctrl+C to stop');
 }
 
-// Implementation of the SDUI service
+/// Implementation of the SDUI gRPC service.
+///
+/// This class handles incoming requests for UI definitions and returns
+/// appropriate widget data based on the requested screen ID.
 class SduiServiceImpl extends SduiServiceBase {
   @override
   Future<SduiWidgetData> getSduiWidget(
       ServiceCall call, SduiRequest request) async {
-    // Based on the requested screen, return different UI definitions
     print('Received request for screen: ${request.screenId}');
+
     switch (request.screenId) {
       case 'home':
         return _createHomeScreen();
@@ -32,13 +51,14 @@ class SduiServiceImpl extends SduiServiceBase {
       case 'settings':
         return _createSettingsScreen();
       default:
-        // Default or error screen
         print('Warning: Unknown screen ID requested: ${request.screenId}');
         return _createErrorScreen();
     }
   }
 
-  // Sample screen definitions
+  /// Creates the home screen UI definition.
+  ///
+  /// Returns a scaffold with an app bar and a column of welcome content.
   SduiWidgetData _createHomeScreen() {
     final homeScreen = SduiWidgetData()
       ..type = WidgetType.SCAFFOLD

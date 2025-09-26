@@ -14,9 +14,26 @@ import 'package:flutter_sdui/src/widgets/sdui_spacer.dart';
 import 'package:flutter_sdui/src/widgets/sdui_text.dart';
 import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 
-// Parser for Protobuf definitions for SDUI
+/// Parser for converting server-side widget definitions to SDUI widgets.
+///
+/// This class handles the conversion of protobuf-based widget definitions
+/// received from the server into corresponding SDUI widget instances that
+/// can be rendered in the Flutter application.
+///
+/// The parser supports various widget types and their properties, maintaining
+/// type safety through protobuf definitions while providing flexibility
+/// for server-driven UI updates.
 class SduiParser {
-  // Parse method for JSON data
+  /// Parses JSON data into SDUI widgets.
+  ///
+  /// This method is currently not implemented and will throw an
+  /// [UnimplementedError]. Future versions may support JSON-based
+  /// widget definitions as an alternative to protobuf.
+  ///
+  /// [data] - The JSON map containing widget definition
+  ///
+  /// Returns a parsed [SduiWidget] instance.
+  /// Throws [UnimplementedError] - JSON parsing is not yet supported.
   static SduiWidget parseJSON(Map<String, dynamic> data) {
     final String? type = data['type']?.toString().toLowerCase();
     switch (type) {
@@ -43,7 +60,17 @@ class SduiParser {
     }
   }
 
-  // Parse from Protobuf data model
+  /// Parses protobuf widget data into SDUI widgets.
+  ///
+  /// This is the main parsing method that converts server-provided protobuf
+  /// widget definitions into their corresponding SDUI widget instances.
+  /// The method uses a switch statement to determine the widget type and
+  /// delegates to specific parsing methods for each widget type.
+  ///
+  /// [data] - The protobuf widget data received from the server
+  ///
+  /// Returns a parsed [SduiWidget] instance, or [SduiContainer] if the
+  /// widget type is unsupported.
   static SduiWidget parseProto(SduiWidgetData data) {
     switch (data.type) {
       case WidgetType.COLUMN:
@@ -70,9 +97,12 @@ class SduiParser {
     }
   }
 
-  // Helper methods to parse specific widget types from protobuf
+  /// Parses protobuf data into a [SduiColumn] widget.
+  ///
+  /// Extracts all column-specific properties from the protobuf data
+  /// and recursively parses child widgets.
   static SduiColumn _parseProtoColumn(SduiWidgetData data) {
-    List<SduiWidget> children =
+    final List<SduiWidget> children =
         data.children.map((child) => SduiParser.parseProto(child)).toList();
 
     return SduiColumn(
@@ -87,8 +117,12 @@ class SduiParser {
     );
   }
 
+  /// Parses protobuf data into a [SduiRow] widget.
+  ///
+  /// Extracts all row-specific properties from the protobuf data
+  /// and recursively parses child widgets.
   static SduiRow _parseProtoRow(SduiWidgetData data) {
-    List<SduiWidget> children =
+    final List<SduiWidget> children =
         data.children.map((child) => SduiParser.parseProto(child)).toList();
 
     return SduiRow(
@@ -103,23 +137,26 @@ class SduiParser {
     );
   }
 
+  /// Parses protobuf data into a [SduiText] widget.
+  ///
+  /// Extracts text content and all styling properties from the protobuf data.
+  /// Text content is retrieved from the stringAttributes map, while styling
+  /// properties are parsed from individual fields.
   static SduiText _parseProtoText(SduiWidgetData data) {
-    String text = data.stringAttributes['text'] ?? '';
-    TextStyle? style =
+    final String text = data.stringAttributes['text'] ?? '';
+    final TextStyle? style =
         data.hasTextStyle() ? _parseProtoTextStyle(data.textStyle) : null;
 
-    // Parse additional text properties
-    TextAlign? textAlign = _parseProtoTextAlign(data.textAlign);
-    TextOverflow? overflow = _parseProtoTextOverflow(data.overflow);
-    int? maxLines = data.hasMaxLines() ? data.maxLines : null;
-    bool? softWrap = data.hasSoftWrap() ? data.softWrap : null;
+    final TextAlign? textAlign = _parseProtoTextAlign(data.textAlign);
+    final TextOverflow? overflow = _parseProtoTextOverflow(data.overflow);
+    final int? maxLines = data.hasMaxLines() ? data.maxLines : null;
+    final bool? softWrap = data.hasSoftWrap() ? data.softWrap : null;
     double? letterSpacing = data.hasLetterSpacing() ? data.letterSpacing : null;
     double? wordSpacing = data.hasWordSpacing() ? data.wordSpacing : null;
     double? height = data.hasHeight() ? data.height : null;
     String? fontFamily = data.hasFontFamily() ? data.fontFamily : null;
-    TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
+    final TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
 
-    // Extract from style if present
     double? fontSize = style?.fontSize;
     FontWeight? fontWeight = style?.fontWeight;
     Color? color = style?.color;
@@ -154,34 +191,38 @@ class SduiParser {
     );
   }
 
+  /// Parses protobuf data into a [SduiImage] widget.
+  ///
+  /// Extracts image source URL and all display properties including sizing,
+  /// alignment, color blending, and caching options.
   static SduiImage _parseProtoImage(SduiWidgetData data) {
-    String src = data.stringAttributes['src'] ?? '';
-    double? width = data.doubleAttributes['width'];
-    double? height = data.doubleAttributes['height'];
-    BoxFit? fit = _parseProtoBoxFit(data.stringAttributes['fit']);
+    final String src = data.stringAttributes['src'] ?? '';
+    final double? width = data.doubleAttributes['width'];
+    final double? height = data.doubleAttributes['height'];
+    final BoxFit? fit = _parseProtoBoxFit(data.stringAttributes['fit']);
 
-    // Parse additional image properties
-    Alignment? alignment = _parseProtoAlignment(data.alignment);
-    ImageRepeat? repeat = _parseProtoImageRepeat(data.repeat);
-    Color? color = data.hasColor() ? _parseProtoColor(data.color) : null;
-    BlendMode? colorBlendMode = _parseProtoBlendMode(data.colorBlendMode);
-    Rect? centerSlice =
+    final Alignment? alignment = _parseProtoAlignment(data.alignment);
+    final ImageRepeat? repeat = _parseProtoImageRepeat(data.repeat);
+    final Color? color = data.hasColor() ? _parseProtoColor(data.color) : null;
+    final BlendMode? colorBlendMode = _parseProtoBlendMode(data.colorBlendMode);
+    final Rect? centerSlice =
         data.hasCenterSlice() ? _parseProtoRect(data.centerSlice) : null;
-    bool? matchTextDirection =
+    final bool? matchTextDirection =
         data.hasMatchTextDirection() ? data.matchTextDirection : null;
-    bool? gaplessPlayback =
+    final bool? gaplessPlayback =
         data.hasGaplessPlayback() ? data.gaplessPlayback : null;
-    FilterQuality? filterQuality = _parseProtoFilterQuality(data.filterQuality);
-    int? cacheWidth = data.hasCacheWidth() ? data.cacheWidth : null;
-    int? cacheHeight = data.hasCacheHeight() ? data.cacheHeight : null;
-    double? scale = data.hasScale() ? data.scale : null;
-    String? semanticLabel = data.hasSemanticLabel() ? data.semanticLabel : null;
+    final FilterQuality? filterQuality =
+        _parseProtoFilterQuality(data.filterQuality);
+    final int? cacheWidth = data.hasCacheWidth() ? data.cacheWidth : null;
+    final int? cacheHeight = data.hasCacheHeight() ? data.cacheHeight : null;
+    final double? scale = data.hasScale() ? data.scale : null;
+    final String? semanticLabel =
+        data.hasSemanticLabel() ? data.semanticLabel : null;
 
-    // Parse error and loading widgets
-    Widget? errorWidget = data.hasErrorWidget()
+    final Widget? errorWidget = data.hasErrorWidget()
         ? SduiParser.parseProto(data.errorWidget).toFlutterWidget()
         : null;
-    Widget? loadingWidget = data.hasLoadingWidget()
+    final Widget? loadingWidget = data.hasLoadingWidget()
         ? SduiParser.parseProto(data.loadingWidget).toFlutterWidget()
         : null;
 
@@ -229,7 +270,6 @@ class SduiParser {
     double? height = data.doubleAttributes['height'];
     Color? color = data.hasColor() ? _parseProtoColor(data.color) : null;
 
-    // Parse additional container properties
     Alignment? alignment = _parseProtoAlignment(data.alignment);
     BoxConstraints? constraints = data.hasConstraints()
         ? _parseProtoBoxConstraints(data.constraints)
@@ -268,7 +308,6 @@ class SduiParser {
         ? _parseProtoColor(data.backgroundColor)
         : null;
 
-    // Parse additional scaffold properties
     SduiWidget? bottomNavigationBar = data.hasBottomNavigationBar()
         ? SduiParser.parseProto(data.bottomNavigationBar)
         : null;
@@ -334,7 +373,6 @@ class SduiParser {
     Color? color =
         data.icon.hasColor() ? _parseProtoColor(data.icon.color) : null;
 
-    // Parse additional icon properties
     String? semanticLabel = data.hasSemanticLabel() ? data.semanticLabel : null;
     TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
     double? opacity = data.hasOpacity() ? data.opacity : null;
@@ -356,8 +394,12 @@ class SduiParser {
     );
   }
 
-  // Helper methods for parsing protobuf attribute types
+  /// Helper methods for parsing protobuf attribute types into Flutter types.
 
+  /// Parses a string value into a [BoxFit] enum.
+  ///
+  /// Supports common box fit values like 'fill', 'contain', 'cover', etc.
+  /// Returns null if the value is null or unrecognized.
   static BoxFit? _parseProtoBoxFit(String? value) {
     if (value == null) return null;
     switch (value.toLowerCase()) {
@@ -380,16 +422,22 @@ class SduiParser {
     }
   }
 
+  /// Parses protobuf text style data into a Flutter [TextStyle].
+  ///
+  /// Converts all text styling properties from protobuf format
+  /// to their corresponding Flutter TextStyle properties.
   static TextStyle? _parseProtoTextStyle(TextStyleData data) {
-    Color? color = data.hasColor() ? _parseProtoColor(data.color) : null;
-    double? fontSize = data.fontSize;
-    FontWeight? fontWeight = _parseProtoFontWeight(data.fontWeight);
-    TextDecoration? decoration = _parseProtoTextDecoration(data.decoration);
-    double? letterSpacing = data.hasLetterSpacing() ? data.letterSpacing : null;
-    double? wordSpacing = data.hasWordSpacing() ? data.wordSpacing : null;
-    double? height = data.hasHeight() ? data.height : null;
-    String? fontFamily = data.hasFontFamily() ? data.fontFamily : null;
-    FontStyle? fontStyle = _parseProtoFontStyle(data.fontStyle);
+    final Color? color = data.hasColor() ? _parseProtoColor(data.color) : null;
+    final double fontSize = data.fontSize;
+    final FontWeight? fontWeight = _parseProtoFontWeight(data.fontWeight);
+    final TextDecoration? decoration =
+        _parseProtoTextDecoration(data.decoration);
+    final double? letterSpacing =
+        data.hasLetterSpacing() ? data.letterSpacing : null;
+    final double? wordSpacing = data.hasWordSpacing() ? data.wordSpacing : null;
+    final double? height = data.hasHeight() ? data.height : null;
+    final String? fontFamily = data.hasFontFamily() ? data.fontFamily : null;
+    final FontStyle? fontStyle = _parseProtoFontStyle(data.fontStyle);
 
     return TextStyle(
       color: color,
@@ -404,6 +452,10 @@ class SduiParser {
     );
   }
 
+  /// Parses a string value into a [FontWeight] enum.
+  ///
+  /// Supports both named weights ('bold', 'normal') and numeric weights
+  /// ('w100' through 'w900'). Returns null for unrecognized values.
   static FontWeight? _parseProtoFontWeight(String? value) {
     if (value == null) return null;
     switch (value.toLowerCase()) {
@@ -434,6 +486,10 @@ class SduiParser {
     }
   }
 
+  /// Parses protobuf edge insets data into Flutter [EdgeInsets].
+  ///
+  /// Supports both uniform insets (all sides equal) and individual
+  /// side specifications (left, top, right, bottom).
   static EdgeInsets? _parseProtoEdgeInsets(EdgeInsetsData data) {
     if (data.hasAll()) {
       return EdgeInsets.all(data.all);
@@ -447,6 +503,10 @@ class SduiParser {
     );
   }
 
+  /// Parses protobuf color data into a Flutter [Color].
+  ///
+  /// Creates a Color from ARGB values provided in the protobuf data.
+  /// Alpha, red, green, and blue values should be in the range 0-255.
   static Color? _parseProtoColor(ColorData data) {
     return Color.fromARGB(
       data.alpha,
@@ -527,7 +587,7 @@ class SduiParser {
       );
     }
 
-    return BorderRadius.circular(8.0); // Example default value
+    return BorderRadius.circular(8.0); 
   }
 
   // New helper methods for parsing new property types
@@ -1021,8 +1081,8 @@ class SduiParser {
       cacheHeight: data['cacheHeight'] is int ? data['cacheHeight'] : int.tryParse(data['cacheHeight']?.toString() ?? ''),
       scale: (data['scale'] is num) ? (data['scale'] as num).toDouble() : null,
       semanticLabel: data['semanticLabel']?.toString(),
-      errorWidget: errorSduiWidget != null ? errorSduiWidget.toFlutterWidget() : null,
-      loadingWidget: loadingSduiWidget != null ? loadingSduiWidget.toFlutterWidget() : null,
+      errorWidget: errorSduiWidget?.toFlutterWidget(),
+      loadingWidget: loadingSduiWidget?.toFlutterWidget(),
     );
   }
 
@@ -1783,9 +1843,7 @@ class SduiParser {
         return MainAxisAlignmentProto.SPACE_AROUND;
       case MainAxisAlignment.spaceEvenly:
         return MainAxisAlignmentProto.SPACE_EVENLY;
-      default:
-        return MainAxisAlignmentProto.MAIN_AXIS_START;
-    }
+      }
   }
 
   static CrossAxisAlignmentProto _crossAxisAlignmentToProto(CrossAxisAlignment value) {
@@ -1800,8 +1858,6 @@ class SduiParser {
         return CrossAxisAlignmentProto.STRETCH;
       case CrossAxisAlignment.baseline:
         return CrossAxisAlignmentProto.BASELINE;
-      default:
-        return CrossAxisAlignmentProto.CROSS_AXIS_CENTER;
     }
   }
 
@@ -1811,9 +1867,7 @@ class SduiParser {
         return MainAxisSizeProto.MIN;
       case MainAxisSize.max:
         return MainAxisSizeProto.MAX;
-      default:
-        return MainAxisSizeProto.MAX;
-    }
+      }
   }
 
   static TextDirectionProto _textDirectionToProto(TextDirection value) {
@@ -1822,8 +1876,6 @@ class SduiParser {
         return TextDirectionProto.LTR;
       case TextDirection.rtl:
         return TextDirectionProto.RTL;
-      default:
-        return TextDirectionProto.LTR;
     }
   }
 
@@ -1832,8 +1884,6 @@ class SduiParser {
       case VerticalDirection.up:
         return VerticalDirectionProto.UP;
       case VerticalDirection.down:
-        return VerticalDirectionProto.DOWN;
-      default:
         return VerticalDirectionProto.DOWN;
     }
   }
@@ -1844,8 +1894,6 @@ class SduiParser {
         return TextBaselineProto.ALPHABETIC;
       case TextBaseline.ideographic:
         return TextBaselineProto.IDEOGRAPHIC;
-      default:
-        return TextBaselineProto.ALPHABETIC;
     }
   }
 
@@ -2562,8 +2610,7 @@ class SduiParser {
         return TextAlignProto.TEXT_ALIGN_START;
       case TextAlign.end:
         return TextAlignProto.TEXT_ALIGN_END;
-      default:
-        return TextAlignProto.LEFT;
+      
     }
   }
 
@@ -2577,17 +2624,16 @@ class SduiParser {
         return TextOverflowProto.FADE;
       case TextOverflow.visible:
         return TextOverflowProto.VISIBLE;
-      default:
-        return TextOverflowProto.CLIP;
+      
     }
   }
 
   static ColorData _colorToProto(Color color) {
     return ColorData()
-      ..alpha = color.alpha
-      ..red = color.red
-      ..green = color.green
-      ..blue = color.blue;
+      ..alpha = ((color.a * 255.0).round() & 0xff)
+      ..red = ((color.r * 255.0).round() & 0xff)
+      ..green = ((color.g * 255.0).round() & 0xff)
+      ..blue = ((color.b * 255.0).round() & 0xff);
   }
 
   static TextDecorationProto _textDecorationToProto(TextDecoration decoration) {
@@ -2604,8 +2650,6 @@ class SduiParser {
         return FontStyleProto.NORMAL;
       case FontStyle.italic:
         return FontStyleProto.ITALIC;
-      default:
-        return FontStyleProto.NORMAL;
     }
   }
 }

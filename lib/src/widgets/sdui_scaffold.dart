@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 
@@ -96,7 +98,7 @@ class SduiScaffold extends SduiWidget {
       if (potentialAppBar is PreferredSizeWidget) {
         flutterAppBar = potentialAppBar;
       } else {
-        print(
+        log(
             "Warning: appBar widget for SduiScaffold is not a PreferredSizeWidget. It might not render correctly.");
       }
     }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 
@@ -123,7 +125,7 @@ class SduiImage extends SduiWidget {
       );
     } else {
       // Return empty widget for non-network URLs with warning
-      print(
+      log(
           "Warning: SduiImage currently only supports network images. Provided src: $src");
       return const SizedBox.shrink();
     }

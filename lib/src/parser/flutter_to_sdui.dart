@@ -50,7 +50,9 @@ SduiWidget flutterToSdui(Widget widget) {
         width: widget.width,
         height: widget.height,
         fit: widget.fit,
-        alignment: widget.alignment is Alignment ? widget.alignment as Alignment : null,
+        alignment: widget.alignment is Alignment
+            ? widget.alignment as Alignment
+            : null,
         repeat: widget.repeat,
         color: widget.color,
         colorBlendMode: widget.colorBlendMode,
@@ -75,27 +77,40 @@ SduiWidget flutterToSdui(Widget widget) {
   } else if (widget is Container) {
     return SduiContainer(
       child: widget.child != null ? flutterToSdui(widget.child!) : null,
-      padding: widget.padding is EdgeInsets ? widget.padding as EdgeInsets : null,
+      padding:
+          widget.padding is EdgeInsets ? widget.padding as EdgeInsets : null,
       margin: widget.margin is EdgeInsets ? widget.margin as EdgeInsets : null,
-      decoration: widget.decoration is BoxDecoration ? widget.decoration as BoxDecoration : null,
+      decoration: widget.decoration is BoxDecoration
+          ? widget.decoration as BoxDecoration
+          : null,
       width: null, // Container does not expose width directly
       height: null, // Container does not expose height directly
       color: widget.color,
-      alignment: widget.alignment is Alignment ? widget.alignment as Alignment : null,
+      alignment:
+          widget.alignment is Alignment ? widget.alignment as Alignment : null,
       constraints: widget.constraints,
       transform: widget.transform,
-      transformAlignment: widget.transformAlignment is AlignmentGeometry ? widget.transformAlignment as AlignmentGeometry : null,
+      transformAlignment: widget.transformAlignment is AlignmentGeometry
+          ? widget.transformAlignment as AlignmentGeometry
+          : null,
       clipBehavior: widget.clipBehavior,
     );
   } else if (widget is Scaffold) {
     return SduiScaffold(
       appBar: widget.appBar != null ? flutterToSdui(widget.appBar!) : null,
       body: widget.body != null ? flutterToSdui(widget.body!) : null,
-      floatingActionButton: widget.floatingActionButton != null ? flutterToSdui(widget.floatingActionButton!) : null,
-      bottomNavigationBar: widget.bottomNavigationBar != null ? flutterToSdui(widget.bottomNavigationBar!) : null,
+      floatingActionButton: widget.floatingActionButton != null
+          ? flutterToSdui(widget.floatingActionButton!)
+          : null,
+      bottomNavigationBar: widget.bottomNavigationBar != null
+          ? flutterToSdui(widget.bottomNavigationBar!)
+          : null,
       drawer: widget.drawer != null ? flutterToSdui(widget.drawer!) : null,
-      endDrawer: widget.endDrawer != null ? flutterToSdui(widget.endDrawer!) : null,
-      bottomSheet: widget.bottomSheet != null ? flutterToSdui(widget.bottomSheet!) : null,
+      endDrawer:
+          widget.endDrawer != null ? flutterToSdui(widget.endDrawer!) : null,
+      bottomSheet: widget.bottomSheet != null
+          ? flutterToSdui(widget.bottomSheet!)
+          : null,
       backgroundColor: widget.backgroundColor,
       resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
       primary: widget.primary,
@@ -121,5 +136,6 @@ SduiWidget flutterToSdui(Widget widget) {
       shadows: widget.shadows,
     );
   }
-  throw UnimplementedError('Conversion for [38;5;9m${widget.runtimeType}[0m is not implemented');
-} 
+  throw UnimplementedError(
+      'Conversion for [38;5;9m${widget.runtimeType}[0m is not implemented');
+}

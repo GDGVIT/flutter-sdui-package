@@ -13,6 +13,9 @@
 /// ```
 ///
 /// The server listens on port 50051 by default.
+library;
+import 'dart:developer';
+
 import 'package:grpc/grpc.dart';
 import 'package:flutter_sdui/src/generated/sdui.pbgrpc.dart';
 
@@ -29,8 +32,8 @@ Future<void> main() async {
 
   const port = 50051;
   await server.serve(port: port);
-  print('Server listening on port $port...');
-  print('Press Ctrl+C to stop');
+  log('Server listening on port $port...');
+  log('Press Ctrl+C to stop');
 }
 
 /// Implementation of the SDUI gRPC service.
@@ -41,7 +44,7 @@ class SduiServiceImpl extends SduiServiceBase {
   @override
   Future<SduiWidgetData> getSduiWidget(
       ServiceCall call, SduiRequest request) async {
-    print('Received request for screen: ${request.screenId}');
+    log('Received request for screen: ${request.screenId}');
 
     switch (request.screenId) {
       case 'home':
@@ -51,7 +54,7 @@ class SduiServiceImpl extends SduiServiceBase {
       case 'settings':
         return _createSettingsScreen();
       default:
-        print('Warning: Unknown screen ID requested: ${request.screenId}');
+        log('Warning: Unknown screen ID requested: ${request.screenId}');
         return _createErrorScreen();
     }
   }

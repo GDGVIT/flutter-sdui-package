@@ -155,7 +155,8 @@ class SduiParser {
     double? wordSpacing = data.hasWordSpacing() ? data.wordSpacing : null;
     double? height = data.hasHeight() ? data.height : null;
     String? fontFamily = data.hasFontFamily() ? data.fontFamily : null;
-    final TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
+    final TextDirection? textDirection =
+        _parseProtoTextDirection(data.textDirection);
 
     double? fontSize = style?.fontSize;
     FontWeight? fontWeight = style?.fontWeight;
@@ -163,13 +164,25 @@ class SduiParser {
     TextDecoration? decoration = style?.decoration;
     if (data.hasTextStyle()) {
       if (data.textStyle.hasFontSize()) fontSize = data.textStyle.fontSize;
-      if (data.textStyle.hasFontWeight()) fontWeight = _parseProtoFontWeight(data.textStyle.fontWeight);
-      if (data.textStyle.hasColor()) color = _parseProtoColor(data.textStyle.color);
-      if (data.textStyle.hasDecoration()) decoration = _parseProtoTextDecoration(data.textStyle.decoration);
-      if (data.textStyle.hasLetterSpacing()) letterSpacing = data.textStyle.letterSpacing;
-      if (data.textStyle.hasWordSpacing()) wordSpacing = data.textStyle.wordSpacing;
+      if (data.textStyle.hasFontWeight()) {
+        fontWeight = _parseProtoFontWeight(data.textStyle.fontWeight);
+      }
+      if (data.textStyle.hasColor()) {
+        color = _parseProtoColor(data.textStyle.color);
+      }
+      if (data.textStyle.hasDecoration()) {
+        decoration = _parseProtoTextDecoration(data.textStyle.decoration);
+      }
+      if (data.textStyle.hasLetterSpacing()) {
+        letterSpacing = data.textStyle.letterSpacing;
+      }
+      if (data.textStyle.hasWordSpacing()) {
+        wordSpacing = data.textStyle.wordSpacing;
+      }
       if (data.textStyle.hasHeight()) height = data.textStyle.height;
-      if (data.textStyle.hasFontFamily()) fontFamily = data.textStyle.fontFamily;
+      if (data.textStyle.hasFontFamily()) {
+        fontFamily = data.textStyle.fontFamily;
+      }
     }
 
     return SduiText(
@@ -587,7 +600,7 @@ class SduiParser {
       );
     }
 
-    return BorderRadius.circular(8.0); 
+    return BorderRadius.circular(8.0);
   }
 
   // New helper methods for parsing new property types
@@ -933,7 +946,8 @@ class SduiParser {
     return SduiColumn(
       children: children,
       mainAxisAlignment: _parseJsonMainAxisAlignment(data['mainAxisAlignment']),
-      crossAxisAlignment: _parseJsonCrossAxisAlignment(data['crossAxisAlignment']),
+      crossAxisAlignment:
+          _parseJsonCrossAxisAlignment(data['crossAxisAlignment']),
       mainAxisSize: _parseJsonMainAxisSize(data['mainAxisSize']),
       textDirection: _parseJsonTextDirection(data['textDirection']),
       verticalDirection: _parseJsonVerticalDirection(data['verticalDirection']),
@@ -1037,7 +1051,8 @@ class SduiParser {
     return SduiRow(
       children: children,
       mainAxisAlignment: _parseJsonMainAxisAlignment(data['mainAxisAlignment']),
-      crossAxisAlignment: _parseJsonCrossAxisAlignment(data['crossAxisAlignment']),
+      crossAxisAlignment:
+          _parseJsonCrossAxisAlignment(data['crossAxisAlignment']),
       mainAxisSize: _parseJsonMainAxisSize(data['mainAxisSize']),
       textDirection: _parseJsonTextDirection(data['textDirection']),
       verticalDirection: _parseJsonVerticalDirection(data['verticalDirection']),
@@ -1051,34 +1066,54 @@ class SduiParser {
       style: _parseJsonTextStyle(data['style']),
       textAlign: _parseJsonTextAlign(data['textAlign']),
       overflow: _parseJsonTextOverflow(data['overflow']),
-      maxLines: data['maxLines'] is int ? data['maxLines'] : int.tryParse(data['maxLines']?.toString() ?? ''),
+      maxLines: data['maxLines'] is int
+          ? data['maxLines']
+          : int.tryParse(data['maxLines']?.toString() ?? ''),
       softWrap: data['softWrap'] is bool ? data['softWrap'] : null,
-      letterSpacing: (data['letterSpacing'] is num) ? (data['letterSpacing'] as num).toDouble() : null,
-      wordSpacing: (data['wordSpacing'] is num) ? (data['wordSpacing'] as num).toDouble() : null,
-      height: (data['height'] is num) ? (data['height'] as num).toDouble() : null,
+      letterSpacing: (data['letterSpacing'] is num)
+          ? (data['letterSpacing'] as num).toDouble()
+          : null,
+      wordSpacing: (data['wordSpacing'] is num)
+          ? (data['wordSpacing'] as num).toDouble()
+          : null,
+      height:
+          (data['height'] is num) ? (data['height'] as num).toDouble() : null,
       fontFamily: data['fontFamily']?.toString(),
       textDirection: _parseJsonTextDirection(data['textDirection']),
     );
   }
 
   static SduiImage _parseJsonImage(Map<String, dynamic> data) {
-    SduiWidget? errorSduiWidget = data['errorWidget'] is Map<String, dynamic> ? parseJSON(data['errorWidget']) : null;
-    SduiWidget? loadingSduiWidget = data['loadingWidget'] is Map<String, dynamic> ? parseJSON(data['loadingWidget']) : null;
+    SduiWidget? errorSduiWidget = data['errorWidget'] is Map<String, dynamic>
+        ? parseJSON(data['errorWidget'])
+        : null;
+    SduiWidget? loadingSduiWidget =
+        data['loadingWidget'] is Map<String, dynamic>
+            ? parseJSON(data['loadingWidget'])
+            : null;
     return SduiImage(
       data['src']?.toString() ?? '',
       width: (data['width'] is num) ? (data['width'] as num).toDouble() : null,
-      height: (data['height'] is num) ? (data['height'] as num).toDouble() : null,
+      height:
+          (data['height'] is num) ? (data['height'] as num).toDouble() : null,
       fit: _parseJsonBoxFit(data['fit']),
       alignment: _parseJsonAlignment(data['alignment']),
       repeat: _parseJsonImageRepeat(data['repeat']),
       color: _parseJsonColor(data['color']),
       colorBlendMode: _parseJsonBlendMode(data['colorBlendMode']),
       centerSlice: _parseJsonRect(data['centerSlice']),
-      matchTextDirection: data['matchTextDirection'] is bool ? data['matchTextDirection'] : null,
-      gaplessPlayback: data['gaplessPlayback'] is bool ? data['gaplessPlayback'] : null,
+      matchTextDirection: data['matchTextDirection'] is bool
+          ? data['matchTextDirection']
+          : null,
+      gaplessPlayback:
+          data['gaplessPlayback'] is bool ? data['gaplessPlayback'] : null,
       filterQuality: _parseJsonFilterQuality(data['filterQuality']),
-      cacheWidth: data['cacheWidth'] is int ? data['cacheWidth'] : int.tryParse(data['cacheWidth']?.toString() ?? ''),
-      cacheHeight: data['cacheHeight'] is int ? data['cacheHeight'] : int.tryParse(data['cacheHeight']?.toString() ?? ''),
+      cacheWidth: data['cacheWidth'] is int
+          ? data['cacheWidth']
+          : int.tryParse(data['cacheWidth']?.toString() ?? ''),
+      cacheHeight: data['cacheHeight'] is int
+          ? data['cacheHeight']
+          : int.tryParse(data['cacheHeight']?.toString() ?? ''),
       scale: (data['scale'] is num) ? (data['scale'] as num).toDouble() : null,
       semanticLabel: data['semanticLabel']?.toString(),
       errorWidget: errorSduiWidget?.toFlutterWidget(),
@@ -1089,53 +1124,87 @@ class SduiParser {
   static SduiSizedBox _parseJsonSizedBox(Map<String, dynamic> data) {
     return SduiSizedBox(
       width: (data['width'] is num) ? (data['width'] as num).toDouble() : null,
-      height: (data['height'] is num) ? (data['height'] as num).toDouble() : null,
-      child: data['child'] is Map<String, dynamic> ? parseJSON(data['child']) : null,
+      height:
+          (data['height'] is num) ? (data['height'] as num).toDouble() : null,
+      child: data['child'] is Map<String, dynamic>
+          ? parseJSON(data['child'])
+          : null,
     );
   }
 
   static SduiContainer _parseJsonContainer(Map<String, dynamic> data) {
     return SduiContainer(
-      child: data['child'] is Map<String, dynamic> ? parseJSON(data['child']) : null,
+      child: data['child'] is Map<String, dynamic>
+          ? parseJSON(data['child'])
+          : null,
       padding: _parseJsonEdgeInsets(data['padding']),
       margin: _parseJsonEdgeInsets(data['margin']),
       decoration: _parseJsonBoxDecoration(data['decoration']),
       width: (data['width'] is num) ? (data['width'] as num).toDouble() : null,
-      height: (data['height'] is num) ? (data['height'] as num).toDouble() : null,
+      height:
+          (data['height'] is num) ? (data['height'] as num).toDouble() : null,
       color: _parseJsonColor(data['color']),
       alignment: _parseJsonAlignment(data['alignment']),
       constraints: _parseJsonBoxConstraints(data['constraints']),
       transform: _parseJsonTransform(data['transform']),
-      transformAlignment: _parseJsonAlignmentGeometry(data['transformAlignment']),
+      transformAlignment:
+          _parseJsonAlignmentGeometry(data['transformAlignment']),
       clipBehavior: _parseJsonClip(data['clipBehavior']),
     );
   }
 
   static SduiScaffold _parseJsonScaffold(Map<String, dynamic> data) {
     return SduiScaffold(
-      appBar: data['appBar'] is Map<String, dynamic> ? parseJSON(data['appBar']) : null,
-      body: data['body'] is Map<String, dynamic> ? parseJSON(data['body']) : null,
-      floatingActionButton: data['floatingActionButton'] is Map<String, dynamic> ? parseJSON(data['floatingActionButton']) : null,
-      bottomNavigationBar: data['bottomNavigationBar'] is Map<String, dynamic> ? parseJSON(data['bottomNavigationBar']) : null,
-      drawer: data['drawer'] is Map<String, dynamic> ? parseJSON(data['drawer']) : null,
-      endDrawer: data['endDrawer'] is Map<String, dynamic> ? parseJSON(data['endDrawer']) : null,
-      bottomSheet: data['bottomSheet'] is Map<String, dynamic> ? parseJSON(data['bottomSheet']) : null,
+      appBar: data['appBar'] is Map<String, dynamic>
+          ? parseJSON(data['appBar'])
+          : null,
+      body:
+          data['body'] is Map<String, dynamic> ? parseJSON(data['body']) : null,
+      floatingActionButton: data['floatingActionButton'] is Map<String, dynamic>
+          ? parseJSON(data['floatingActionButton'])
+          : null,
+      bottomNavigationBar: data['bottomNavigationBar'] is Map<String, dynamic>
+          ? parseJSON(data['bottomNavigationBar'])
+          : null,
+      drawer: data['drawer'] is Map<String, dynamic>
+          ? parseJSON(data['drawer'])
+          : null,
+      endDrawer: data['endDrawer'] is Map<String, dynamic>
+          ? parseJSON(data['endDrawer'])
+          : null,
+      bottomSheet: data['bottomSheet'] is Map<String, dynamic>
+          ? parseJSON(data['bottomSheet'])
+          : null,
       backgroundColor: _parseJsonColor(data['backgroundColor']),
-      resizeToAvoidBottomInset: data['resizeToAvoidBottomInset'] is bool ? data['resizeToAvoidBottomInset'] : null,
+      resizeToAvoidBottomInset: data['resizeToAvoidBottomInset'] is bool
+          ? data['resizeToAvoidBottomInset']
+          : null,
       primary: data['primary'] is bool ? data['primary'] : null,
-      floatingActionButtonLocation: _parseJsonFabLocation(data['floatingActionButtonLocation']),
+      floatingActionButtonLocation:
+          _parseJsonFabLocation(data['floatingActionButtonLocation']),
       extendBody: data['extendBody'] is bool ? data['extendBody'] : null,
-      extendBodyBehindAppBar: data['extendBodyBehindAppBar'] is bool ? data['extendBodyBehindAppBar'] : null,
+      extendBodyBehindAppBar: data['extendBodyBehindAppBar'] is bool
+          ? data['extendBodyBehindAppBar']
+          : null,
       drawerScrimColor: _parseJsonColor(data['drawerScrimColor']),
-      drawerEdgeDragWidth: (data['drawerEdgeDragWidth'] is num) ? (data['drawerEdgeDragWidth'] as num).toDouble() : null,
-      drawerEnableOpenDragGesture: data['drawerEnableOpenDragGesture'] is bool ? data['drawerEnableOpenDragGesture'] : null,
-      endDrawerEnableOpenDragGesture: data['endDrawerEnableOpenDragGesture'] is bool ? data['endDrawerEnableOpenDragGesture'] : null,
+      drawerEdgeDragWidth: (data['drawerEdgeDragWidth'] is num)
+          ? (data['drawerEdgeDragWidth'] as num).toDouble()
+          : null,
+      drawerEnableOpenDragGesture: data['drawerEnableOpenDragGesture'] is bool
+          ? data['drawerEnableOpenDragGesture']
+          : null,
+      endDrawerEnableOpenDragGesture:
+          data['endDrawerEnableOpenDragGesture'] is bool
+              ? data['endDrawerEnableOpenDragGesture']
+              : null,
     );
   }
 
   static SduiSpacer _parseJsonSpacer(Map<String, dynamic> data) {
     return SduiSpacer(
-      flex: data['flex'] is int ? data['flex'] : int.tryParse(data['flex']?.toString() ?? '') ?? 1,
+      flex: data['flex'] is int
+          ? data['flex']
+          : int.tryParse(data['flex']?.toString() ?? '') ?? 1,
     );
   }
 
@@ -1146,8 +1215,10 @@ class SduiParser {
       color: _parseJsonColor(data['color']),
       semanticLabel: data['semanticLabel']?.toString(),
       textDirection: _parseJsonTextDirection(data['textDirection']),
-      opacity: (data['opacity'] is num) ? (data['opacity'] as num).toDouble() : null,
-      applyTextScaling: data['applyTextScaling'] is bool ? data['applyTextScaling'] : null,
+      opacity:
+          (data['opacity'] is num) ? (data['opacity'] as num).toDouble() : null,
+      applyTextScaling:
+          data['applyTextScaling'] is bool ? data['applyTextScaling'] : null,
       shadows: _parseJsonShadows(data['shadows']),
     );
   }
@@ -1157,12 +1228,19 @@ class SduiParser {
     if (value is! Map<String, dynamic>) return null;
     return TextStyle(
       color: _parseJsonColor(value['color']),
-      fontSize: (value['fontSize'] is num) ? (value['fontSize'] as num).toDouble() : null,
+      fontSize: (value['fontSize'] is num)
+          ? (value['fontSize'] as num).toDouble()
+          : null,
       fontWeight: _parseJsonFontWeight(value['fontWeight']),
       decoration: _parseJsonTextDecoration(value['decoration']),
-      letterSpacing: (value['letterSpacing'] is num) ? (value['letterSpacing'] as num).toDouble() : null,
-      wordSpacing: (value['wordSpacing'] is num) ? (value['wordSpacing'] as num).toDouble() : null,
-      height: (value['height'] is num) ? (value['height'] as num).toDouble() : null,
+      letterSpacing: (value['letterSpacing'] is num)
+          ? (value['letterSpacing'] as num).toDouble()
+          : null,
+      wordSpacing: (value['wordSpacing'] is num)
+          ? (value['wordSpacing'] as num).toDouble()
+          : null,
+      height:
+          (value['height'] is num) ? (value['height'] as num).toDouble() : null,
       fontFamily: value['fontFamily']?.toString(),
       fontStyle: _parseJsonFontStyle(value['fontStyle']),
     );
@@ -1375,48 +1453,78 @@ class SduiParser {
   static BlendMode? _parseJsonBlendMode(dynamic value) {
     if (value == null) return null;
     switch (value.toString().toLowerCase()) {
-      case 'clear': return BlendMode.clear;
-      case 'src': return BlendMode.src;
-      case 'dst': return BlendMode.dst;
+      case 'clear':
+        return BlendMode.clear;
+      case 'src':
+        return BlendMode.src;
+      case 'dst':
+        return BlendMode.dst;
       case 'srcover':
-      case 'src_over': return BlendMode.srcOver;
+      case 'src_over':
+        return BlendMode.srcOver;
       case 'dstover':
-      case 'dst_over': return BlendMode.dstOver;
+      case 'dst_over':
+        return BlendMode.dstOver;
       case 'srcin':
-      case 'src_in': return BlendMode.srcIn;
+      case 'src_in':
+        return BlendMode.srcIn;
       case 'dstin':
-      case 'dst_in': return BlendMode.dstIn;
+      case 'dst_in':
+        return BlendMode.dstIn;
       case 'srcout':
-      case 'src_out': return BlendMode.srcOut;
+      case 'src_out':
+        return BlendMode.srcOut;
       case 'dstout':
-      case 'dst_out': return BlendMode.dstOut;
+      case 'dst_out':
+        return BlendMode.dstOut;
       case 'srcatop':
-      case 'src_atop': return BlendMode.srcATop;
+      case 'src_atop':
+        return BlendMode.srcATop;
       case 'dstatop':
-      case 'dst_atop': return BlendMode.dstATop;
-      case 'xor': return BlendMode.xor;
-      case 'plus': return BlendMode.plus;
-      case 'modulate': return BlendMode.modulate;
-      case 'screen': return BlendMode.screen;
-      case 'overlay': return BlendMode.overlay;
-      case 'darken': return BlendMode.darken;
-      case 'lighten': return BlendMode.lighten;
+      case 'dst_atop':
+        return BlendMode.dstATop;
+      case 'xor':
+        return BlendMode.xor;
+      case 'plus':
+        return BlendMode.plus;
+      case 'modulate':
+        return BlendMode.modulate;
+      case 'screen':
+        return BlendMode.screen;
+      case 'overlay':
+        return BlendMode.overlay;
+      case 'darken':
+        return BlendMode.darken;
+      case 'lighten':
+        return BlendMode.lighten;
       case 'colordodge':
-      case 'color_dodge': return BlendMode.colorDodge;
+      case 'color_dodge':
+        return BlendMode.colorDodge;
       case 'colorburn':
-      case 'color_burn': return BlendMode.colorBurn;
+      case 'color_burn':
+        return BlendMode.colorBurn;
       case 'hardlight':
-      case 'hard_light': return BlendMode.hardLight;
+      case 'hard_light':
+        return BlendMode.hardLight;
       case 'softlight':
-      case 'soft_light': return BlendMode.softLight;
-      case 'difference': return BlendMode.difference;
-      case 'exclusion': return BlendMode.exclusion;
-      case 'multiply': return BlendMode.multiply;
-      case 'hue': return BlendMode.hue;
-      case 'saturation': return BlendMode.saturation;
-      case 'color': return BlendMode.color;
-      case 'luminosity': return BlendMode.luminosity;
-      default: return null;
+      case 'soft_light':
+        return BlendMode.softLight;
+      case 'difference':
+        return BlendMode.difference;
+      case 'exclusion':
+        return BlendMode.exclusion;
+      case 'multiply':
+        return BlendMode.multiply;
+      case 'hue':
+        return BlendMode.hue;
+      case 'saturation':
+        return BlendMode.saturation;
+      case 'color':
+        return BlendMode.color;
+      case 'luminosity':
+        return BlendMode.luminosity;
+      default:
+        return null;
     }
   }
 
@@ -1435,11 +1543,16 @@ class SduiParser {
   static FilterQuality? _parseJsonFilterQuality(dynamic value) {
     if (value == null) return null;
     switch (value.toString().toLowerCase()) {
-      case 'none': return FilterQuality.none;
-      case 'low': return FilterQuality.low;
-      case 'medium': return FilterQuality.medium;
-      case 'high': return FilterQuality.high;
-      default: return null;
+      case 'none':
+        return FilterQuality.none;
+      case 'low':
+        return FilterQuality.low;
+      case 'medium':
+        return FilterQuality.medium;
+      case 'high':
+        return FilterQuality.high;
+      default:
+        return null;
     }
   }
 
@@ -1451,8 +1564,11 @@ class SduiParser {
       return EdgeInsets.only(
         left: (value['left'] is num) ? (value['left'] as num).toDouble() : 0.0,
         top: (value['top'] is num) ? (value['top'] as num).toDouble() : 0.0,
-        right: (value['right'] is num) ? (value['right'] as num).toDouble() : 0.0,
-        bottom: (value['bottom'] is num) ? (value['bottom'] as num).toDouble() : 0.0,
+        right:
+            (value['right'] is num) ? (value['right'] as num).toDouble() : 0.0,
+        bottom: (value['bottom'] is num)
+            ? (value['bottom'] as num).toDouble()
+            : 0.0,
       );
     }
     return null;
@@ -1470,13 +1586,22 @@ class SduiParser {
   static BorderRadius? _parseJsonBorderRadius(dynamic value) {
     if (value is Map<String, dynamic>) {
       if (value.containsKey('all')) {
-        return BorderRadius.all(Radius.circular((value['all'] as num).toDouble()));
+        return BorderRadius.all(
+            Radius.circular((value['all'] as num).toDouble()));
       }
       return BorderRadius.only(
-        topLeft: value['topLeft'] != null ? Radius.circular((value['topLeft'] as num).toDouble()) : Radius.zero,
-        topRight: value['topRight'] != null ? Radius.circular((value['topRight'] as num).toDouble()) : Radius.zero,
-        bottomLeft: value['bottomLeft'] != null ? Radius.circular((value['bottomLeft'] as num).toDouble()) : Radius.zero,
-        bottomRight: value['bottomRight'] != null ? Radius.circular((value['bottomRight'] as num).toDouble()) : Radius.zero,
+        topLeft: value['topLeft'] != null
+            ? Radius.circular((value['topLeft'] as num).toDouble())
+            : Radius.zero,
+        topRight: value['topRight'] != null
+            ? Radius.circular((value['topRight'] as num).toDouble())
+            : Radius.zero,
+        bottomLeft: value['bottomLeft'] != null
+            ? Radius.circular((value['bottomLeft'] as num).toDouble())
+            : Radius.zero,
+        bottomRight: value['bottomRight'] != null
+            ? Radius.circular((value['bottomRight'] as num).toDouble())
+            : Radius.zero,
       );
     }
     return null;
@@ -1485,10 +1610,18 @@ class SduiParser {
   static BoxConstraints? _parseJsonBoxConstraints(dynamic value) {
     if (value is Map<String, dynamic>) {
       return BoxConstraints(
-        minWidth: (value['minWidth'] is num) ? (value['minWidth'] as num).toDouble() : 0.0,
-        maxWidth: (value['maxWidth'] is num) ? (value['maxWidth'] as num).toDouble() : double.infinity,
-        minHeight: (value['minHeight'] is num) ? (value['minHeight'] as num).toDouble() : 0.0,
-        maxHeight: (value['maxHeight'] is num) ? (value['maxHeight'] as num).toDouble() : double.infinity,
+        minWidth: (value['minWidth'] is num)
+            ? (value['minWidth'] as num).toDouble()
+            : 0.0,
+        maxWidth: (value['maxWidth'] is num)
+            ? (value['maxWidth'] as num).toDouble()
+            : double.infinity,
+        minHeight: (value['minHeight'] is num)
+            ? (value['minHeight'] as num).toDouble()
+            : 0.0,
+        maxHeight: (value['maxHeight'] is num)
+            ? (value['maxHeight'] as num).toDouble()
+            : double.infinity,
       );
     }
     return null;
@@ -1500,10 +1633,22 @@ class SduiParser {
         final vals = value['matrixValues'] as List;
         if (vals.length == 16) {
           return Matrix4(
-            (vals[0] as num).toDouble(), (vals[1] as num).toDouble(), (vals[2] as num).toDouble(), (vals[3] as num).toDouble(),
-            (vals[4] as num).toDouble(), (vals[5] as num).toDouble(), (vals[6] as num).toDouble(), (vals[7] as num).toDouble(),
-            (vals[8] as num).toDouble(), (vals[9] as num).toDouble(), (vals[10] as num).toDouble(), (vals[11] as num).toDouble(),
-            (vals[12] as num).toDouble(), (vals[13] as num).toDouble(), (vals[14] as num).toDouble(), (vals[15] as num).toDouble(),
+            (vals[0] as num).toDouble(),
+            (vals[1] as num).toDouble(),
+            (vals[2] as num).toDouble(),
+            (vals[3] as num).toDouble(),
+            (vals[4] as num).toDouble(),
+            (vals[5] as num).toDouble(),
+            (vals[6] as num).toDouble(),
+            (vals[7] as num).toDouble(),
+            (vals[8] as num).toDouble(),
+            (vals[9] as num).toDouble(),
+            (vals[10] as num).toDouble(),
+            (vals[11] as num).toDouble(),
+            (vals[12] as num).toDouble(),
+            (vals[13] as num).toDouble(),
+            (vals[14] as num).toDouble(),
+            (vals[15] as num).toDouble(),
           );
         }
       } else if (value['type'] == 'translate') {
@@ -1532,13 +1677,18 @@ class SduiParser {
   static Clip? _parseJsonClip(dynamic value) {
     if (value == null) return null;
     switch (value.toString().toLowerCase()) {
-      case 'none': return Clip.none;
+      case 'none':
+        return Clip.none;
       case 'hardedge':
-      case 'hard_edge': return Clip.hardEdge;
-      case 'antialias': return Clip.antiAlias;
+      case 'hard_edge':
+        return Clip.hardEdge;
+      case 'antialias':
+        return Clip.antiAlias;
       case 'antialiaswithsavelayer':
-      case 'antialias_with_save_layer': return Clip.antiAliasWithSaveLayer;
-      default: return null;
+      case 'antialias_with_save_layer':
+        return Clip.antiAliasWithSaveLayer;
+      default:
+        return null;
     }
   }
 
@@ -1546,33 +1696,46 @@ class SduiParser {
     if (value == null) return null;
     switch (value.toString().toLowerCase()) {
       case 'starttop':
-      case 'start_top': return FloatingActionButtonLocation.startTop;
+      case 'start_top':
+        return FloatingActionButtonLocation.startTop;
       case 'start':
       case 'startfloat':
-      case 'start_float': return FloatingActionButtonLocation.startFloat;
+      case 'start_float':
+        return FloatingActionButtonLocation.startFloat;
       case 'centertop':
-      case 'center_top': return FloatingActionButtonLocation.centerTop;
+      case 'center_top':
+        return FloatingActionButtonLocation.centerTop;
       case 'center':
       case 'centerfloat':
-      case 'center_float': return FloatingActionButtonLocation.centerFloat;
+      case 'center_float':
+        return FloatingActionButtonLocation.centerFloat;
       case 'endtop':
-      case 'end_top': return FloatingActionButtonLocation.endTop;
+      case 'end_top':
+        return FloatingActionButtonLocation.endTop;
       case 'end':
       case 'endfloat':
-      case 'end_float': return FloatingActionButtonLocation.endFloat;
+      case 'end_float':
+        return FloatingActionButtonLocation.endFloat;
       case 'minicentertop':
-      case 'mini_center_top': return FloatingActionButtonLocation.miniCenterTop;
+      case 'mini_center_top':
+        return FloatingActionButtonLocation.miniCenterTop;
       case 'minicenterfloat':
-      case 'mini_center_float': return FloatingActionButtonLocation.miniCenterFloat;
+      case 'mini_center_float':
+        return FloatingActionButtonLocation.miniCenterFloat;
       case 'ministarttop':
-      case 'mini_start_top': return FloatingActionButtonLocation.miniStartTop;
+      case 'mini_start_top':
+        return FloatingActionButtonLocation.miniStartTop;
       case 'ministartfloat':
-      case 'mini_start_float': return FloatingActionButtonLocation.miniStartFloat;
+      case 'mini_start_float':
+        return FloatingActionButtonLocation.miniStartFloat;
       case 'miniendtop':
-      case 'mini_end_top': return FloatingActionButtonLocation.miniEndTop;
+      case 'mini_end_top':
+        return FloatingActionButtonLocation.miniEndTop;
       case 'miniendfloat':
-      case 'mini_end_float': return FloatingActionButtonLocation.miniEndFloat;
-      default: return null;
+      case 'mini_end_float':
+        return FloatingActionButtonLocation.miniEndFloat;
+      default:
+        return null;
     }
   }
 
@@ -1580,27 +1743,41 @@ class SduiParser {
     if (value == null) return null;
     if (value is String) {
       switch (value.toLowerCase()) {
-        case 'settings': return Icons.settings;
-        case 'home': return Icons.home;
-        case 'search': return Icons.search;
-        case 'add': return Icons.add;
-        case 'edit': return Icons.edit;
-        default: break;
+        case 'settings':
+          return Icons.settings;
+        case 'home':
+          return Icons.home;
+        case 'search':
+          return Icons.search;
+        case 'add':
+          return Icons.add;
+        case 'edit':
+          return Icons.edit;
+        default:
+          break;
       }
     } else if (value is Map<String, dynamic>) {
       if (value['name'] != null) {
         switch (value['name'].toString().toLowerCase()) {
-          case 'settings': return Icons.settings;
-          case 'home': return Icons.home;
-          case 'search': return Icons.search;
-          case 'add': return Icons.add;
-          case 'edit': return Icons.edit;
-          default: break;
+          case 'settings':
+            return Icons.settings;
+          case 'home':
+            return Icons.home;
+          case 'search':
+            return Icons.search;
+          case 'add':
+            return Icons.add;
+          case 'edit':
+            return Icons.edit;
+          default:
+            break;
         }
       }
       if (value['codePoint'] != null) {
         return IconData(
-          value['codePoint'] is int ? value['codePoint'] : int.tryParse(value['codePoint'].toString()) ?? 0,
+          value['codePoint'] is int
+              ? value['codePoint']
+              : int.tryParse(value['codePoint'].toString()) ?? 0,
           fontFamily: value['fontFamily']?.toString() ?? 'MaterialIcons',
         );
       }
@@ -1618,7 +1795,9 @@ class SduiParser {
               (v['offsetX'] is num) ? (v['offsetX'] as num).toDouble() : 0.0,
               (v['offsetY'] is num) ? (v['offsetY'] as num).toDouble() : 0.0,
             ),
-            blurRadius: (v['blurRadius'] is num) ? (v['blurRadius'] as num).toDouble() : 0.0,
+            blurRadius: (v['blurRadius'] is num)
+                ? (v['blurRadius'] as num).toDouble()
+                : 0.0,
           );
         }
         return const Shadow();
@@ -1653,12 +1832,21 @@ class SduiParser {
   static Map<String, dynamic> _toJsonColumn(SduiColumn widget) {
     return {
       'type': 'column',
-      if (widget.mainAxisAlignment != null) 'mainAxisAlignment': widget.mainAxisAlignment.toString().split('.').last,
-      if (widget.crossAxisAlignment != null) 'crossAxisAlignment': widget.crossAxisAlignment.toString().split('.').last,
-      if (widget.mainAxisSize != null) 'mainAxisSize': widget.mainAxisSize.toString().split('.').last,
-      if (widget.textDirection != null) 'textDirection': widget.textDirection.toString().split('.').last,
-      if (widget.verticalDirection != null) 'verticalDirection': widget.verticalDirection.toString().split('.').last,
-      if (widget.textBaseline != null) 'textBaseline': widget.textBaseline.toString().split('.').last,
+      if (widget.mainAxisAlignment != null)
+        'mainAxisAlignment':
+            widget.mainAxisAlignment.toString().split('.').last,
+      if (widget.crossAxisAlignment != null)
+        'crossAxisAlignment':
+            widget.crossAxisAlignment.toString().split('.').last,
+      if (widget.mainAxisSize != null)
+        'mainAxisSize': widget.mainAxisSize.toString().split('.').last,
+      if (widget.textDirection != null)
+        'textDirection': widget.textDirection.toString().split('.').last,
+      if (widget.verticalDirection != null)
+        'verticalDirection':
+            widget.verticalDirection.toString().split('.').last,
+      if (widget.textBaseline != null)
+        'textBaseline': widget.textBaseline.toString().split('.').last,
       'children': widget.children.map(toJson).toList(),
     };
   }
@@ -1666,12 +1854,21 @@ class SduiParser {
   static Map<String, dynamic> _toJsonRow(SduiRow widget) {
     return {
       'type': 'row',
-      if (widget.mainAxisAlignment != null) 'mainAxisAlignment': widget.mainAxisAlignment.toString().split('.').last,
-      if (widget.crossAxisAlignment != null) 'crossAxisAlignment': widget.crossAxisAlignment.toString().split('.').last,
-      if (widget.mainAxisSize != null) 'mainAxisSize': widget.mainAxisSize.toString().split('.').last,
-      if (widget.textDirection != null) 'textDirection': widget.textDirection.toString().split('.').last,
-      if (widget.verticalDirection != null) 'verticalDirection': widget.verticalDirection.toString().split('.').last,
-      if (widget.textBaseline != null) 'textBaseline': widget.textBaseline.toString().split('.').last,
+      if (widget.mainAxisAlignment != null)
+        'mainAxisAlignment':
+            widget.mainAxisAlignment.toString().split('.').last,
+      if (widget.crossAxisAlignment != null)
+        'crossAxisAlignment':
+            widget.crossAxisAlignment.toString().split('.').last,
+      if (widget.mainAxisSize != null)
+        'mainAxisSize': widget.mainAxisSize.toString().split('.').last,
+      if (widget.textDirection != null)
+        'textDirection': widget.textDirection.toString().split('.').last,
+      if (widget.verticalDirection != null)
+        'verticalDirection':
+            widget.verticalDirection.toString().split('.').last,
+      if (widget.textBaseline != null)
+        'textBaseline': widget.textBaseline.toString().split('.').last,
       'children': widget.children.map(toJson).toList(),
     };
   }
@@ -1681,29 +1878,36 @@ class SduiParser {
       'type': 'text',
       'text': widget.text,
       if (widget.style != null) 'style': _toJsonTextStyle(widget.style!),
-      if (widget.textAlign != null) 'textAlign': widget.textAlign.toString().split('.').last,
-      if (widget.overflow != null) 'overflow': widget.overflow.toString().split('.').last,
+      if (widget.textAlign != null)
+        'textAlign': widget.textAlign.toString().split('.').last,
+      if (widget.overflow != null)
+        'overflow': widget.overflow.toString().split('.').last,
       if (widget.maxLines != null) 'maxLines': widget.maxLines,
       if (widget.softWrap != null) 'softWrap': widget.softWrap,
       if (widget.letterSpacing != null) 'letterSpacing': widget.letterSpacing,
       if (widget.wordSpacing != null) 'wordSpacing': widget.wordSpacing,
       if (widget.height != null) 'height': widget.height,
       if (widget.fontFamily != null) 'fontFamily': widget.fontFamily,
-      if (widget.textDirection != null) 'textDirection': widget.textDirection.toString().split('.').last,
+      if (widget.textDirection != null)
+        'textDirection': widget.textDirection.toString().split('.').last,
     };
   }
 
   static Map<String, dynamic> _toJsonTextStyle(TextStyle style) {
     return {
-      if (style.color != null) 'color': '#${style.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (style.color != null)
+        'color': '#${style.color!.value.toRadixString(16).padLeft(8, '0')}',
       if (style.fontSize != null) 'fontSize': style.fontSize,
-      if (style.fontWeight != null) 'fontWeight': style.fontWeight.toString().split('.').last,
-      if (style.decoration != null) 'decoration': style.decoration.toString().split('.').last,
+      if (style.fontWeight != null)
+        'fontWeight': style.fontWeight.toString().split('.').last,
+      if (style.decoration != null)
+        'decoration': style.decoration.toString().split('.').last,
       if (style.letterSpacing != null) 'letterSpacing': style.letterSpacing,
       if (style.wordSpacing != null) 'wordSpacing': style.wordSpacing,
       if (style.height != null) 'height': style.height,
       if (style.fontFamily != null) 'fontFamily': style.fontFamily,
-      if (style.fontStyle != null) 'fontStyle': style.fontStyle.toString().split('.').last,
+      if (style.fontStyle != null)
+        'fontStyle': style.fontStyle.toString().split('.').last,
     };
   }
 
@@ -1715,13 +1919,20 @@ class SduiParser {
       if (widget.height != null) 'height': widget.height,
       if (widget.fit != null) 'fit': widget.fit.toString().split('.').last,
       if (widget.alignment != null) 'alignment': widget.alignment.toString(),
-      if (widget.repeat != null) 'repeat': widget.repeat.toString().split('.').last,
-      if (widget.color != null) 'color': '#${widget.color!.value.toRadixString(16).padLeft(8, '0')}',
-      if (widget.colorBlendMode != null) 'colorBlendMode': widget.colorBlendMode.toString().split('.').last,
-      if (widget.centerSlice != null) 'centerSlice': widget.centerSlice.toString(),
-      if (widget.matchTextDirection != null) 'matchTextDirection': widget.matchTextDirection,
-      if (widget.gaplessPlayback != null) 'gaplessPlayback': widget.gaplessPlayback,
-      if (widget.filterQuality != null) 'filterQuality': widget.filterQuality.toString().split('.').last,
+      if (widget.repeat != null)
+        'repeat': widget.repeat.toString().split('.').last,
+      if (widget.color != null)
+        'color': '#${widget.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.colorBlendMode != null)
+        'colorBlendMode': widget.colorBlendMode.toString().split('.').last,
+      if (widget.centerSlice != null)
+        'centerSlice': widget.centerSlice.toString(),
+      if (widget.matchTextDirection != null)
+        'matchTextDirection': widget.matchTextDirection,
+      if (widget.gaplessPlayback != null)
+        'gaplessPlayback': widget.gaplessPlayback,
+      if (widget.filterQuality != null)
+        'filterQuality': widget.filterQuality.toString().split('.').last,
       if (widget.cacheWidth != null) 'cacheWidth': widget.cacheWidth,
       if (widget.cacheHeight != null) 'cacheHeight': widget.cacheHeight,
       if (widget.scale != null) 'scale': widget.scale,
@@ -1744,15 +1955,20 @@ class SduiParser {
       if (widget.child != null) 'child': toJson(widget.child!),
       if (widget.padding != null) 'padding': _toJsonEdgeInsets(widget.padding!),
       if (widget.margin != null) 'margin': _toJsonEdgeInsets(widget.margin!),
-      if (widget.decoration != null) 'decoration': _toJsonBoxDecoration(widget.decoration!),
+      if (widget.decoration != null)
+        'decoration': _toJsonBoxDecoration(widget.decoration!),
       if (widget.width != null) 'width': widget.width,
       if (widget.height != null) 'height': widget.height,
-      if (widget.color != null) 'color': '#${widget.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.color != null)
+        'color': '#${widget.color!.value.toRadixString(16).padLeft(8, '0')}',
       if (widget.alignment != null) 'alignment': widget.alignment.toString(),
-      if (widget.constraints != null) 'constraints': _toJsonBoxConstraints(widget.constraints!),
+      if (widget.constraints != null)
+        'constraints': _toJsonBoxConstraints(widget.constraints!),
       if (widget.transform != null) 'transform': widget.transform.toString(),
-      if (widget.transformAlignment != null) 'transformAlignment': widget.transformAlignment.toString(),
-      if (widget.clipBehavior != null) 'clipBehavior': widget.clipBehavior.toString().split('.').last,
+      if (widget.transformAlignment != null)
+        'transformAlignment': widget.transformAlignment.toString(),
+      if (widget.clipBehavior != null)
+        'clipBehavior': widget.clipBehavior.toString().split('.').last,
     };
   }
 
@@ -1761,21 +1977,35 @@ class SduiParser {
       'type': 'scaffold',
       if (widget.appBar != null) 'appBar': toJson(widget.appBar!),
       if (widget.body != null) 'body': toJson(widget.body!),
-      if (widget.floatingActionButton != null) 'floatingActionButton': toJson(widget.floatingActionButton!),
-      if (widget.bottomNavigationBar != null) 'bottomNavigationBar': toJson(widget.bottomNavigationBar!),
+      if (widget.floatingActionButton != null)
+        'floatingActionButton': toJson(widget.floatingActionButton!),
+      if (widget.bottomNavigationBar != null)
+        'bottomNavigationBar': toJson(widget.bottomNavigationBar!),
       if (widget.drawer != null) 'drawer': toJson(widget.drawer!),
       if (widget.endDrawer != null) 'endDrawer': toJson(widget.endDrawer!),
-      if (widget.bottomSheet != null) 'bottomSheet': toJson(widget.bottomSheet!),
-      if (widget.backgroundColor != null) 'backgroundColor': '#${widget.backgroundColor!.value.toRadixString(16).padLeft(8, '0')}',
-      if (widget.resizeToAvoidBottomInset != null) 'resizeToAvoidBottomInset': widget.resizeToAvoidBottomInset,
+      if (widget.bottomSheet != null)
+        'bottomSheet': toJson(widget.bottomSheet!),
+      if (widget.backgroundColor != null)
+        'backgroundColor':
+            '#${widget.backgroundColor!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.resizeToAvoidBottomInset != null)
+        'resizeToAvoidBottomInset': widget.resizeToAvoidBottomInset,
       if (widget.primary != null) 'primary': widget.primary,
-      if (widget.floatingActionButtonLocation != null) 'floatingActionButtonLocation': widget.floatingActionButtonLocation.toString().split('.').last,
+      if (widget.floatingActionButtonLocation != null)
+        'floatingActionButtonLocation':
+            widget.floatingActionButtonLocation.toString().split('.').last,
       if (widget.extendBody != null) 'extendBody': widget.extendBody,
-      if (widget.extendBodyBehindAppBar != null) 'extendBodyBehindAppBar': widget.extendBodyBehindAppBar,
-      if (widget.drawerScrimColor != null) 'drawerScrimColor': '#${widget.drawerScrimColor!.value.toRadixString(16).padLeft(8, '0')}',
-      if (widget.drawerEdgeDragWidth != null) 'drawerEdgeDragWidth': widget.drawerEdgeDragWidth,
-      if (widget.drawerEnableOpenDragGesture != null) 'drawerEnableOpenDragGesture': widget.drawerEnableOpenDragGesture,
-      if (widget.endDrawerEnableOpenDragGesture != null) 'endDrawerEnableOpenDragGesture': widget.endDrawerEnableOpenDragGesture,
+      if (widget.extendBodyBehindAppBar != null)
+        'extendBodyBehindAppBar': widget.extendBodyBehindAppBar,
+      if (widget.drawerScrimColor != null)
+        'drawerScrimColor':
+            '#${widget.drawerScrimColor!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.drawerEdgeDragWidth != null)
+        'drawerEdgeDragWidth': widget.drawerEdgeDragWidth,
+      if (widget.drawerEnableOpenDragGesture != null)
+        'drawerEnableOpenDragGesture': widget.drawerEnableOpenDragGesture,
+      if (widget.endDrawerEnableOpenDragGesture != null)
+        'endDrawerEnableOpenDragGesture': widget.endDrawerEnableOpenDragGesture,
     };
   }
 
@@ -1791,17 +2021,23 @@ class SduiParser {
       'type': 'icon',
       if (widget.icon != null) 'icon': widget.icon!.codePoint,
       if (widget.size != null) 'size': widget.size,
-      if (widget.color != null) 'color': '#${widget.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (widget.color != null)
+        'color': '#${widget.color!.value.toRadixString(16).padLeft(8, '0')}',
       if (widget.semanticLabel != null) 'semanticLabel': widget.semanticLabel,
-      if (widget.textDirection != null) 'textDirection': widget.textDirection.toString().split('.').last,
+      if (widget.textDirection != null)
+        'textDirection': widget.textDirection.toString().split('.').last,
       if (widget.opacity != null) 'opacity': widget.opacity,
-      if (widget.applyTextScaling != null) 'applyTextScaling': widget.applyTextScaling,
-      if (widget.shadows != null) 'shadows': widget.shadows!.map((s) => s.toString()).toList(),
+      if (widget.applyTextScaling != null)
+        'applyTextScaling': widget.applyTextScaling,
+      if (widget.shadows != null)
+        'shadows': widget.shadows!.map((s) => s.toString()).toList(),
     };
   }
 
   static Map<String, dynamic> _toJsonEdgeInsets(EdgeInsets edge) {
-    if (edge.left == edge.right && edge.left == edge.top && edge.left == edge.bottom) {
+    if (edge.left == edge.right &&
+        edge.left == edge.top &&
+        edge.left == edge.bottom) {
       return {'all': edge.left};
     }
     return {
@@ -1814,13 +2050,17 @@ class SduiParser {
 
   static Map<String, dynamic> _toJsonBoxDecoration(BoxDecoration decoration) {
     return {
-      if (decoration.color != null) 'color': '#${decoration.color!.value.toRadixString(16).padLeft(8, '0')}',
-      if (decoration.borderRadius != null) 'borderRadius': decoration.borderRadius.toString(),
+      if (decoration.color != null)
+        'color':
+            '#${decoration.color!.value.toRadixString(16).padLeft(8, '0')}',
+      if (decoration.borderRadius != null)
+        'borderRadius': decoration.borderRadius.toString(),
       // Add more as needed
     };
   }
 
-  static Map<String, dynamic> _toJsonBoxConstraints(BoxConstraints constraints) {
+  static Map<String, dynamic> _toJsonBoxConstraints(
+      BoxConstraints constraints) {
     return {
       'minWidth': constraints.minWidth,
       'maxWidth': constraints.maxWidth,
@@ -1829,7 +2069,8 @@ class SduiParser {
     };
   }
 
-  static MainAxisAlignmentProto _mainAxisAlignmentToProto(MainAxisAlignment value) {
+  static MainAxisAlignmentProto _mainAxisAlignmentToProto(
+      MainAxisAlignment value) {
     switch (value) {
       case MainAxisAlignment.start:
         return MainAxisAlignmentProto.MAIN_AXIS_START;
@@ -1843,10 +2084,11 @@ class SduiParser {
         return MainAxisAlignmentProto.SPACE_AROUND;
       case MainAxisAlignment.spaceEvenly:
         return MainAxisAlignmentProto.SPACE_EVENLY;
-      }
+    }
   }
 
-  static CrossAxisAlignmentProto _crossAxisAlignmentToProto(CrossAxisAlignment value) {
+  static CrossAxisAlignmentProto _crossAxisAlignmentToProto(
+      CrossAxisAlignment value) {
     switch (value) {
       case CrossAxisAlignment.start:
         return CrossAxisAlignmentProto.CROSS_AXIS_START;
@@ -1867,7 +2109,7 @@ class SduiParser {
         return MainAxisSizeProto.MIN;
       case MainAxisSize.max:
         return MainAxisSizeProto.MAX;
-      }
+    }
   }
 
   static TextDirectionProto _textDirectionToProto(TextDirection value) {
@@ -1879,7 +2121,8 @@ class SduiParser {
     }
   }
 
-  static VerticalDirectionProto _verticalDirectionToProto(VerticalDirection value) {
+  static VerticalDirectionProto _verticalDirectionToProto(
+      VerticalDirection value) {
     switch (value) {
       case VerticalDirection.up:
         return VerticalDirectionProto.UP;
@@ -1966,10 +2209,12 @@ class SduiParser {
     final data = SduiWidgetData()..type = WidgetType.COLUMN;
     data.children.addAll(col.children.map((c) => SduiParser.toProto(c)));
     if (col.mainAxisAlignment != null) {
-      data.mainAxisAlignment = _mainAxisAlignmentToProto(col.mainAxisAlignment!);
+      data.mainAxisAlignment =
+          _mainAxisAlignmentToProto(col.mainAxisAlignment!);
     }
     if (col.crossAxisAlignment != null) {
-      data.crossAxisAlignment = _crossAxisAlignmentToProto(col.crossAxisAlignment!);
+      data.crossAxisAlignment =
+          _crossAxisAlignmentToProto(col.crossAxisAlignment!);
     }
     if (col.mainAxisSize != null) {
       data.mainAxisSize = _mainAxisSizeToProto(col.mainAxisSize!);
@@ -1978,7 +2223,8 @@ class SduiParser {
       data.textDirection = _textDirectionToProto(col.textDirection!);
     }
     if (col.verticalDirection != null) {
-      data.verticalDirection = _verticalDirectionToProto(col.verticalDirection!);
+      data.verticalDirection =
+          _verticalDirectionToProto(col.verticalDirection!);
     }
     if (col.textBaseline != null) {
       data.textBaseline = _textBaselineToProto(col.textBaseline!);
@@ -1990,7 +2236,8 @@ class SduiParser {
     return SduiColumn(
       children: data.children.map((c) => SduiParser.parseProto(c)).toList(),
       mainAxisAlignment: _parseProtoMainAxisAlignment(data.mainAxisAlignment),
-      crossAxisAlignment: _parseProtoCrossAxisAlignment(data.crossAxisAlignment),
+      crossAxisAlignment:
+          _parseProtoCrossAxisAlignment(data.crossAxisAlignment),
       mainAxisSize: _parseProtoMainAxisSize(data.mainAxisSize),
       textDirection: _parseProtoTextDirection(data.textDirection),
       verticalDirection: _parseProtoVerticalDirection(data.verticalDirection),
@@ -2018,7 +2265,8 @@ class SduiParser {
     } else if (widget is SduiIcon) {
       return iconToProto(widget);
     }
-    throw UnimplementedError('toProto not implemented for [38;5;9m${widget.runtimeType}[0m');
+    throw UnimplementedError(
+        'toProto not implemented for [38;5;9m${widget.runtimeType}[0m');
   }
 
   static SduiWidget fromProto(SduiWidgetData data) {
@@ -2050,22 +2298,45 @@ class SduiParser {
   static SduiWidgetData rowToProto(SduiRow row) {
     final data = SduiWidgetData()..type = WidgetType.ROW;
     data.children.addAll(row.children.map((c) => SduiParser.toProto(c)));
-    if (row.mainAxisAlignment != null) data.mainAxisAlignment = _mainAxisAlignmentToProto(row.mainAxisAlignment!);
-    if (row.crossAxisAlignment != null) data.crossAxisAlignment = _crossAxisAlignmentToProto(row.crossAxisAlignment!);
-    if (row.mainAxisSize != null) data.mainAxisSize = _mainAxisSizeToProto(row.mainAxisSize!);
-    if (row.textDirection != null) data.textDirection = _textDirectionToProto(row.textDirection!);
-    if (row.verticalDirection != null) data.verticalDirection = _verticalDirectionToProto(row.verticalDirection!);
-    if (row.textBaseline != null) data.textBaseline = _textBaselineToProto(row.textBaseline!);
+    if (row.mainAxisAlignment != null) {
+      data.mainAxisAlignment =
+          _mainAxisAlignmentToProto(row.mainAxisAlignment!);
+    }
+    if (row.crossAxisAlignment != null) {
+      data.crossAxisAlignment =
+          _crossAxisAlignmentToProto(row.crossAxisAlignment!);
+    }
+    if (row.mainAxisSize != null) {
+      data.mainAxisSize = _mainAxisSizeToProto(row.mainAxisSize!);
+    }
+    if (row.textDirection != null) {
+      data.textDirection = _textDirectionToProto(row.textDirection!);
+    }
+    if (row.verticalDirection != null) {
+      data.verticalDirection =
+          _verticalDirectionToProto(row.verticalDirection!);
+    }
+    if (row.textBaseline != null) {
+      data.textBaseline = _textBaselineToProto(row.textBaseline!);
+    }
     return data;
   }
 
   static SduiRow rowFromProto(SduiWidgetData data) {
-    List<SduiWidget> children = data.children.map((c) => SduiParser.parseProto(c)).toList();
-    MainAxisAlignment mainAxisAlignment = _parseProtoMainAxisAlignment(data.mainAxisAlignment) ?? MainAxisAlignment.start;
-    CrossAxisAlignment crossAxisAlignment = _parseProtoCrossAxisAlignment(data.crossAxisAlignment) ?? CrossAxisAlignment.center;
-    MainAxisSize mainAxisSize = _parseProtoMainAxisSize(data.mainAxisSize) ?? MainAxisSize.max;
+    List<SduiWidget> children =
+        data.children.map((c) => SduiParser.parseProto(c)).toList();
+    MainAxisAlignment mainAxisAlignment =
+        _parseProtoMainAxisAlignment(data.mainAxisAlignment) ??
+            MainAxisAlignment.start;
+    CrossAxisAlignment crossAxisAlignment =
+        _parseProtoCrossAxisAlignment(data.crossAxisAlignment) ??
+            CrossAxisAlignment.center;
+    MainAxisSize mainAxisSize =
+        _parseProtoMainAxisSize(data.mainAxisSize) ?? MainAxisSize.max;
     TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
-    VerticalDirection verticalDirection = _parseProtoVerticalDirection(data.verticalDirection) ?? VerticalDirection.down;
+    VerticalDirection verticalDirection =
+        _parseProtoVerticalDirection(data.verticalDirection) ??
+            VerticalDirection.down;
     TextBaseline? textBaseline = _parseProtoTextBaseline(data.textBaseline);
     return SduiRow(
       children: children,
@@ -2083,26 +2354,37 @@ class SduiParser {
     final data = SduiWidgetData()..type = WidgetType.TEXT;
     data.stringAttributes['text'] = text.text;
     if (text.style != null) data.textStyle = _textStyleToProto(text.style!);
-    if (text.textAlign != null) data.textAlign = _textAlignToProto(text.textAlign!);
-    if (text.overflow != null) data.overflow = _textOverflowToProto(text.overflow!);
+    if (text.textAlign != null) {
+      data.textAlign = _textAlignToProto(text.textAlign!);
+    }
+    if (text.overflow != null) {
+      data.overflow = _textOverflowToProto(text.overflow!);
+    }
     if (text.maxLines != null) data.maxLines = text.maxLines!;
     if (text.softWrap != null) data.softWrap = text.softWrap!;
     if (text.letterSpacing != null) data.letterSpacing = text.letterSpacing!;
     if (text.wordSpacing != null) data.wordSpacing = text.wordSpacing!;
     if (text.height != null) data.height = text.height!;
     if (text.fontFamily != null) data.fontFamily = text.fontFamily!;
-    if (text.textDirection != null) data.textDirection = _textDirectionToProto(text.textDirection!);
+    if (text.textDirection != null) {
+      data.textDirection = _textDirectionToProto(text.textDirection!);
+    }
     // Individual style overrides
-    if (text.decoration != null) data.textStyle.decoration = _textDecorationToProto(text.decoration!);
+    if (text.decoration != null) {
+      data.textStyle.decoration = _textDecorationToProto(text.decoration!);
+    }
     if (text.fontSize != null) data.textStyle.fontSize = text.fontSize!;
-    if (text.fontWeight != null) data.textStyle.fontWeight = text.fontWeight.toString().split('.').last;
+    if (text.fontWeight != null) {
+      data.textStyle.fontWeight = text.fontWeight.toString().split('.').last;
+    }
     if (text.color != null) data.textStyle.color = _colorToProto(text.color!);
     return data;
   }
 
   static SduiText textFromProto(SduiWidgetData data) {
     String text = data.stringAttributes['text'] ?? '';
-    TextStyle? style = data.hasTextStyle() ? _parseProtoTextStyle(data.textStyle) : null;
+    TextStyle? style =
+        data.hasTextStyle() ? _parseProtoTextStyle(data.textStyle) : null;
     TextAlign? textAlign = _parseProtoTextAlign(data.textAlign);
     TextOverflow? overflow = _parseProtoTextOverflow(data.overflow);
     int? maxLines = data.hasMaxLines() ? data.maxLines : null;
@@ -2113,10 +2395,20 @@ class SduiParser {
     String? fontFamily = data.hasFontFamily() ? data.fontFamily : null;
     TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
     // Individual style overrides
-    TextDecoration? decoration = data.hasTextStyle() && data.textStyle.hasDecoration() ? _parseProtoTextDecoration(data.textStyle.decoration) : null;
-    double? fontSize = data.hasTextStyle() && data.textStyle.hasFontSize() ? data.textStyle.fontSize : null;
-    FontWeight? fontWeight = data.hasTextStyle() && data.textStyle.fontWeight.isNotEmpty ? _parseProtoFontWeight(data.textStyle.fontWeight) : null;
-    Color? color = data.hasTextStyle() && data.textStyle.hasColor() ? _parseProtoColor(data.textStyle.color) : null;
+    TextDecoration? decoration =
+        data.hasTextStyle() && data.textStyle.hasDecoration()
+            ? _parseProtoTextDecoration(data.textStyle.decoration)
+            : null;
+    double? fontSize = data.hasTextStyle() && data.textStyle.hasFontSize()
+        ? data.textStyle.fontSize
+        : null;
+    FontWeight? fontWeight =
+        data.hasTextStyle() && data.textStyle.fontWeight.isNotEmpty
+            ? _parseProtoFontWeight(data.textStyle.fontWeight)
+            : null;
+    Color? color = data.hasTextStyle() && data.textStyle.hasColor()
+        ? _parseProtoColor(data.textStyle.color)
+        : null;
     return SduiText(
       text,
       style: style,
@@ -2142,15 +2434,29 @@ class SduiParser {
     data.stringAttributes['src'] = image.src;
     if (image.width != null) data.doubleAttributes['width'] = image.width!;
     if (image.height != null) data.doubleAttributes['height'] = image.height!;
-    if (image.fit != null) data.stringAttributes['fit'] = image.fit.toString().split('.').last;
-    if (image.alignment != null) data.alignment = _alignmentToProto(image.alignment!);
+    if (image.fit != null) {
+      data.stringAttributes['fit'] = image.fit.toString().split('.').last;
+    }
+    if (image.alignment != null) {
+      data.alignment = _alignmentToProto(image.alignment!);
+    }
     if (image.repeat != null) data.repeat = _imageRepeatToProto(image.repeat!);
     if (image.color != null) data.color = _colorToProto(image.color!);
-    if (image.colorBlendMode != null) data.colorBlendMode = _blendModeToProto(image.colorBlendMode!);
-    if (image.centerSlice != null) data.centerSlice = _rectToProto(image.centerSlice!);
-    if (image.matchTextDirection != null) data.matchTextDirection = image.matchTextDirection!;
-    if (image.gaplessPlayback != null) data.gaplessPlayback = image.gaplessPlayback!;
-    if (image.filterQuality != null) data.filterQuality = _filterQualityToProto(image.filterQuality!);
+    if (image.colorBlendMode != null) {
+      data.colorBlendMode = _blendModeToProto(image.colorBlendMode!);
+    }
+    if (image.centerSlice != null) {
+      data.centerSlice = _rectToProto(image.centerSlice!);
+    }
+    if (image.matchTextDirection != null) {
+      data.matchTextDirection = image.matchTextDirection!;
+    }
+    if (image.gaplessPlayback != null) {
+      data.gaplessPlayback = image.gaplessPlayback!;
+    }
+    if (image.filterQuality != null) {
+      data.filterQuality = _filterQualityToProto(image.filterQuality!);
+    }
     if (image.cacheWidth != null) data.cacheWidth = image.cacheWidth!;
     if (image.cacheHeight != null) data.cacheHeight = image.cacheHeight!;
     if (image.scale != null) data.scale = image.scale!;
@@ -2164,14 +2470,20 @@ class SduiParser {
     double? width = data.doubleAttributes['width'];
     double? height = data.doubleAttributes['height'];
     BoxFit? fit = _parseProtoBoxFit(data.stringAttributes['fit']);
-    Alignment alignment = _parseProtoAlignment(data.alignment) ?? Alignment.center;
-    ImageRepeat repeat = _parseProtoImageRepeat(data.repeat) ?? ImageRepeat.noRepeat;
+    Alignment alignment =
+        _parseProtoAlignment(data.alignment) ?? Alignment.center;
+    ImageRepeat repeat =
+        _parseProtoImageRepeat(data.repeat) ?? ImageRepeat.noRepeat;
     Color? color = data.hasColor() ? _parseProtoColor(data.color) : null;
     BlendMode? colorBlendMode = _parseProtoBlendMode(data.colorBlendMode);
-    Rect? centerSlice = data.hasCenterSlice() ? _parseProtoRect(data.centerSlice) : null;
-    bool matchTextDirection = data.hasMatchTextDirection() ? data.matchTextDirection : false;
-    bool gaplessPlayback = data.hasGaplessPlayback() ? data.gaplessPlayback : false;
-    FilterQuality filterQuality = _parseProtoFilterQuality(data.filterQuality) ?? FilterQuality.low;
+    Rect? centerSlice =
+        data.hasCenterSlice() ? _parseProtoRect(data.centerSlice) : null;
+    bool matchTextDirection =
+        data.hasMatchTextDirection() ? data.matchTextDirection : false;
+    bool gaplessPlayback =
+        data.hasGaplessPlayback() ? data.gaplessPlayback : false;
+    FilterQuality filterQuality =
+        _parseProtoFilterQuality(data.filterQuality) ?? FilterQuality.low;
     int? cacheWidth = data.hasCacheWidth() ? data.cacheWidth : null;
     int? cacheHeight = data.hasCacheHeight() ? data.cacheHeight : null;
     double scale = data.hasScale() ? data.scale : 1.0;
@@ -2307,7 +2619,8 @@ class SduiParser {
   static SduiSizedBox sizedBoxFromProto(SduiWidgetData data) {
     double? width = data.doubleAttributes['width'];
     double? height = data.doubleAttributes['height'];
-    SduiWidget? child = data.hasChild() ? SduiParser.parseProto(data.child) : null;
+    SduiWidget? child =
+        data.hasChild() ? SduiParser.parseProto(data.child) : null;
     return SduiSizedBox(width: width, height: height, child: child);
   }
 
@@ -2317,33 +2630,57 @@ class SduiParser {
     if (c.child != null) data.child = toProto(c.child!);
     if (c.padding != null) data.padding = _edgeInsetsToProto(c.padding!);
     if (c.margin != null) data.margin = _edgeInsetsToProto(c.margin!);
-    if (c.decoration != null) data.boxDecoration = _boxDecorationToProto(c.decoration!);
+    if (c.decoration != null) {
+      data.boxDecoration = _boxDecorationToProto(c.decoration!);
+    }
     if (c.width != null) data.doubleAttributes['width'] = c.width!;
     if (c.height != null) data.doubleAttributes['height'] = c.height!;
     // Only set color if decoration is null
-    if (c.decoration == null && c.color != null) data.color = _colorToProto(c.color!);
+    if (c.decoration == null && c.color != null) {
+      data.color = _colorToProto(c.color!);
+    }
     if (c.alignment != null) data.alignment = _alignmentToProto(c.alignment!);
-    if (c.constraints != null) data.constraints = _boxConstraintsToProto(c.constraints!);
+    if (c.constraints != null) {
+      data.constraints = _boxConstraintsToProto(c.constraints!);
+    }
     if (c.transform != null) data.transform = _matrix4ToProto(c.transform!);
-    if (c.transformAlignment != null) data.transformAlignment = _alignmentGeometryToProto(c.transformAlignment!);
-    if (c.clipBehavior != null && c.clipBehavior != Clip.none) data.clipBehavior = _clipToProto(c.clipBehavior!);
+    if (c.transformAlignment != null) {
+      data.transformAlignment =
+          _alignmentGeometryToProto(c.transformAlignment!);
+    }
+    if (c.clipBehavior != null && c.clipBehavior != Clip.none) {
+      data.clipBehavior = _clipToProto(c.clipBehavior!);
+    }
     return data;
   }
 
   static SduiContainer containerFromProto(SduiWidgetData data) {
-    SduiWidget? child = data.hasChild() ? SduiParser.parseProto(data.child) : null;
-    EdgeInsets? padding = data.hasPadding() ? _parseProtoEdgeInsets(data.padding) : null;
-    EdgeInsets? margin = data.hasMargin() ? _parseProtoEdgeInsets(data.margin) : null;
-    BoxDecoration? decoration = data.hasBoxDecoration() ? _parseProtoBoxDecoration(data.boxDecoration) : null;
+    SduiWidget? child =
+        data.hasChild() ? SduiParser.parseProto(data.child) : null;
+    EdgeInsets? padding =
+        data.hasPadding() ? _parseProtoEdgeInsets(data.padding) : null;
+    EdgeInsets? margin =
+        data.hasMargin() ? _parseProtoEdgeInsets(data.margin) : null;
+    BoxDecoration? decoration = data.hasBoxDecoration()
+        ? _parseProtoBoxDecoration(data.boxDecoration)
+        : null;
     double? width = data.doubleAttributes['width'];
     double? height = data.doubleAttributes['height'];
     // Only use color if decoration is null
-    Color? color = (decoration == null && data.hasColor()) ? _parseProtoColor(data.color) : null;
+    Color? color = (decoration == null && data.hasColor())
+        ? _parseProtoColor(data.color)
+        : null;
     Alignment? alignment = _parseProtoAlignment(data.alignment);
-    BoxConstraints? constraints = data.hasConstraints() ? _parseProtoBoxConstraints(data.constraints) : null;
-    Matrix4? transform = data.hasTransform() ? _parseProtoTransform(data.transform) : null;
-    AlignmentGeometry? transformAlignment = data.hasTransformAlignment() ? _parseProtoAlignmentGeometry(data.transformAlignment) : null;
-    Clip? clipBehavior = data.hasClipBehavior() ? _parseProtoClip(data.clipBehavior) : Clip.none;
+    BoxConstraints? constraints = data.hasConstraints()
+        ? _parseProtoBoxConstraints(data.constraints)
+        : null;
+    Matrix4? transform =
+        data.hasTransform() ? _parseProtoTransform(data.transform) : null;
+    AlignmentGeometry? transformAlignment = data.hasTransformAlignment()
+        ? _parseProtoAlignmentGeometry(data.transformAlignment)
+        : null;
+    Clip? clipBehavior =
+        data.hasClipBehavior() ? _parseProtoClip(data.clipBehavior) : Clip.none;
     return SduiContainer(
       child: child,
       padding: padding,
@@ -2362,7 +2699,9 @@ class SduiParser {
 
   static EdgeInsetsData _edgeInsetsToProto(EdgeInsets edge) {
     final data = EdgeInsetsData();
-    if (edge.left == edge.right && edge.left == edge.top && edge.left == edge.bottom) {
+    if (edge.left == edge.right &&
+        edge.left == edge.top &&
+        edge.left == edge.bottom) {
       data.all = edge.left;
     } else {
       data.left = edge.left;
@@ -2376,8 +2715,10 @@ class SduiParser {
   static BoxDecorationData _boxDecorationToProto(BoxDecoration decoration) {
     final data = BoxDecorationData();
     if (decoration.color != null) data.color = _colorToProto(decoration.color!);
-    if (decoration.borderRadius != null && decoration.borderRadius is BorderRadius) {
-      data.borderRadius = _borderRadiusToProto(decoration.borderRadius as BorderRadius);
+    if (decoration.borderRadius != null &&
+        decoration.borderRadius is BorderRadius) {
+      data.borderRadius =
+          _borderRadiusToProto(decoration.borderRadius as BorderRadius);
     }
     // Add more as needed
     return data;
@@ -2427,7 +2768,8 @@ class SduiParser {
       return _alignmentToProto(alignment);
     }
     // Fallback: center
-    return AlignmentData()..predefined = AlignmentData_PredefinedAlignment.CENTER_ALIGN;
+    return AlignmentData()
+      ..predefined = AlignmentData_PredefinedAlignment.CENTER_ALIGN;
   }
 
   static ClipProto _clipToProto(Clip clip) {
@@ -2448,42 +2790,87 @@ class SduiParser {
     final data = SduiWidgetData()..type = WidgetType.SCAFFOLD;
     if (s.appBar != null) data.appBar = toProto(s.appBar!);
     if (s.body != null) data.body = toProto(s.body!);
-    if (s.floatingActionButton != null) data.floatingActionButton = toProto(s.floatingActionButton!);
-    if (s.bottomNavigationBar != null) data.bottomNavigationBar = toProto(s.bottomNavigationBar!);
+    if (s.floatingActionButton != null) {
+      data.floatingActionButton = toProto(s.floatingActionButton!);
+    }
+    if (s.bottomNavigationBar != null) {
+      data.bottomNavigationBar = toProto(s.bottomNavigationBar!);
+    }
     if (s.drawer != null) data.drawer = toProto(s.drawer!);
     if (s.endDrawer != null) data.endDrawer = toProto(s.endDrawer!);
     if (s.bottomSheet != null) data.bottomSheet = toProto(s.bottomSheet!);
-    if (s.backgroundColor != null) data.backgroundColor = _colorToProto(s.backgroundColor!);
-    if (s.resizeToAvoidBottomInset != null) data.resizeToAvoidBottomInset = s.resizeToAvoidBottomInset!;
+    if (s.backgroundColor != null) {
+      data.backgroundColor = _colorToProto(s.backgroundColor!);
+    }
+    if (s.resizeToAvoidBottomInset != null) {
+      data.resizeToAvoidBottomInset = s.resizeToAvoidBottomInset!;
+    }
     if (s.primary != null) data.primary = s.primary!;
-    if (s.floatingActionButtonLocation != null) data.floatingActionButtonLocation = _fabLocationToProto(s.floatingActionButtonLocation!);
+    if (s.floatingActionButtonLocation != null) {
+      data.floatingActionButtonLocation =
+          _fabLocationToProto(s.floatingActionButtonLocation!);
+    }
     if (s.extendBody != null) data.extendBody = s.extendBody!;
-    if (s.extendBodyBehindAppBar != null) data.extendBodyBehindAppBar = s.extendBodyBehindAppBar!;
-    if (s.drawerScrimColor != null) data.drawerScrimColor = _colorToProto(s.drawerScrimColor!);
-    if (s.drawerEdgeDragWidth != null) data.drawerEdgeDragWidth = s.drawerEdgeDragWidth!;
-    if (s.drawerEnableOpenDragGesture != null) data.drawerEnableOpenDragGesture = s.drawerEnableOpenDragGesture!;
-    if (s.endDrawerEnableOpenDragGesture != null) data.endDrawerEnableOpenDragGesture = s.endDrawerEnableOpenDragGesture!;
+    if (s.extendBodyBehindAppBar != null) {
+      data.extendBodyBehindAppBar = s.extendBodyBehindAppBar!;
+    }
+    if (s.drawerScrimColor != null) {
+      data.drawerScrimColor = _colorToProto(s.drawerScrimColor!);
+    }
+    if (s.drawerEdgeDragWidth != null) {
+      data.drawerEdgeDragWidth = s.drawerEdgeDragWidth!;
+    }
+    if (s.drawerEnableOpenDragGesture != null) {
+      data.drawerEnableOpenDragGesture = s.drawerEnableOpenDragGesture!;
+    }
+    if (s.endDrawerEnableOpenDragGesture != null) {
+      data.endDrawerEnableOpenDragGesture = s.endDrawerEnableOpenDragGesture!;
+    }
     return data;
   }
 
   static SduiScaffold scaffoldFromProto(SduiWidgetData data) {
-    SduiWidget? appBar = data.hasAppBar() ? SduiParser.parseProto(data.appBar) : null;
+    SduiWidget? appBar =
+        data.hasAppBar() ? SduiParser.parseProto(data.appBar) : null;
     SduiWidget? body = data.hasBody() ? SduiParser.parseProto(data.body) : null;
-    SduiWidget? floatingActionButton = data.hasFloatingActionButton() ? SduiParser.parseProto(data.floatingActionButton) : null;
-    SduiWidget? bottomNavigationBar = data.hasBottomNavigationBar() ? SduiParser.parseProto(data.bottomNavigationBar) : null;
-    SduiWidget? drawer = data.hasDrawer() ? SduiParser.parseProto(data.drawer) : null;
-    SduiWidget? endDrawer = data.hasEndDrawer() ? SduiParser.parseProto(data.endDrawer) : null;
-    SduiWidget? bottomSheet = data.hasBottomSheet() ? SduiParser.parseProto(data.bottomSheet) : null;
-    Color? backgroundColor = data.hasBackgroundColor() ? _parseProtoColor(data.backgroundColor) : null;
-    bool? resizeToAvoidBottomInset = data.hasResizeToAvoidBottomInset() ? data.resizeToAvoidBottomInset : null;
+    SduiWidget? floatingActionButton = data.hasFloatingActionButton()
+        ? SduiParser.parseProto(data.floatingActionButton)
+        : null;
+    SduiWidget? bottomNavigationBar = data.hasBottomNavigationBar()
+        ? SduiParser.parseProto(data.bottomNavigationBar)
+        : null;
+    SduiWidget? drawer =
+        data.hasDrawer() ? SduiParser.parseProto(data.drawer) : null;
+    SduiWidget? endDrawer =
+        data.hasEndDrawer() ? SduiParser.parseProto(data.endDrawer) : null;
+    SduiWidget? bottomSheet =
+        data.hasBottomSheet() ? SduiParser.parseProto(data.bottomSheet) : null;
+    Color? backgroundColor = data.hasBackgroundColor()
+        ? _parseProtoColor(data.backgroundColor)
+        : null;
+    bool? resizeToAvoidBottomInset = data.hasResizeToAvoidBottomInset()
+        ? data.resizeToAvoidBottomInset
+        : null;
     bool primary = data.hasPrimary() ? data.primary : true;
-    FloatingActionButtonLocation? floatingActionButtonLocation = data.hasFloatingActionButtonLocation() ? _parseProtoFabLocation(data.floatingActionButtonLocation) : null;
+    FloatingActionButtonLocation? floatingActionButtonLocation =
+        data.hasFloatingActionButtonLocation()
+            ? _parseProtoFabLocation(data.floatingActionButtonLocation)
+            : null;
     bool extendBody = data.hasExtendBody() ? data.extendBody : false;
-    bool extendBodyBehindAppBar = data.hasExtendBodyBehindAppBar() ? data.extendBodyBehindAppBar : false;
-    Color? drawerScrimColor = data.hasDrawerScrimColor() ? _parseProtoColor(data.drawerScrimColor) : null;
-    double? drawerEdgeDragWidth = data.hasDrawerEdgeDragWidth() ? data.drawerEdgeDragWidth : null;
-    bool drawerEnableOpenDragGesture = data.hasDrawerEnableOpenDragGesture() ? data.drawerEnableOpenDragGesture : true;
-    bool endDrawerEnableOpenDragGesture = data.hasEndDrawerEnableOpenDragGesture() ? data.endDrawerEnableOpenDragGesture : true;
+    bool extendBodyBehindAppBar =
+        data.hasExtendBodyBehindAppBar() ? data.extendBodyBehindAppBar : false;
+    Color? drawerScrimColor = data.hasDrawerScrimColor()
+        ? _parseProtoColor(data.drawerScrimColor)
+        : null;
+    double? drawerEdgeDragWidth =
+        data.hasDrawerEdgeDragWidth() ? data.drawerEdgeDragWidth : null;
+    bool drawerEnableOpenDragGesture = data.hasDrawerEnableOpenDragGesture()
+        ? data.drawerEnableOpenDragGesture
+        : true;
+    bool endDrawerEnableOpenDragGesture =
+        data.hasEndDrawerEnableOpenDragGesture()
+            ? data.endDrawerEnableOpenDragGesture
+            : true;
     return SduiScaffold(
       appBar: appBar,
       body: body,
@@ -2505,20 +2892,45 @@ class SduiParser {
     );
   }
 
-  static FloatingActionButtonLocationProto _fabLocationToProto(FloatingActionButtonLocation loc) {
+  static FloatingActionButtonLocationProto _fabLocationToProto(
+      FloatingActionButtonLocation loc) {
     // Use the same mapping as _parseProtoFabLocation, but reversed
-    if (loc == FloatingActionButtonLocation.startTop) return FloatingActionButtonLocationProto.FAB_START_TOP;
-    if (loc == FloatingActionButtonLocation.startFloat) return FloatingActionButtonLocationProto.FAB_START_FLOAT;
-    if (loc == FloatingActionButtonLocation.centerTop) return FloatingActionButtonLocationProto.FAB_CENTER_TOP;
-    if (loc == FloatingActionButtonLocation.centerFloat) return FloatingActionButtonLocationProto.FAB_CENTER_FLOAT;
-    if (loc == FloatingActionButtonLocation.endTop) return FloatingActionButtonLocationProto.FAB_END_TOP;
-    if (loc == FloatingActionButtonLocation.endFloat) return FloatingActionButtonLocationProto.FAB_END_FLOAT;
-    if (loc == FloatingActionButtonLocation.miniCenterTop) return FloatingActionButtonLocationProto.FAB_MINI_CENTER_TOP;
-    if (loc == FloatingActionButtonLocation.miniCenterFloat) return FloatingActionButtonLocationProto.FAB_MINI_CENTER_FLOAT;
-    if (loc == FloatingActionButtonLocation.miniStartTop) return FloatingActionButtonLocationProto.FAB_MINI_START_TOP;
-    if (loc == FloatingActionButtonLocation.miniStartFloat) return FloatingActionButtonLocationProto.FAB_MINI_START_FLOAT;
-    if (loc == FloatingActionButtonLocation.miniEndTop) return FloatingActionButtonLocationProto.FAB_MINI_END_TOP;
-    if (loc == FloatingActionButtonLocation.miniEndFloat) return FloatingActionButtonLocationProto.FAB_MINI_END_FLOAT;
+    if (loc == FloatingActionButtonLocation.startTop) {
+      return FloatingActionButtonLocationProto.FAB_START_TOP;
+    }
+    if (loc == FloatingActionButtonLocation.startFloat) {
+      return FloatingActionButtonLocationProto.FAB_START_FLOAT;
+    }
+    if (loc == FloatingActionButtonLocation.centerTop) {
+      return FloatingActionButtonLocationProto.FAB_CENTER_TOP;
+    }
+    if (loc == FloatingActionButtonLocation.centerFloat) {
+      return FloatingActionButtonLocationProto.FAB_CENTER_FLOAT;
+    }
+    if (loc == FloatingActionButtonLocation.endTop) {
+      return FloatingActionButtonLocationProto.FAB_END_TOP;
+    }
+    if (loc == FloatingActionButtonLocation.endFloat) {
+      return FloatingActionButtonLocationProto.FAB_END_FLOAT;
+    }
+    if (loc == FloatingActionButtonLocation.miniCenterTop) {
+      return FloatingActionButtonLocationProto.FAB_MINI_CENTER_TOP;
+    }
+    if (loc == FloatingActionButtonLocation.miniCenterFloat) {
+      return FloatingActionButtonLocationProto.FAB_MINI_CENTER_FLOAT;
+    }
+    if (loc == FloatingActionButtonLocation.miniStartTop) {
+      return FloatingActionButtonLocationProto.FAB_MINI_START_TOP;
+    }
+    if (loc == FloatingActionButtonLocation.miniStartFloat) {
+      return FloatingActionButtonLocationProto.FAB_MINI_START_FLOAT;
+    }
+    if (loc == FloatingActionButtonLocation.miniEndTop) {
+      return FloatingActionButtonLocationProto.FAB_MINI_END_TOP;
+    }
+    if (loc == FloatingActionButtonLocation.miniEndFloat) {
+      return FloatingActionButtonLocationProto.FAB_MINI_END_FLOAT;
+    }
     return FloatingActionButtonLocationProto.FAB_CENTER_FLOAT;
   }
 
@@ -2545,22 +2957,32 @@ class SduiParser {
     if (icon.size != null) data.icon.size = icon.size!;
     if (icon.color != null) data.icon.color = _colorToProto(icon.color!);
     if (icon.semanticLabel != null) data.semanticLabel = icon.semanticLabel!;
-    if (icon.textDirection != null) data.textDirection = _textDirectionToProto(icon.textDirection!);
+    if (icon.textDirection != null) {
+      data.textDirection = _textDirectionToProto(icon.textDirection!);
+    }
     if (icon.opacity != null) data.opacity = icon.opacity!;
-    if (icon.applyTextScaling != null) data.applyTextScaling = icon.applyTextScaling!;
-    if (icon.shadows != null) data.shadows.addAll(icon.shadows!.map(_shadowToProto));
+    if (icon.applyTextScaling != null) {
+      data.applyTextScaling = icon.applyTextScaling!;
+    }
+    if (icon.shadows != null) {
+      data.shadows.addAll(icon.shadows!.map(_shadowToProto));
+    }
     return data;
   }
 
   static SduiIcon iconFromProto(SduiWidgetData data) {
     IconData? iconData = data.hasIcon() ? _parseProtoIconData(data.icon) : null;
     double? size = data.icon.size;
-    Color? color = data.icon.hasColor() ? _parseProtoColor(data.icon.color) : null;
+    Color? color =
+        data.icon.hasColor() ? _parseProtoColor(data.icon.color) : null;
     String? semanticLabel = data.hasSemanticLabel() ? data.semanticLabel : null;
     TextDirection? textDirection = _parseProtoTextDirection(data.textDirection);
     double? opacity = data.hasOpacity() ? data.opacity : null;
-    bool? applyTextScaling = data.hasApplyTextScaling() ? data.applyTextScaling : null;
-    List<Shadow>? shadows = data.shadows.isNotEmpty ? data.shadows.map((s) => _parseProtoShadow(s)).toList() : null;
+    bool? applyTextScaling =
+        data.hasApplyTextScaling() ? data.applyTextScaling : null;
+    List<Shadow>? shadows = data.shadows.isNotEmpty
+        ? data.shadows.map((s) => _parseProtoShadow(s)).toList()
+        : null;
     return SduiIcon(
       icon: iconData,
       size: size,
@@ -2586,13 +3008,19 @@ class SduiParser {
     final data = TextStyleData();
     if (style.color != null) data.color = _colorToProto(style.color!);
     if (style.fontSize != null) data.fontSize = style.fontSize!;
-    if (style.fontWeight != null) data.fontWeight = style.fontWeight.toString().split('.').last;
-    if (style.decoration != null) data.decoration = _textDecorationToProto(style.decoration!);
+    if (style.fontWeight != null) {
+      data.fontWeight = style.fontWeight.toString().split('.').last;
+    }
+    if (style.decoration != null) {
+      data.decoration = _textDecorationToProto(style.decoration!);
+    }
     if (style.letterSpacing != null) data.letterSpacing = style.letterSpacing!;
     if (style.wordSpacing != null) data.wordSpacing = style.wordSpacing!;
     if (style.height != null) data.height = style.height!;
     if (style.fontFamily != null) data.fontFamily = style.fontFamily!;
-    if (style.fontStyle != null) data.fontStyle = _fontStyleToProto(style.fontStyle!);
+    if (style.fontStyle != null) {
+      data.fontStyle = _fontStyleToProto(style.fontStyle!);
+    }
     return data;
   }
 
@@ -2610,7 +3038,6 @@ class SduiParser {
         return TextAlignProto.TEXT_ALIGN_START;
       case TextAlign.end:
         return TextAlignProto.TEXT_ALIGN_END;
-      
     }
   }
 
@@ -2624,7 +3051,6 @@ class SduiParser {
         return TextOverflowProto.FADE;
       case TextOverflow.visible:
         return TextOverflowProto.VISIBLE;
-      
     }
   }
 
@@ -2637,10 +3063,18 @@ class SduiParser {
   }
 
   static TextDecorationProto _textDecorationToProto(TextDecoration decoration) {
-    if (decoration == TextDecoration.none) return TextDecorationProto.TEXT_DECORATION_NONE;
-    if (decoration == TextDecoration.underline) return TextDecorationProto.UNDERLINE;
-    if (decoration == TextDecoration.overline) return TextDecorationProto.OVERLINE;
-    if (decoration == TextDecoration.lineThrough) return TextDecorationProto.LINE_THROUGH;
+    if (decoration == TextDecoration.none) {
+      return TextDecorationProto.TEXT_DECORATION_NONE;
+    }
+    if (decoration == TextDecoration.underline) {
+      return TextDecorationProto.UNDERLINE;
+    }
+    if (decoration == TextDecoration.overline) {
+      return TextDecorationProto.OVERLINE;
+    }
+    if (decoration == TextDecoration.lineThrough) {
+      return TextDecorationProto.LINE_THROUGH;
+    }
     return TextDecorationProto.TEXT_DECORATION_NONE;
   }
 

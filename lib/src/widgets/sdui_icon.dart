@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 
@@ -52,7 +54,7 @@ class SduiIcon extends SduiWidget {
 
   String? get iconName {
     if (icon == null) return null;
-    
+
     const codePointToName = <int, String>{
       0xe8b8: 'settings',
       0xe88a: 'home',
@@ -62,7 +64,7 @@ class SduiIcon extends SduiWidget {
       0xe88e: 'info',
       0xe318: 'home',
     };
-    print(codePointToName);
+    log(codePointToName.toString());
     return codePointToName[icon!.codePoint];
   }
 

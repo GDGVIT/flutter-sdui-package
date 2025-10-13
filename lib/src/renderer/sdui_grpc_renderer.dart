@@ -4,21 +4,47 @@ import 'package:flutter_sdui/src/parser/sdui_proto_parser.dart';
 import 'package:flutter_sdui/src/service/sdui_grpc_client.dart';
 import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 
-/// A widget that renders a UI from a gRPC server.
+/// A Flutter widget that renders server-driven UI from a gRPC server.
+///
+/// This widget acts as the main entry point for rendering server-driven UI.
+/// It fetches widget definitions from a gRPC server, parses them, and renders
+/// the resulting widget tree in the Flutter app.
+///
+/// The renderer handles loading states, error states, and automatic re-fetching
+/// when the screen ID or client changes.
+///
+/// Example usage:
+/// ```dart
+/// SduiGrpcRenderer(
+///   client: sduiClient,
+///   screenId: 'home',
+///   loadingWidget: CustomLoadingSpinner(),
+///   errorBuilder: (context, error) => ErrorWidget(error),
+/// )
+/// ```
 class SduiGrpcRenderer extends StatefulWidget {
-  /// The gRPC client to use for fetching UI widgets.
+  /// The gRPC client used to fetch widget data from the server.
   final SduiGrpcClient client;
 
-  /// The screen ID to fetch from the server.
+  /// The identifier for the screen/UI to fetch from the server.
+  /// This should correspond to a valid screen ID on the server.
   final String screenId;
 
-  /// Optional loading widget to display while fetching the UI.
+  /// Optional widget to display while the UI is being fetched.
+  /// If not provided, a default [CircularProgressIndicator] is shown.
   final Widget? loadingWidget;
 
-  /// Optional error widget builder to display if an error occurs.
+  /// Optional builder function to create a custom error widget.
+  ///
+  /// The function receives the [BuildContext] and the error [Object].
+  /// If not provided, a default error text widget is displayed.
   final Widget Function(BuildContext, Object)? errorBuilder;
 
-  /// Creates a new SduiGrpcRenderer.
+  /// Creates a new [SduiGrpcRenderer].
+  ///
+  /// The [client] and [screenId] parameters are required.
+  /// The [loadingWidget] and [errorBuilder] parameters are optional
+  /// and provide customization for loading and error states.
   const SduiGrpcRenderer({
     super.key,
     required this.client,
@@ -49,6 +75,7 @@ class _SduiGrpcRendererState extends State<SduiGrpcRenderer> {
     }
   }
 
+  /// Initiates a request to fetch widget data from the server.
   void _fetchWidget() {
     _widgetFuture = widget.client.getWidget(widget.screenId);
   }
@@ -67,8 +94,7 @@ class _SduiGrpcRendererState extends State<SduiGrpcRenderer> {
           }
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
-          // Convert the protobuf data to a Flutter widget
-          // This will use our SduiProtoParser to create the widget tree
+          // Parse the protobuf data and convert to Flutter widget
           final SduiWidget sduiWidget = SduiParser.parseProto(snapshot.data!);
           return sduiWidget.toFlutterWidget();
         } else {

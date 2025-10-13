@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sdui/flutter_sdui.dart';
 
+/// Example application demonstrating Flutter SDUI with gRPC.
+///
+/// This example shows how to:
+/// * Connect to a gRPC server
+/// * Fetch server-driven UI definitions
+/// * Render dynamic UI content
+/// * Handle different screen types
 void main() {
   runApp(const MyApp());
 }
 
+/// Root application widget that sets up the Material theme and routing.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -21,6 +29,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// Demo widget that showcases the gRPC renderer functionality.
+///
+/// This widget demonstrates how to:
+/// * Initialize a gRPC client connection
+/// * Switch between different screen definitions
+/// * Handle loading and error states
+/// * Properly dispose of resources
 class GrpcRendererDemo extends StatefulWidget {
   const GrpcRendererDemo({super.key});
 
@@ -35,16 +50,16 @@ class _GrpcRendererDemoState extends State<GrpcRendererDemo> {
   @override
   void initState() {
     super.initState();
-    // Connect to your gRPC server
+    // Initialize gRPC client with server connection details
     _grpcClient = SduiGrpcClient(
-      host: 'localhost', // Replace with your server address
-      port: 50051, // Replace with your server port
+      host: 'localhost',
+      port: 50051,
     );
   }
 
   @override
   void dispose() {
-    // Close the gRPC connection when done
+    // Clean up gRPC connection
     _grpcClient.dispose();
     super.dispose();
   }
@@ -57,7 +72,7 @@ class _GrpcRendererDemoState extends State<GrpcRendererDemo> {
       ),
       body: Column(
         children: [
-          // Screen selector
+          // Screen selection controls
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -84,7 +99,7 @@ class _GrpcRendererDemoState extends State<GrpcRendererDemo> {
             ),
           ),
 
-          // SDUI Renderer that fetches UI from gRPC server
+          // Server-driven UI renderer
           Expanded(
             child: SduiGrpcRenderer(
               client: _grpcClient,

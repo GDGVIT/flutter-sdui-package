@@ -1,18 +1,46 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 
-/// Represents an Icon widget in SDUI.
+/// A server-driven UI widget that represents a Flutter [Icon] widget.
+///
+/// This widget displays a graphical icon from Flutter's built-in icon sets
+/// or custom icon fonts. It supports comprehensive styling options including
+/// size, color, shadows, and opacity.
+///
+/// The widget can handle missing icon data gracefully by rendering an empty
+/// widget instead of throwing an error.
 class SduiIcon extends SduiWidget {
+  /// The icon to display. If null, an empty widget will be rendered.
   final IconData? icon;
+
+  /// The size of the icon in logical pixels.
   final double? size;
+
+  /// The color to use when drawing the icon.
   final Color? color;
+
+  /// Semantic description of the icon for accessibility.
   final String? semanticLabel;
+
+  /// The text direction to use for resolving the icon.
   final TextDirection? textDirection;
-  final double?
-      opacity; // Custom property for opacity - will use Opacity widget
+
+  /// The opacity to apply to the icon. Values should be between 0.0 and 1.0.
+  final double? opacity;
+
+  /// Whether to scale the icon based on the text scale factor.
   final bool? applyTextScaling;
+
+  /// A list of shadows to cast behind the icon.
   final List<Shadow>? shadows;
 
+  /// Creates a new [SduiIcon] widget.
+  ///
+  /// All parameters are optional. If [icon] is null, an empty widget
+  /// will be rendered. The [opacity] will be applied using an [Opacity]
+  /// widget if the value is less than 1.0.
   SduiIcon({
     this.icon,
     this.size,
@@ -26,7 +54,7 @@ class SduiIcon extends SduiWidget {
 
   String? get iconName {
     if (icon == null) return null;
-    
+
     const codePointToName = <int, String>{
       0xe8b8: 'settings',
       0xe88a: 'home',
@@ -36,7 +64,7 @@ class SduiIcon extends SduiWidget {
       0xe88e: 'info',
       0xe318: 'home',
     };
-    print(codePointToName);
+    log(codePointToName.toString());
     return codePointToName[icon!.codePoint];
   }
 
@@ -56,7 +84,7 @@ class SduiIcon extends SduiWidget {
       applyTextScaling: applyTextScaling,
     );
 
-    // Apply opacity if provided
+    // Apply opacity wrapper if needed
     if (opacity != null && opacity! < 1.0) {
       iconWidget = Opacity(
         opacity: opacity!,

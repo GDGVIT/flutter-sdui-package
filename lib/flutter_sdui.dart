@@ -17,6 +17,7 @@ export 'src/widgets/sdui_container.dart';
 export 'src/widgets/sdui_scaffold.dart';
 export 'src/widgets/sdui_spacer.dart';
 export 'src/widgets/sdui_icon.dart';
+export 'src/widgets/sdui_appbar.dart';
 
 // Export gRPC client and renderer
 export 'src/service/sdui_grpc_client.dart';

@@ -8,6 +8,7 @@ import 'package:flutter_sdui/src/widgets/sdui_container.dart';
 import 'package:flutter_sdui/src/widgets/sdui_scaffold.dart';
 import 'package:flutter_sdui/src/widgets/sdui_spacer.dart';
 import 'package:flutter_sdui/src/widgets/sdui_icon.dart';
+import 'package:flutter_sdui/src/widgets/sdui_appbar.dart';
 import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 
 SduiWidget flutterToSdui(Widget widget) {
@@ -135,7 +136,25 @@ SduiWidget flutterToSdui(Widget widget) {
       applyTextScaling: widget.applyTextScaling,
       shadows: widget.shadows,
     );
+  } else if (widget is AppBar) {
+    return SduiAppBar(
+      title: widget.title is Text ? (widget.title as Text).data : null,
+      backgroundColor: widget.backgroundColor,
+      foregroundColor: widget.foregroundColor,
+      elevation: widget.elevation,
+      centerTitle: widget.centerTitle,
+      actions: widget.actions,
+      leading: widget.leading,
+      bottom: widget.bottom,
+      toolbarHeight: widget.toolbarHeight,
+      leadingWidth: widget.leadingWidth,
+      automaticallyImplyLeading: widget.automaticallyImplyLeading,
+      flexibleSpace: widget.flexibleSpace,
+      titleSpacing: widget.titleSpacing,
+      toolbarOpacity: widget.toolbarOpacity,
+      bottomOpacity: widget.bottomOpacity,
+    );
   }
   throw UnimplementedError(
-      'Conversion for [38;5;9m${widget.runtimeType}[0m is not implemented');
+      'Conversion for ${widget.runtimeType} is not implemented');
 }

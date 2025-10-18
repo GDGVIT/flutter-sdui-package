@@ -3,7 +3,7 @@
 	<img width="400" src="https://user-images.githubusercontent.com/56252312/159312411-58410727-3933-4224-b43e-4e9b627838a3.png#gh-light-mode-only" alt="GDSC VIT"/>
 </a>
 	<h2 align="center">Flutter Glimpse</h2>
-	<h4 align="center">A Flutter package for implementing Server-Driven UI with both JSON and gRPC support<h4>
+	<h4 align="center">A powerful Flutter package for implementing Server-Driven UI (SDUI) with both JSON and gRPC support.<h4>
 </p>
 
 [![Join Us](https://img.shields.io/badge/Join%20Us-Developer%20Student%20Clubs-red)](https://dsc.community.dev/vellore-institute-of-technology/)
@@ -11,7 +11,6 @@
 [![DOCS](https://img.shields.io/badge/Documentation-see%20docs-green?style=flat-square&logo=appveyor)](docs/grpc_support.md)
 [![UI ](https://img.shields.io/badge/Flutter-SDK-blue?style=flat-square&logo=flutter)](https://flutter.dev)
 
-A powerful Flutter package for implementing Server-Driven UI (SDUI) with both JSON and gRPC support.
 
 ## What is SDUI?
 

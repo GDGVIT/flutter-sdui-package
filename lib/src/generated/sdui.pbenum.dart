@@ -14,6 +14,7 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 /// Enum for Widget Types
+/// 
 class WidgetType extends $pb.ProtobufEnum {
   static const WidgetType WIDGET_TYPE_UNSPECIFIED =
       WidgetType._(0, _omitEnumNames ? '' : 'WIDGET_TYPE_UNSPECIFIED');
@@ -32,6 +33,7 @@ class WidgetType extends $pb.ProtobufEnum {
   static const WidgetType SPACER =
       WidgetType._(8, _omitEnumNames ? '' : 'SPACER');
   static const WidgetType ICON = WidgetType._(9, _omitEnumNames ? '' : 'ICON');
+  static const WidgetType APPBAR = WidgetType._(10, _omitEnumNames ? '' : 'APPBAR');
 
   static const $core.List<WidgetType> values = <WidgetType>[
     WIDGET_TYPE_UNSPECIFIED,
@@ -44,10 +46,11 @@ class WidgetType extends $pb.ProtobufEnum {
     SCAFFOLD,
     SPACER,
     ICON,
+    APPBAR,
   ];
 
   static final $core.List<WidgetType?> _byValue =
-      $pb.ProtobufEnum.$_initByValueList(values, 9);
+      $pb.ProtobufEnum.$_initByValueList(values, 10);
   static WidgetType? valueOf($core.int value) =>
       value < 0 || value >= _byValue.length ? null : _byValue[value];
 

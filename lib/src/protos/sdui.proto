@@ -14,6 +14,7 @@ enum WidgetType {
   SCAFFOLD = 7;
   SPACER = 8;
   ICON = 9;
+  APPBAR = 10;
   // Add other widget types here
 }
 
@@ -101,6 +102,20 @@ message SduiWidgetData {
   double opacity = 62;
   bool apply_text_scaling = 63;
   repeated ShadowData shadows = 64;
+  
+  // AppBar specific attributes
+  SduiWidgetData title_widget = 65; // For custom title widget
+  ColorData foreground_color = 66;
+  repeated SduiWidgetData actions = 67;
+  SduiWidgetData leading = 68;
+  SduiWidgetData bottom = 69;
+  double toolbar_height = 70;
+  double leading_width = 71;
+  bool automatically_imply_leading = 72;
+  SduiWidgetData flexible_space = 73;
+  double title_spacing = 74;
+  double toolbar_opacity = 75;
+  double bottom_opacity = 76;
 }
 
 // Message for Color

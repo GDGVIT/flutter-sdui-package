@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sdui/src/generated/sdui.pb.dart';
+import 'package:flutter_sdui/src/widgets/sdui_appbar.dart';
 import 'package:flutter_sdui/src/widgets/sdui_column.dart';
 import 'package:flutter_sdui/src/widgets/sdui_container.dart';
 import 'package:flutter_sdui/src/widgets/sdui_icon.dart';
@@ -55,6 +56,8 @@ class SduiParser {
         return _parseJsonSpacer(data);
       case 'icon':
         return _parseJsonIcon(data);
+      case 'appbar':
+        return _parseJsonAppBar(data);
       default:
         return SduiContainer();
     }
@@ -91,6 +94,8 @@ class SduiParser {
         return _parseProtoSpacer(data);
       case WidgetType.ICON:
         return _parseProtoIcon(data);
+      case WidgetType.APPBAR:
+        return _parseProtoAppBar(data);
       default:
         log('Unsupported widget type: ${data.type}');
         return SduiContainer();
@@ -404,6 +409,33 @@ class SduiParser {
       opacity: opacity,
       applyTextScaling: applyTextScaling,
       shadows: shadows,
+    );
+  }
+
+  static SduiAppBar _parseProtoAppBar(SduiWidgetData data) {
+    String? title = data.stringAttributes['title'];
+    Color? backgroundColor = data.hasBackgroundColor()
+        ? _parseProtoColor(data.backgroundColor)
+        : null;
+    double? elevation = data.doubleAttributes['elevation'];
+    bool? centerTitle = data.boolAttributes['centerTitle'];
+
+    return SduiAppBar(
+      title: title,
+      backgroundColor: backgroundColor,
+      foregroundColor: null,
+      elevation: elevation,
+      centerTitle: centerTitle,
+      actions: null,
+      leading: null,
+      bottom: null,
+      toolbarHeight: null,
+      leadingWidth: null,
+      automaticallyImplyLeading: null,
+      flexibleSpace: null,
+      titleSpacing: null,
+      toolbarOpacity: null,
+      bottomOpacity: null,
     );
   }
 
@@ -1220,6 +1252,60 @@ class SduiParser {
       applyTextScaling:
           data['applyTextScaling'] is bool ? data['applyTextScaling'] : null,
       shadows: _parseJsonShadows(data['shadows']),
+    );
+  }
+
+  static SduiAppBar _parseJsonAppBar(Map<String, dynamic> data) {
+    List<Widget>? actions;
+    if (data['actions'] is List) {
+      actions = (data['actions'] as List)
+          .map((a) => SduiParser.parseJSON(a as Map<String, dynamic>).toFlutterWidget())
+          .toList();
+    }
+
+    Widget? leading;
+    if (data['leading'] != null) {
+      leading = SduiParser.parseJSON(data['leading'] as Map<String, dynamic>)
+          .toFlutterWidget();
+    }
+
+    Widget? flexibleSpace;
+    if (data['flexibleSpace'] != null) {
+      flexibleSpace =
+          SduiParser.parseJSON(data['flexibleSpace'] as Map<String, dynamic>)
+              .toFlutterWidget();
+    }
+
+    return SduiAppBar(
+      title: data['title']?.toString(),
+      backgroundColor: _parseJsonColor(data['backgroundColor']),
+      foregroundColor: _parseJsonColor(data['foregroundColor']),
+      elevation: (data['elevation'] is num)
+          ? (data['elevation'] as num).toDouble()
+          : null,
+      centerTitle: data['centerTitle'] is bool ? data['centerTitle'] : null,
+      actions: actions,
+      leading: leading,
+      bottom: null, // Complex widget, needs special handling
+      toolbarHeight: (data['toolbarHeight'] is num)
+          ? (data['toolbarHeight'] as num).toDouble()
+          : null,
+      leadingWidth: (data['leadingWidth'] is num)
+          ? (data['leadingWidth'] as num).toDouble()
+          : null,
+      automaticallyImplyLeading: data['automaticallyImplyLeading'] is bool
+          ? data['automaticallyImplyLeading']
+          : null,
+      flexibleSpace: flexibleSpace,
+      titleSpacing: (data['titleSpacing'] is num)
+          ? (data['titleSpacing'] as num).toDouble()
+          : null,
+      toolbarOpacity: (data['toolbarOpacity'] is num)
+          ? (data['toolbarOpacity'] as num).toDouble()
+          : null,
+      bottomOpacity: (data['bottomOpacity'] is num)
+          ? (data['bottomOpacity'] as num).toDouble()
+          : null,
     );
   }
 

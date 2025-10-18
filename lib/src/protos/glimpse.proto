@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package flutter_sdui;
+package flutter_glimpse;
 
 // Enum for Widget Types
 enum WidgetType {
@@ -14,12 +14,12 @@ enum WidgetType {
   SCAFFOLD = 7;
   SPACER = 8;
   ICON = 9;
-  APPBAR = 10;
+  APP_BAR = 10;
   // Add other widget types here
 }
 
 // Generic Widget message
-message SduiWidgetData {
+message GlimpseWidgetData {
   WidgetType type = 1;
   map<string, string> string_attributes = 2; // For simple string attributes like text content, image src
   map<string, double> double_attributes = 3; // For numerical attributes like width, height, flex
@@ -35,20 +35,20 @@ message SduiWidgetData {
   BoxDecorationData box_decoration = 11;
 
   // Children widgets
-  repeated SduiWidgetData children = 12;
-  SduiWidgetData child = 13; // For widgets that take a single child (e.g. SizedBox, Container)
+  repeated GlimpseWidgetData children = 12;
+  GlimpseWidgetData child = 13; // For widgets that take a single child (e.g. SizedBox, Container)
 
   // Scaffold specific parts
-  SduiWidgetData app_bar = 14;
-  SduiWidgetData body = 15; // Body can also be a single child
-  SduiWidgetData floating_action_button = 16;
+  GlimpseWidgetData app_bar = 14;
+  GlimpseWidgetData body = 15; // Body can also be a single child
+  GlimpseWidgetData floating_action_button = 16;
   ColorData background_color = 17; // For Scaffold background
   
   // New Scaffold attributes
-  SduiWidgetData bottom_navigation_bar = 18;
-  SduiWidgetData drawer = 19;
-  SduiWidgetData end_drawer = 20;
-  SduiWidgetData bottom_sheet = 21;
+  GlimpseWidgetData bottom_navigation_bar = 18;
+  GlimpseWidgetData drawer = 19;
+  GlimpseWidgetData end_drawer = 20;
+  GlimpseWidgetData bottom_sheet = 21;
   bool resize_to_avoid_bottom_inset = 22;
   bool primary = 23;
   FloatingActionButtonLocationProto floating_action_button_location = 24;
@@ -95,8 +95,8 @@ message SduiWidgetData {
   int32 cache_height = 57;
   double scale = 58;
   string semantic_label = 59;
-  SduiWidgetData error_widget = 60;
-  SduiWidgetData loading_widget = 61;
+  GlimpseWidgetData error_widget = 60;
+  GlimpseWidgetData loading_widget = 61;
   
   // Icon specific attributes
   double opacity = 62;
@@ -104,15 +104,15 @@ message SduiWidgetData {
   repeated ShadowData shadows = 64;
   
   // AppBar specific attributes
-  SduiWidgetData title_widget = 65; // For custom title widget
+  GlimpseWidgetData title_widget = 65; // For custom title widget
   ColorData foreground_color = 66;
-  repeated SduiWidgetData actions = 67;
-  SduiWidgetData leading = 68;
-  SduiWidgetData bottom = 69;
+  repeated GlimpseWidgetData actions = 67;
+  GlimpseWidgetData leading = 68;
+  GlimpseWidgetData bottom = 69;
   double toolbar_height = 70;
   double leading_width = 71;
   bool automatically_imply_leading = 72;
-  SduiWidgetData flexible_space = 73;
+  GlimpseWidgetData flexible_space = 73;
   double title_spacing = 74;
   double toolbar_opacity = 75;
   double bottom_opacity = 76;
@@ -507,11 +507,11 @@ enum FloatingActionButtonLocationProto {
 }
 
 // Service definition
-service SduiService {
-  rpc GetSduiWidget (SduiRequest) returns (SduiWidgetData);
+service GlimpseService {
+  rpc GetGlimpseWidget (GlimpseRequest) returns (GlimpseWidgetData);
 }
 
-message SduiRequest {
+message GlimpseRequest {
   string screen_id = 1; // Example: identifier for which UI to fetch
 }
 

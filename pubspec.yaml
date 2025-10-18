@@ -1,8 +1,8 @@
-name: flutter_sdui
+name: flutter_glimpse
 description: "A Flutter package for Server-Driven UI with JSON and gRPC support. Build dynamic UIs updated from the server without app releases."
 version: 0.0.1
-homepage: https://github.com/GDGVIT/flutter-sdui-package
-repository: https://github.com/GDGVIT/flutter-sdui-package
+homepage: https://github.com/GDGVIT/flutter-glimpse
+repository: https://github.com/GDGVIT/flutter-glimpse
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/flutter_glimpse.dart';
 
-/// Represents an AppBar widget in SDUI.
-class SduiAppBar extends SduiWidget {
+/// Represents an AppBar widget in Glimpse.
+class GlimpseAppBar extends GlimpseWidget {
   final String? title;
   final Color? backgroundColor;
   final Color? foregroundColor;
@@ -19,7 +19,7 @@ class SduiAppBar extends SduiWidget {
   final double? toolbarOpacity;
   final double? bottomOpacity;
 
-  SduiAppBar({
+  GlimpseAppBar({
     this.title,
     this.backgroundColor,
     this.foregroundColor,

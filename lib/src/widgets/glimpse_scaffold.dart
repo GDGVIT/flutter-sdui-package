@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/src/widgets/glimpse_widget.dart';
 
-/// A server-driven UI widget that represents a Flutter [Scaffold] widget.
+/// A Glimpse widget that represents a Flutter [Scaffold] widget.
 ///
 /// This widget implements the basic material design visual layout structure.
 /// It provides slots for the most common components of a screen, such as
@@ -14,27 +14,27 @@ import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 ///
 /// Note: The [appBar] widget must resolve to a [PreferredSizeWidget]
 /// (such as an AppBar) to be properly displayed.
-class SduiScaffold extends SduiWidget {
+class GlimpseScaffold extends GlimpseWidget {
   /// An app bar to display at the top of the scaffold.
-  final SduiWidget? appBar;
+  final GlimpseWidget? appBar;
 
   /// The primary content of the scaffold.
-  final SduiWidget? body;
+  final GlimpseWidget? body;
 
   /// A floating action button displayed over the body.
-  final SduiWidget? floatingActionButton;
+  final GlimpseWidget? floatingActionButton;
 
   /// A bottom navigation bar to display at the bottom of the scaffold.
-  final SduiWidget? bottomNavigationBar;
+  final GlimpseWidget? bottomNavigationBar;
 
   /// A navigation drawer that slides in from the left side.
-  final SduiWidget? drawer;
+  final GlimpseWidget? drawer;
 
   /// A navigation drawer that slides in from the right side.
-  final SduiWidget? endDrawer;
+  final GlimpseWidget? endDrawer;
 
   /// A bottom sheet displayed above the scaffold body.
-  final SduiWidget? bottomSheet;
+  final GlimpseWidget? bottomSheet;
 
   /// The color of the scaffold's background.
   final Color? backgroundColor;
@@ -66,11 +66,11 @@ class SduiScaffold extends SduiWidget {
   /// Whether the end drawer can be opened with a drag gesture.
   final bool? endDrawerEnableOpenDragGesture;
 
-  /// Creates a new [SduiScaffold] widget.
+  /// Creates a new [GlimpseScaffold] widget.
   ///
   /// All parameters are optional. The scaffold will display only the
   /// components that are provided.
-  SduiScaffold({
+  GlimpseScaffold({
     this.appBar,
     this.body,
     this.floatingActionButton,
@@ -98,8 +98,7 @@ class SduiScaffold extends SduiWidget {
       if (potentialAppBar is PreferredSizeWidget) {
         flutterAppBar = potentialAppBar;
       } else {
-        log(
-            "Warning: appBar widget for SduiScaffold is not a PreferredSizeWidget. It might not render correctly.");
+        log("Warning: appBar widget for GlimpseScaffold is not a PreferredSizeWidget. It might not render correctly.");
       }
     }
 

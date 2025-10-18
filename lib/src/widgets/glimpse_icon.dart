@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/src/widgets/glimpse_widget.dart';
 
-/// A server-driven UI widget that represents a Flutter [Icon] widget.
+/// A Glimpse widget that represents a Flutter [Icon] widget.
 ///
 /// This widget displays a graphical icon from Flutter's built-in icon sets
 /// or custom icon fonts. It supports comprehensive styling options including
@@ -11,7 +11,7 @@ import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 ///
 /// The widget can handle missing icon data gracefully by rendering an empty
 /// widget instead of throwing an error.
-class SduiIcon extends SduiWidget {
+class GlimpseIcon extends GlimpseWidget {
   /// The icon to display. If null, an empty widget will be rendered.
   final IconData? icon;
 
@@ -36,12 +36,12 @@ class SduiIcon extends SduiWidget {
   /// A list of shadows to cast behind the icon.
   final List<Shadow>? shadows;
 
-  /// Creates a new [SduiIcon] widget.
+  /// Creates a new [GlimpseIcon] widget.
   ///
   /// All parameters are optional. If [icon] is null, an empty widget
   /// will be rendered. The [opacity] will be applied using an [Opacity]
   /// widget if the value is less than 1.0.
-  SduiIcon({
+  GlimpseIcon({
     this.icon,
     this.size,
     this.color,

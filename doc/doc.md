@@ -1,4 +1,4 @@
-# Comprehensive Guide to Creating Screens with Flutter SDUI and gRPC
+# Comprehensive Guide to Creating Screens with Flutter Glimpse and gRPC
 
 ## Overview
 
@@ -6,23 +6,24 @@ This guide explains how to create dynamic UI screens for Flutter applications us
 
 ## Setup Requirements
 
-1. **Flutter application** with the `flutter_sdui` package
+1. **Flutter application** with the `flutter_glimpse` package
 2. **gRPC server** (can be implemented in any language that supports gRPC)
-3. **Proto definitions** from the SDUI package
+3. **Proto definitions** from the Glimpse package
 
 ## Creating a gRPC Server
 
 ### 1. Set Up Server Environment
 
 Example in Dart:
+
 ```dart
 import 'package:grpc/grpc.dart';
-import 'package:flutter_sdui/src/generated/sdui.pbgrpc.dart';
+import 'package:flutter_glimpse/src/generated/glimpse.pbgrpc.dart';
 
 Future<void> main() async {
   final server = Server.create(
     services: [
-      SduiServiceImpl(),
+      GlimpseServiceImpl(),
     ],
   );
 
@@ -32,15 +33,15 @@ Future<void> main() async {
 }
 ```
 
-### 2. Implement the SDUI Service
+### 2. Implement the Glimpse Service
 
-Create a class that implements the SDUI service from the protobuf definitions:
+Create a class that implements the Glimpse service from the protobuf definitions:
 
 ```dart
-class SduiServiceImpl extends SduiServiceBase {
+class GlimpseServiceImpl extends GlimpseServiceBase {
   @override
-  Future<SduiWidgetData> getSduiWidget(
-      ServiceCall call, SduiRequest request) async {
+  Future<GlimpseWidgetData> getGlimpseWidget(
+      ServiceCall call, GlimpseRequest request) async {
     // Return different UI based on the requested screen ID
     switch (request.screenId) {
       case 'home':
@@ -59,24 +60,24 @@ class SduiServiceImpl extends SduiServiceBase {
 
 ### Basic Structure of a Screen
 
-Each screen is built as a tree of `SduiWidgetData` objects:
+Each screen is built as a tree of `GlimpseWidgetData` objects:
 
 ```dart
-SduiWidgetData createScreen() {
-  final screen = SduiWidgetData()
+GlimpseWidgetData createScreen() {
+  final screen = GlimpseWidgetData()
     ..type = WidgetType.SCAFFOLD
-    ..appBar = (SduiWidgetData()
+    ..appBar = (GlimpseWidgetData()
       ..type = WidgetType.CONTAINER
       // Define appBar properties
-      ..child = (SduiWidgetData()
+      ..child = (GlimpseWidgetData()
         ..type = WidgetType.TEXT
         ..stringAttributes['text'] = 'Screen Title'))
-    ..body = (SduiWidgetData()
+    ..body = (GlimpseWidgetData()
       ..type = WidgetType.COLUMN
       ..children.addAll([
         // Add child widgets here
       ]));
-  
+
   return screen;
 }
 ```
@@ -84,23 +85,27 @@ SduiWidgetData createScreen() {
 ### Common Widget Types
 
 #### Scaffold
+
 The root container for a screen:
+
 ```dart
-SduiWidgetData()
+GlimpseWidgetData()
   ..type = WidgetType.SCAFFOLD
   ..backgroundColor = (ColorData()
     ..red = 255
     ..green = 255
     ..blue = 255
     ..alpha = 255)
-  ..appBar = (SduiWidgetData()...)
-  ..body = (SduiWidgetData()...)
+  ..appBar = (GlimpseWidgetData()...)
+  ..body = (GlimpseWidgetData()...)
 ```
 
 #### Container
+
 A box that can have decoration, padding, margin:
+
 ```dart
-SduiWidgetData()
+GlimpseWidgetData()
   ..type = WidgetType.CONTAINER
   ..padding = (EdgeInsetsData()..all = 16)
   ..margin = (EdgeInsetsData()
@@ -114,13 +119,15 @@ SduiWidgetData()
       ..blue = 240
       ..alpha = 255)
     ..borderRadius = (BorderRadiusData()..all = 8))
-  ..child = (SduiWidgetData()...)
+  ..child = (GlimpseWidgetData()...)
 ```
 
 #### Text
+
 Display text with styling:
+
 ```dart
-SduiWidgetData()
+GlimpseWidgetData()
   ..type = WidgetType.TEXT
   ..stringAttributes['text'] = 'Hello World'
   ..textStyle = (TextStyleData()
@@ -134,9 +141,11 @@ SduiWidgetData()
 ```
 
 #### Column and Row
+
 Layout widgets for vertical and horizontal arrangement:
+
 ```dart
-SduiWidgetData()
+GlimpseWidgetData()
   ..type = WidgetType.COLUMN  // or WidgetType.ROW
   ..mainAxisAlignment = MainAxisAlignmentProto.MAIN_AXIS_CENTER
   ..crossAxisAlignment = CrossAxisAlignmentProto.CROSS_AXIS_START
@@ -146,9 +155,11 @@ SduiWidgetData()
 ```
 
 #### Image
+
 Display network images:
+
 ```dart
-SduiWidgetData()
+GlimpseWidgetData()
   ..type = WidgetType.IMAGE
   ..stringAttributes['src'] = 'https://example.com/image.jpg'
   ..stringAttributes['fit'] = 'cover'
@@ -157,9 +168,11 @@ SduiWidgetData()
 ```
 
 #### Icon
+
 Display Material icons:
+
 ```dart
-SduiWidgetData()
+GlimpseWidgetData()
   ..type = WidgetType.ICON
   ..icon = (IconDataMessage()
     ..name = 'home'  // Material icon name
@@ -174,6 +187,7 @@ SduiWidgetData()
 ### Advanced Styling
 
 #### Gradients
+
 ```dart
 ..boxDecoration = (BoxDecorationData()
   ..gradient = (GradientData()
@@ -197,6 +211,7 @@ SduiWidgetData()
 ```
 
 #### Shadows
+
 ```dart
 ..boxDecoration = (BoxDecorationData()
   ..boxShadow.add(BoxShadowData()
@@ -212,6 +227,7 @@ SduiWidgetData()
 ```
 
 #### Transforms
+
 ```dart
 ..transform = (TransformData()
   ..type = TransformData_TransformType.ROTATE
@@ -221,11 +237,12 @@ SduiWidgetData()
 ## Example Screens
 
 ### Home Screen with Card Layout
+
 ```dart
-SduiWidgetData _createHomeScreen() {
-  final homeScreen = SduiWidgetData()
+GlimpseWidgetData _createHomeScreen() {
+  final homeScreen = GlimpseWidgetData()
     ..type = WidgetType.SCAFFOLD
-    ..appBar = (SduiWidgetData()
+    ..appBar = (GlimpseWidgetData()
       ..type = WidgetType.CONTAINER
       ..boxDecoration = (BoxDecorationData()
         ..color = (ColorData()
@@ -238,7 +255,7 @@ SduiWidgetData _createHomeScreen() {
         ..left = 16
         ..right = 16
         ..bottom = 8)
-      ..child = (SduiWidgetData()
+      ..child = (GlimpseWidgetData()
         ..type = WidgetType.TEXT
         ..stringAttributes['text'] = 'Home Screen'
         ..textStyle = (TextStyleData()
@@ -249,20 +266,20 @@ SduiWidgetData _createHomeScreen() {
             ..green = 255
             ..blue = 255
             ..alpha = 255))))
-    ..body = (SduiWidgetData()
+    ..body = (GlimpseWidgetData()
       ..type = WidgetType.COLUMN
       ..children.addAll([
         // Hero Image
-        SduiWidgetData()
+        GlimpseWidgetData()
           ..type = WidgetType.CONTAINER
           ..doubleAttributes['height'] = 200
-          ..child = (SduiWidgetData()
+          ..child = (GlimpseWidgetData()
             ..type = WidgetType.IMAGE
             ..stringAttributes['src'] = 'https://picsum.photos/800/300'
             ..stringAttributes['fit'] = 'cover'),
-            
+
         // Feature card
-        SduiWidgetData()
+        GlimpseWidgetData()
           ..type = WidgetType.CONTAINER
           ..margin = (EdgeInsetsData()..all = 16)
           ..padding = (EdgeInsetsData()..all = 16)
@@ -273,19 +290,19 @@ SduiWidgetData _createHomeScreen() {
               ..green = 240
               ..blue = 240
               ..alpha = 255))
-          ..child = (SduiWidgetData()
+          ..child = (GlimpseWidgetData()
             ..type = WidgetType.COLUMN
             ..children.addAll([
-              SduiWidgetData()
+              GlimpseWidgetData()
                 ..type = WidgetType.TEXT
                 ..stringAttributes['text'] = 'Feature Card'
                 ..textStyle = (TextStyleData()
                   ..fontSize = 18
                   ..fontWeight = 'bold'),
-              SduiWidgetData()
+              GlimpseWidgetData()
                 ..type = WidgetType.SIZED_BOX
                 ..doubleAttributes['height'] = 8,
-              SduiWidgetData()
+              GlimpseWidgetData()
                 ..type = WidgetType.TEXT
                 ..stringAttributes['text'] = 'This is a description of the feature'
             ]))
@@ -296,20 +313,21 @@ SduiWidgetData _createHomeScreen() {
 ```
 
 ### Profile Screen with Avatar
+
 ```dart
-SduiWidgetData _createProfileScreen() {
-  final profileScreen = SduiWidgetData()
+GlimpseWidgetData _createProfileScreen() {
+  final profileScreen = GlimpseWidgetData()
     ..type = WidgetType.SCAFFOLD
     ..backgroundColor = (ColorData()
       ..red = 245
       ..green = 245
       ..blue = 245
       ..alpha = 255)
-    ..body = (SduiWidgetData()
+    ..body = (GlimpseWidgetData()
       ..type = WidgetType.COLUMN
       ..children.addAll([
         // Profile Header
-        SduiWidgetData()
+        GlimpseWidgetData()
           ..type = WidgetType.CONTAINER
           ..color = (ColorData()
             ..red = 76
@@ -319,13 +337,13 @@ SduiWidgetData _createProfileScreen() {
           ..padding = (EdgeInsetsData()
             ..top = 40
             ..bottom = 20)
-          ..child = (SduiWidgetData()
+          ..child = (GlimpseWidgetData()
             ..type = WidgetType.COLUMN
             ..mainAxisAlignment = MainAxisAlignmentProto.MAIN_AXIS_CENTER
             ..crossAxisAlignment = CrossAxisAlignmentProto.CROSS_AXIS_CENTER
             ..children.addAll([
               // Avatar
-              SduiWidgetData()
+              GlimpseWidgetData()
                 ..type = WidgetType.CONTAINER
                 ..doubleAttributes['width'] = 100
                 ..doubleAttributes['height'] = 100
@@ -340,16 +358,16 @@ SduiWidgetData _createProfileScreen() {
                         ..alpha = 255)
                       ..width = 3
                       ..style = BorderStyleProto.SOLID)))
-                ..child = (SduiWidgetData()
+                ..child = (GlimpseWidgetData()
                   ..type = WidgetType.IMAGE
                   ..stringAttributes['src'] = 'https://randomuser.me/api/portraits/women/44.jpg'
                   ..stringAttributes['fit'] = 'cover'),
-              
+
               // Name
-              SduiWidgetData()
+              GlimpseWidgetData()
                 ..type = WidgetType.SIZED_BOX
                 ..doubleAttributes['height'] = 16,
-              SduiWidgetData()
+              GlimpseWidgetData()
                 ..type = WidgetType.TEXT
                 ..stringAttributes['text'] = 'Sarah Johnson'
                 ..textStyle = (TextStyleData()
@@ -370,18 +388,22 @@ SduiWidgetData _createProfileScreen() {
 ## Best Practices
 
 1. **Structure Your Code**
+
    - Create helper methods for repeated UI patterns
    - Break complex screens into logical sections
 
 2. **Handle Errors Gracefully**
+
    - Always provide an error screen for unknown screen IDs
    - Include helpful information in error screens
 
 3. **Optimize Network Usage**
+
    - Keep UI definitions concise
    - Consider caching common UI components
 
 4. **Progressive Enhancement**
+
    - Start with simple layouts and add complexity gradually
    - Test on different device sizes
 
@@ -396,8 +418,8 @@ SduiWidgetData _createProfileScreen() {
 Create helper methods for commonly used components:
 
 ```dart
-SduiWidgetData _createSettingItem(String title, String subtitle, String iconName) {
-  return SduiWidgetData()
+GlimpseWidgetData _createSettingItem(String title, String subtitle, String iconName) {
+  return GlimpseWidgetData()
     ..type = WidgetType.CONTAINER
     ..padding = (EdgeInsetsData()
       ..all = 12)
@@ -408,22 +430,22 @@ SduiWidgetData _createSettingItem(String title, String subtitle, String iconName
         ..green = 255
         ..blue = 255
         ..alpha = 255))
-    ..child = (SduiWidgetData()
+    ..child = (GlimpseWidgetData()
       ..type = WidgetType.ROW
       ..children.addAll([
         // Icon
-        SduiWidgetData()
+        GlimpseWidgetData()
           ..type = WidgetType.ICON
           ..icon = (IconDataMessage()
             ..name = iconName),
         // Content
-        SduiWidgetData()
+        GlimpseWidgetData()
           ..type = WidgetType.COLUMN
           ..children.addAll([
-            SduiWidgetData()
+            GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] = title,
-            SduiWidgetData()
+            GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] = subtitle
           ])
@@ -449,14 +471,17 @@ if (deviceWidth > 600) {
 ## Troubleshooting
 
 1. **Missing Properties**
+
    - Ensure all required properties are set for each widget type
    - Check for typos in property names
 
 2. **Enum Value Issues**
+
    - Ensure you're using the correct enum values defined in the proto files
    - Watch for renamed enum values to avoid conflicts
 
 3. **Nested Structure Problems**
+
    - Verify that all parentheses and brackets are properly closed
    - Maintain consistent indentation for readability
 

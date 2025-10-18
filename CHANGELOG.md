@@ -8,8 +8,8 @@
 - JSON and gRPC support for dynamic UI rendering
 - Protocol Buffers integration for type-safe communication
 - Core widget support: Text, Column, Row, Container, Scaffold, Image, Icon, SizedBox, Spacer
-- SduiGrpcClient for server communication
-- SduiGrpcRenderer widget for rendering server-driven UI
+- GlimpseGrpcClient for server communication
+- GlimpseGrpcRenderer widget for rendering server-driven UI
 - Comprehensive documentation and examples
-- Flutter-to-SDUI conversion utilities
+- Flutter-to-Glimpse conversion utilities
 - Error handling and loading states

@@ -1,8 +1,8 @@
-/// Example gRPC server implementation for Flutter SDUI.
+/// Example gRPC server implementation for Flutter Glimpse.
 ///
 /// This is a standalone Dart server that provides server-driven UI definitions
 /// through gRPC. It demonstrates how to:
-/// * Set up a gRPC server with SDUI service
+/// * Set up a gRPC server with Glimpse service
 /// * Handle different screen requests
 /// * Create widget definitions using protobuf
 /// * Return complex UI structures
@@ -14,19 +14,20 @@
 ///
 /// The server listens on port 50051 by default.
 library;
+
 import 'dart:developer';
 
 import 'package:grpc/grpc.dart';
-import 'package:flutter_sdui/src/generated/sdui.pbgrpc.dart';
+import 'package:flutter_glimpse/src/generated/glimpse.pbgrpc.dart';
 
 /// Entry point for the gRPC server.
 ///
-/// Initializes the server with the SDUI service implementation
+/// Initializes the server with the Glimpse service implementation
 /// and starts listening for client connections.
 Future<void> main() async {
   final server = Server.create(
     services: [
-      SduiServiceImpl(),
+      GlimpseServiceImpl(),
     ],
   );
 
@@ -36,14 +37,14 @@ Future<void> main() async {
   log('Press Ctrl+C to stop');
 }
 
-/// Implementation of the SDUI gRPC service.
+/// Implementation of the Glimpse gRPC service.
 ///
 /// This class handles incoming requests for UI definitions and returns
 /// appropriate widget data based on the requested screen ID.
-class SduiServiceImpl extends SduiServiceBase {
+class GlimpseServiceImpl extends GlimpseServiceBase {
   @override
-  Future<SduiWidgetData> getSduiWidget(
-      ServiceCall call, SduiRequest request) async {
+  Future<GlimpseWidgetData> getGlimpseWidget(
+      ServiceCall call, GlimpseRequest request) async {
     log('Received request for screen: ${request.screenId}');
 
     switch (request.screenId) {
@@ -62,32 +63,32 @@ class SduiServiceImpl extends SduiServiceBase {
   /// Creates the home screen UI definition.
   ///
   /// Returns a scaffold with an app bar and a column of welcome content.
-  SduiWidgetData _createHomeScreen() {
-    final homeScreen = SduiWidgetData()
+  GlimpseWidgetData _createHomeScreen() {
+    final homeScreen = GlimpseWidgetData()
       ..type = WidgetType.SCAFFOLD
-      ..body = (SduiWidgetData()
+      ..body = (GlimpseWidgetData()
         ..type = WidgetType.COLUMN
         ..children.addAll([
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()..all = 16)
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] = 'Welcome to Server-Driven UI!'
               ..textStyle = (TextStyleData()
                 ..fontSize = 22
                 ..fontWeight = 'bold')),
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()
               ..left = 16
               ..right = 16
               ..bottom = 16)
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] =
                   'This UI is rendered from data sent by the server via gRPC.'),
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()..all = 16)
             ..margin = (EdgeInsetsData()
@@ -99,10 +100,10 @@ class SduiServiceImpl extends SduiServiceBase {
                 ..green = 240
                 ..blue = 240
                 ..alpha = 255))
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.ROW
               ..children.addAll([
-                SduiWidgetData()
+                GlimpseWidgetData()
                   ..type = WidgetType.ICON
                   ..icon = (IconDataMessage()
                     ..name = 'home'
@@ -112,10 +113,10 @@ class SduiServiceImpl extends SduiServiceBase {
                       ..blue = 210
                       ..alpha = 255)
                     ..size = 24),
-                SduiWidgetData()
+                GlimpseWidgetData()
                   ..type = WidgetType.SIZED_BOX
                   ..doubleAttributes['width'] = 16,
-                SduiWidgetData()
+                GlimpseWidgetData()
                   ..type = WidgetType.TEXT
                   ..stringAttributes['text'] =
                       'Select a screen from the dropdown.'
@@ -125,10 +126,10 @@ class SduiServiceImpl extends SduiServiceBase {
     return homeScreen;
   }
 
-  SduiWidgetData _createProfileScreen() {
-    final profileScreen = SduiWidgetData()
+  GlimpseWidgetData _createProfileScreen() {
+    final profileScreen = GlimpseWidgetData()
       ..type = WidgetType.SCAFFOLD
-      ..appBar = (SduiWidgetData()
+      ..appBar = (GlimpseWidgetData()
         ..type = WidgetType.CONTAINER
         ..boxDecoration = (BoxDecorationData()
           ..color = (ColorData()
@@ -141,7 +142,7 @@ class SduiServiceImpl extends SduiServiceBase {
           ..left = 16
           ..right = 16
           ..bottom = 8)
-        ..child = (SduiWidgetData()
+        ..child = (GlimpseWidgetData()
           ..type = WidgetType.TEXT
           ..stringAttributes['text'] = 'Profile Screen'
           ..textStyle = (TextStyleData()
@@ -152,25 +153,25 @@ class SduiServiceImpl extends SduiServiceBase {
               ..green = 255
               ..blue = 255
               ..alpha = 255))))
-      ..body = (SduiWidgetData()
+      ..body = (GlimpseWidgetData()
         ..type = WidgetType.COLUMN
         ..children.addAll([
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()..all = 16)
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] = 'User Profile'
               ..textStyle = (TextStyleData()
                 ..fontSize = 22
                 ..fontWeight = 'bold')),
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()
               ..left = 16
               ..right = 16
               ..bottom = 24)
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] =
                   'This is a sample profile page rendered from gRPC data.'),
@@ -179,10 +180,10 @@ class SduiServiceImpl extends SduiServiceBase {
     return profileScreen;
   }
 
-  SduiWidgetData _createSettingsScreen() {
-    final settingsScreen = SduiWidgetData()
+  GlimpseWidgetData _createSettingsScreen() {
+    final settingsScreen = GlimpseWidgetData()
       ..type = WidgetType.SCAFFOLD
-      ..appBar = (SduiWidgetData()
+      ..appBar = (GlimpseWidgetData()
         ..type = WidgetType.CONTAINER
         ..boxDecoration = (BoxDecorationData()
           ..color = (ColorData()
@@ -195,7 +196,7 @@ class SduiServiceImpl extends SduiServiceBase {
           ..left = 16
           ..right = 16
           ..bottom = 8)
-        ..child = (SduiWidgetData()
+        ..child = (GlimpseWidgetData()
           ..type = WidgetType.TEXT
           ..stringAttributes['text'] = 'Settings Screen'
           ..textStyle = (TextStyleData()
@@ -206,25 +207,25 @@ class SduiServiceImpl extends SduiServiceBase {
               ..green = 255
               ..blue = 255
               ..alpha = 255))))
-      ..body = (SduiWidgetData()
+      ..body = (GlimpseWidgetData()
         ..type = WidgetType.COLUMN
         ..children.addAll([
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()..all = 16)
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] = 'App Settings'
               ..textStyle = (TextStyleData()
                 ..fontSize = 22
                 ..fontWeight = 'bold')),
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()
               ..left = 16
               ..right = 16
               ..bottom = 24)
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] =
                   'This is a sample settings page from the gRPC server.'),
@@ -233,10 +234,10 @@ class SduiServiceImpl extends SduiServiceBase {
     return settingsScreen;
   }
 
-  SduiWidgetData _createErrorScreen() {
-    final errorScreen = SduiWidgetData()
+  GlimpseWidgetData _createErrorScreen() {
+    final errorScreen = GlimpseWidgetData()
       ..type = WidgetType.SCAFFOLD
-      ..appBar = (SduiWidgetData()
+      ..appBar = (GlimpseWidgetData()
         ..type = WidgetType.CONTAINER
         ..boxDecoration = (BoxDecorationData()
           ..color = (ColorData()
@@ -249,7 +250,7 @@ class SduiServiceImpl extends SduiServiceBase {
           ..left = 16
           ..right = 16
           ..bottom = 8)
-        ..child = (SduiWidgetData()
+        ..child = (GlimpseWidgetData()
           ..type = WidgetType.TEXT
           ..stringAttributes['text'] = 'Error'
           ..textStyle = (TextStyleData()
@@ -260,13 +261,13 @@ class SduiServiceImpl extends SduiServiceBase {
               ..green = 255
               ..blue = 255
               ..alpha = 255))))
-      ..body = (SduiWidgetData()
+      ..body = (GlimpseWidgetData()
         ..type = WidgetType.COLUMN
         ..children.addAll([
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()..all = 16)
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] = 'Screen Not Found'
               ..textStyle = (TextStyleData()
@@ -277,12 +278,12 @@ class SduiServiceImpl extends SduiServiceBase {
                   ..green = 47
                   ..blue = 47
                   ..alpha = 255))),
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()
               ..left = 16
               ..right = 16)
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] =
                   'The requested screen could not be found. Try a different screen ID.'),

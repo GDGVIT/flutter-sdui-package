@@ -1,18 +1,18 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/src/widgets/glimpse_widget.dart';
 
-/// A server-driven UI widget that represents a Flutter [Container] widget.
+/// A Glimpse widget that represents a Flutter [Container] widget.
 ///
 /// This widget combines common painting, positioning, and sizing widgets
 /// into a single convenient widget. It's one of the most versatile widgets
-/// in the SDUI toolkit, supporting decoration, padding, margins, constraints,
+/// in the Glimpse toolkit, supporting decoration, padding, margins, constraints,
 /// and transformations.
 ///
 /// Note: The [color] parameter is only applied when [decoration] is null.
 /// If both are specified, [decoration] takes precedence.
-class SduiContainer extends SduiWidget {
+class GlimpseContainer extends GlimpseWidget {
   /// The widget below this widget in the tree.
-  final SduiWidget? child;
+  final GlimpseWidget? child;
 
   /// Empty space to inscribe inside the decoration. The child is placed inside this padding.
   final EdgeInsets? padding;
@@ -48,11 +48,11 @@ class SduiContainer extends SduiWidget {
   /// The clip behavior for the container's contents.
   final Clip? clipBehavior;
 
-  /// Creates a new [SduiContainer] widget.
+  /// Creates a new [GlimpseContainer] widget.
   ///
   /// All parameters are optional. The container's appearance and behavior
   /// are determined by the combination of properties provided.
-  SduiContainer({
+  GlimpseContainer({
     this.child,
     this.padding,
     this.margin,

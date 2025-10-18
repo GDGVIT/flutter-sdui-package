@@ -2,30 +2,19 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_sdui/src/generated/sdui.pb.dart';
-import 'package:flutter_sdui/src/widgets/sdui_appbar.dart';
-import 'package:flutter_sdui/src/widgets/sdui_column.dart';
-import 'package:flutter_sdui/src/widgets/sdui_container.dart';
-import 'package:flutter_sdui/src/widgets/sdui_icon.dart';
-import 'package:flutter_sdui/src/widgets/sdui_image.dart';
-import 'package:flutter_sdui/src/widgets/sdui_row.dart';
-import 'package:flutter_sdui/src/widgets/sdui_scaffold.dart';
-import 'package:flutter_sdui/src/widgets/sdui_sized_box.dart';
-import 'package:flutter_sdui/src/widgets/sdui_spacer.dart';
-import 'package:flutter_sdui/src/widgets/sdui_text.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/flutter_glimpse.dart';
 
-/// Parser for converting server-side widget definitions to SDUI widgets.
+/// Parser for converting server-side widget definitions to Glimpse widgets.
 ///
 /// This class handles the conversion of protobuf-based widget definitions
-/// received from the server into corresponding SDUI widget instances that
+/// received from the server into corresponding Glimpse widget instances that
 /// can be rendered in the Flutter application.
 ///
 /// The parser supports various widget types and their properties, maintaining
 /// type safety through protobuf definitions while providing flexibility
 /// for server-driven UI updates.
-class SduiParser {
-  /// Parses JSON data into SDUI widgets.
+class GlimpseParser {
+  /// Parses JSON data into Glimpse widgets.
   ///
   /// This method is currently not implemented and will throw an
   /// [UnimplementedError]. Future versions may support JSON-based
@@ -33,9 +22,9 @@ class SduiParser {
   ///
   /// [data] - The JSON map containing widget definition
   ///
-  /// Returns a parsed [SduiWidget] instance.
+  /// Returns a parsed [GlimpseWidget] instance.
   /// Throws [UnimplementedError] - JSON parsing is not yet supported.
-  static SduiWidget parseJSON(Map<String, dynamic> data) {
+  static GlimpseWidget parseJSON(Map<String, dynamic> data) {
     final String? type = data['type']?.toString().toLowerCase();
     switch (type) {
       case 'column':
@@ -56,25 +45,25 @@ class SduiParser {
         return _parseJsonSpacer(data);
       case 'icon':
         return _parseJsonIcon(data);
-      case 'appbar':
+      case 'app_bar':
         return _parseJsonAppBar(data);
       default:
-        return SduiContainer();
+        return GlimpseContainer();
     }
   }
 
-  /// Parses protobuf widget data into SDUI widgets.
+  /// Parses protobuf widget data into Glimpse widgets.
   ///
   /// This is the main parsing method that converts server-provided protobuf
-  /// widget definitions into their corresponding SDUI widget instances.
+  /// widget definitions into their corresponding Glimpse widget instances.
   /// The method uses a switch statement to determine the widget type and
   /// delegates to specific parsing methods for each widget type.
   ///
   /// [data] - The protobuf widget data received from the server
   ///
-  /// Returns a parsed [SduiWidget] instance, or [SduiContainer] if the
+  /// Returns a parsed [GlimpseWidget] instance, or [GlimpseContainer] if the
   /// widget type is unsupported.
-  static SduiWidget parseProto(SduiWidgetData data) {
+  static GlimpseWidget parseProto(GlimpseWidgetData data) {
     switch (data.type) {
       case WidgetType.COLUMN:
         return _parseProtoColumn(data);
@@ -94,23 +83,23 @@ class SduiParser {
         return _parseProtoSpacer(data);
       case WidgetType.ICON:
         return _parseProtoIcon(data);
-      case WidgetType.APPBAR:
+      case WidgetType.APP_BAR:
         return _parseProtoAppBar(data);
       default:
         log('Unsupported widget type: ${data.type}');
-        return SduiContainer();
+        return GlimpseContainer();
     }
   }
 
-  /// Parses protobuf data into a [SduiColumn] widget.
+  /// Parses protobuf data into a [GlimpseColumn] widget.
   ///
   /// Extracts all column-specific properties from the protobuf data
   /// and recursively parses child widgets.
-  static SduiColumn _parseProtoColumn(SduiWidgetData data) {
-    final List<SduiWidget> children =
-        data.children.map((child) => SduiParser.parseProto(child)).toList();
+  static GlimpseColumn _parseProtoColumn(GlimpseWidgetData data) {
+    final List<GlimpseWidget> children =
+        data.children.map((child) => GlimpseParser.parseProto(child)).toList();
 
-    return SduiColumn(
+    return GlimpseColumn(
       children: children,
       mainAxisAlignment: _parseProtoMainAxisAlignment(data.mainAxisAlignment),
       crossAxisAlignment:
@@ -122,15 +111,15 @@ class SduiParser {
     );
   }
 
-  /// Parses protobuf data into a [SduiRow] widget.
+  /// Parses protobuf data into a [GlimpseRow] widget.
   ///
   /// Extracts all row-specific properties from the protobuf data
   /// and recursively parses child widgets.
-  static SduiRow _parseProtoRow(SduiWidgetData data) {
-    final List<SduiWidget> children =
-        data.children.map((child) => SduiParser.parseProto(child)).toList();
+  static GlimpseRow _parseProtoRow(GlimpseWidgetData data) {
+    final List<GlimpseWidget> children =
+        data.children.map((child) => GlimpseParser.parseProto(child)).toList();
 
-    return SduiRow(
+    return GlimpseRow(
       children: children,
       mainAxisAlignment: _parseProtoMainAxisAlignment(data.mainAxisAlignment),
       crossAxisAlignment:
@@ -142,12 +131,12 @@ class SduiParser {
     );
   }
 
-  /// Parses protobuf data into a [SduiText] widget.
+  /// Parses protobuf data into a [GlimpseText] widget.
   ///
   /// Extracts text content and all styling properties from the protobuf data.
   /// Text content is retrieved from the stringAttributes map, while styling
   /// properties are parsed from individual fields.
-  static SduiText _parseProtoText(SduiWidgetData data) {
+  static GlimpseText _parseProtoText(GlimpseWidgetData data) {
     final String text = data.stringAttributes['text'] ?? '';
     final TextStyle? style =
         data.hasTextStyle() ? _parseProtoTextStyle(data.textStyle) : null;
@@ -190,7 +179,7 @@ class SduiParser {
       }
     }
 
-    return SduiText(
+    return GlimpseText(
       text,
       style: style,
       textAlign: textAlign,
@@ -209,11 +198,11 @@ class SduiParser {
     );
   }
 
-  /// Parses protobuf data into a [SduiImage] widget.
+  /// Parses protobuf data into a [GlimpseImage] widget.
   ///
   /// Extracts image source URL and all display properties including sizing,
   /// alignment, color blending, and caching options.
-  static SduiImage _parseProtoImage(SduiWidgetData data) {
+  static GlimpseImage _parseProtoImage(GlimpseWidgetData data) {
     final String src = data.stringAttributes['src'] ?? '';
     final double? width = data.doubleAttributes['width'];
     final double? height = data.doubleAttributes['height'];
@@ -238,13 +227,13 @@ class SduiParser {
         data.hasSemanticLabel() ? data.semanticLabel : null;
 
     final Widget? errorWidget = data.hasErrorWidget()
-        ? SduiParser.parseProto(data.errorWidget).toFlutterWidget()
+        ? GlimpseParser.parseProto(data.errorWidget).toFlutterWidget()
         : null;
     final Widget? loadingWidget = data.hasLoadingWidget()
-        ? SduiParser.parseProto(data.loadingWidget).toFlutterWidget()
+        ? GlimpseParser.parseProto(data.loadingWidget).toFlutterWidget()
         : null;
 
-    return SduiImage(
+    return GlimpseImage(
       src,
       width: width,
       height: height,
@@ -266,17 +255,17 @@ class SduiParser {
     );
   }
 
-  static SduiSizedBox _parseProtoSizedBox(SduiWidgetData data) {
+  static GlimpseSizedBox _parseProtoSizedBox(GlimpseWidgetData data) {
     double? width = data.doubleAttributes['width'];
     double? height = data.doubleAttributes['height'];
-    SduiWidget? child =
-        data.hasChild() ? SduiParser.parseProto(data.child) : null;
-    return SduiSizedBox(width: width, height: height, child: child);
+    GlimpseWidget? child =
+        data.hasChild() ? GlimpseParser.parseProto(data.child) : null;
+    return GlimpseSizedBox(width: width, height: height, child: child);
   }
 
-  static SduiContainer _parseProtoContainer(SduiWidgetData data) {
-    SduiWidget? child =
-        data.hasChild() ? SduiParser.parseProto(data.child) : null;
+  static GlimpseContainer _parseProtoContainer(GlimpseWidgetData data) {
+    GlimpseWidget? child =
+        data.hasChild() ? GlimpseParser.parseProto(data.child) : null;
     EdgeInsets? padding =
         data.hasPadding() ? _parseProtoEdgeInsets(data.padding) : null;
     EdgeInsets? margin =
@@ -299,7 +288,7 @@ class SduiParser {
         : null;
     Clip? clipBehavior = _parseProtoClip(data.clipBehavior);
 
-    return SduiContainer(
+    return GlimpseContainer(
       child: child,
       padding: padding,
       margin: margin,
@@ -315,26 +304,28 @@ class SduiParser {
     );
   }
 
-  static SduiScaffold _parseProtoScaffold(SduiWidgetData data) {
-    SduiWidget? appBar =
-        data.hasAppBar() ? SduiParser.parseProto(data.appBar) : null;
-    SduiWidget? body = data.hasBody() ? SduiParser.parseProto(data.body) : null;
-    SduiWidget? floatingActionButton = data.hasFloatingActionButton()
-        ? SduiParser.parseProto(data.floatingActionButton)
+  static GlimpseScaffold _parseProtoScaffold(GlimpseWidgetData data) {
+    GlimpseWidget? appBar =
+        data.hasAppBar() ? GlimpseParser.parseProto(data.appBar) : null;
+    GlimpseWidget? body =
+        data.hasBody() ? GlimpseParser.parseProto(data.body) : null;
+    GlimpseWidget? floatingActionButton = data.hasFloatingActionButton()
+        ? GlimpseParser.parseProto(data.floatingActionButton)
         : null;
     Color? backgroundColor = data.hasBackgroundColor()
         ? _parseProtoColor(data.backgroundColor)
         : null;
 
-    SduiWidget? bottomNavigationBar = data.hasBottomNavigationBar()
-        ? SduiParser.parseProto(data.bottomNavigationBar)
+    GlimpseWidget? bottomNavigationBar = data.hasBottomNavigationBar()
+        ? GlimpseParser.parseProto(data.bottomNavigationBar)
         : null;
-    SduiWidget? drawer =
-        data.hasDrawer() ? SduiParser.parseProto(data.drawer) : null;
-    SduiWidget? endDrawer =
-        data.hasEndDrawer() ? SduiParser.parseProto(data.endDrawer) : null;
-    SduiWidget? bottomSheet =
-        data.hasBottomSheet() ? SduiParser.parseProto(data.bottomSheet) : null;
+    GlimpseWidget? drawer =
+        data.hasDrawer() ? GlimpseParser.parseProto(data.drawer) : null;
+    GlimpseWidget? endDrawer =
+        data.hasEndDrawer() ? GlimpseParser.parseProto(data.endDrawer) : null;
+    GlimpseWidget? bottomSheet = data.hasBottomSheet()
+        ? GlimpseParser.parseProto(data.bottomSheet)
+        : null;
     bool? resizeToAvoidBottomInset = data.hasResizeToAvoidBottomInset()
         ? data.resizeToAvoidBottomInset
         : null;
@@ -359,7 +350,7 @@ class SduiParser {
             ? data.endDrawerEnableOpenDragGesture
             : null;
 
-    return SduiScaffold(
+    return GlimpseScaffold(
       appBar: appBar,
       body: body,
       floatingActionButton: floatingActionButton,
@@ -380,12 +371,12 @@ class SduiParser {
     );
   }
 
-  static SduiSpacer _parseProtoSpacer(SduiWidgetData data) {
+  static GlimpseSpacer _parseProtoSpacer(GlimpseWidgetData data) {
     int flex = data.intAttributes['flex'] ?? 1;
-    return SduiSpacer(flex: flex);
+    return GlimpseSpacer(flex: flex);
   }
 
-  static SduiIcon _parseProtoIcon(SduiWidgetData data) {
+  static GlimpseIcon _parseProtoIcon(GlimpseWidgetData data) {
     IconData? iconData = data.hasIcon() ? _parseProtoIconData(data.icon) : null;
     double? size = data.icon.size;
     Color? color =
@@ -400,7 +391,7 @@ class SduiParser {
         ? data.shadows.map((s) => _parseProtoShadow(s)).toList()
         : null;
 
-    return SduiIcon(
+    return GlimpseIcon(
       icon: iconData,
       size: size,
       color: color,
@@ -412,7 +403,7 @@ class SduiParser {
     );
   }
 
-  static SduiAppBar _parseProtoAppBar(SduiWidgetData data) {
+  static GlimpseAppBar _parseProtoAppBar(GlimpseWidgetData data) {
     String? title = data.stringAttributes['title'];
     Color? backgroundColor = data.hasBackgroundColor()
         ? _parseProtoColor(data.backgroundColor)
@@ -420,7 +411,7 @@ class SduiParser {
     double? elevation = data.doubleAttributes['elevation'];
     bool? centerTitle = data.boolAttributes['centerTitle'];
 
-    return SduiAppBar(
+    return GlimpseAppBar(
       title: title,
       backgroundColor: backgroundColor,
       foregroundColor: null,
@@ -971,11 +962,11 @@ class SduiParser {
     }
   }
 
-  static SduiColumn _parseJsonColumn(Map<String, dynamic> data) {
+  static GlimpseColumn _parseJsonColumn(Map<String, dynamic> data) {
     final children = (data['children'] as List<dynamic>? ?? [])
         .map((child) => parseJSON(child as Map<String, dynamic>))
         .toList();
-    return SduiColumn(
+    return GlimpseColumn(
       children: children,
       mainAxisAlignment: _parseJsonMainAxisAlignment(data['mainAxisAlignment']),
       crossAxisAlignment:
@@ -1076,11 +1067,11 @@ class SduiParser {
     }
   }
 
-  static SduiRow _parseJsonRow(Map<String, dynamic> data) {
+  static GlimpseRow _parseJsonRow(Map<String, dynamic> data) {
     final children = (data['children'] as List<dynamic>? ?? [])
         .map((child) => parseJSON(child as Map<String, dynamic>))
         .toList();
-    return SduiRow(
+    return GlimpseRow(
       children: children,
       mainAxisAlignment: _parseJsonMainAxisAlignment(data['mainAxisAlignment']),
       crossAxisAlignment:
@@ -1092,8 +1083,8 @@ class SduiParser {
     );
   }
 
-  static SduiText _parseJsonText(Map<String, dynamic> data) {
-    return SduiText(
+  static GlimpseText _parseJsonText(Map<String, dynamic> data) {
+    return GlimpseText(
       data['text']?.toString() ?? '',
       style: _parseJsonTextStyle(data['style']),
       textAlign: _parseJsonTextAlign(data['textAlign']),
@@ -1115,15 +1106,16 @@ class SduiParser {
     );
   }
 
-  static SduiImage _parseJsonImage(Map<String, dynamic> data) {
-    SduiWidget? errorSduiWidget = data['errorWidget'] is Map<String, dynamic>
-        ? parseJSON(data['errorWidget'])
-        : null;
-    SduiWidget? loadingSduiWidget =
+  static GlimpseImage _parseJsonImage(Map<String, dynamic> data) {
+    GlimpseWidget? errorGlimpseWidget =
+        data['errorWidget'] is Map<String, dynamic>
+            ? parseJSON(data['errorWidget'])
+            : null;
+    GlimpseWidget? loadingGlimpseWidget =
         data['loadingWidget'] is Map<String, dynamic>
             ? parseJSON(data['loadingWidget'])
             : null;
-    return SduiImage(
+    return GlimpseImage(
       data['src']?.toString() ?? '',
       width: (data['width'] is num) ? (data['width'] as num).toDouble() : null,
       height:
@@ -1148,13 +1140,13 @@ class SduiParser {
           : int.tryParse(data['cacheHeight']?.toString() ?? ''),
       scale: (data['scale'] is num) ? (data['scale'] as num).toDouble() : null,
       semanticLabel: data['semanticLabel']?.toString(),
-      errorWidget: errorSduiWidget?.toFlutterWidget(),
-      loadingWidget: loadingSduiWidget?.toFlutterWidget(),
+      errorWidget: errorGlimpseWidget?.toFlutterWidget(),
+      loadingWidget: loadingGlimpseWidget?.toFlutterWidget(),
     );
   }
 
-  static SduiSizedBox _parseJsonSizedBox(Map<String, dynamic> data) {
-    return SduiSizedBox(
+  static GlimpseSizedBox _parseJsonSizedBox(Map<String, dynamic> data) {
+    return GlimpseSizedBox(
       width: (data['width'] is num) ? (data['width'] as num).toDouble() : null,
       height:
           (data['height'] is num) ? (data['height'] as num).toDouble() : null,
@@ -1164,8 +1156,8 @@ class SduiParser {
     );
   }
 
-  static SduiContainer _parseJsonContainer(Map<String, dynamic> data) {
-    return SduiContainer(
+  static GlimpseContainer _parseJsonContainer(Map<String, dynamic> data) {
+    return GlimpseContainer(
       child: data['child'] is Map<String, dynamic>
           ? parseJSON(data['child'])
           : null,
@@ -1185,8 +1177,8 @@ class SduiParser {
     );
   }
 
-  static SduiScaffold _parseJsonScaffold(Map<String, dynamic> data) {
-    return SduiScaffold(
+  static GlimpseScaffold _parseJsonScaffold(Map<String, dynamic> data) {
+    return GlimpseScaffold(
       appBar: data['appBar'] is Map<String, dynamic>
           ? parseJSON(data['appBar'])
           : null,
@@ -1232,16 +1224,16 @@ class SduiParser {
     );
   }
 
-  static SduiSpacer _parseJsonSpacer(Map<String, dynamic> data) {
-    return SduiSpacer(
+  static GlimpseSpacer _parseJsonSpacer(Map<String, dynamic> data) {
+    return GlimpseSpacer(
       flex: data['flex'] is int
           ? data['flex']
           : int.tryParse(data['flex']?.toString() ?? '') ?? 1,
     );
   }
 
-  static SduiIcon _parseJsonIcon(Map<String, dynamic> data) {
-    return SduiIcon(
+  static GlimpseIcon _parseJsonIcon(Map<String, dynamic> data) {
+    return GlimpseIcon(
       icon: _parseJsonIconData(data['icon']),
       size: (data['size'] is num) ? (data['size'] as num).toDouble() : null,
       color: _parseJsonColor(data['color']),
@@ -1255,28 +1247,29 @@ class SduiParser {
     );
   }
 
-  static SduiAppBar _parseJsonAppBar(Map<String, dynamic> data) {
+  static GlimpseAppBar _parseJsonAppBar(Map<String, dynamic> data) {
     List<Widget>? actions;
     if (data['actions'] is List) {
       actions = (data['actions'] as List)
-          .map((a) => SduiParser.parseJSON(a as Map<String, dynamic>).toFlutterWidget())
+          .map((a) =>
+              GlimpseParser.parseJSON(a as Map<String, dynamic>).toFlutterWidget())
           .toList();
     }
 
     Widget? leading;
     if (data['leading'] != null) {
-      leading = SduiParser.parseJSON(data['leading'] as Map<String, dynamic>)
+      leading = GlimpseParser.parseJSON(data['leading'] as Map<String, dynamic>)
           .toFlutterWidget();
     }
 
     Widget? flexibleSpace;
     if (data['flexibleSpace'] != null) {
       flexibleSpace =
-          SduiParser.parseJSON(data['flexibleSpace'] as Map<String, dynamic>)
+          GlimpseParser.parseJSON(data['flexibleSpace'] as Map<String, dynamic>)
               .toFlutterWidget();
     }
 
-    return SduiAppBar(
+    return GlimpseAppBar(
       title: data['title']?.toString(),
       backgroundColor: _parseJsonColor(data['backgroundColor']),
       foregroundColor: _parseJsonColor(data['foregroundColor']),
@@ -1892,30 +1885,30 @@ class SduiParser {
     return null;
   }
 
-  static Map<String, dynamic> toJson(SduiWidget widget) {
-    if (widget is SduiColumn) {
+  static Map<String, dynamic> toJson(GlimpseWidget widget) {
+    if (widget is GlimpseColumn) {
       return _toJsonColumn(widget);
-    } else if (widget is SduiRow) {
+    } else if (widget is GlimpseRow) {
       return _toJsonRow(widget);
-    } else if (widget is SduiText) {
+    } else if (widget is GlimpseText) {
       return _toJsonText(widget);
-    } else if (widget is SduiImage) {
+    } else if (widget is GlimpseImage) {
       return _toJsonImage(widget);
-    } else if (widget is SduiSizedBox) {
+    } else if (widget is GlimpseSizedBox) {
       return _toJsonSizedBox(widget);
-    } else if (widget is SduiContainer) {
+    } else if (widget is GlimpseContainer) {
       return _toJsonContainer(widget);
-    } else if (widget is SduiScaffold) {
+    } else if (widget is GlimpseScaffold) {
       return _toJsonScaffold(widget);
-    } else if (widget is SduiSpacer) {
+    } else if (widget is GlimpseSpacer) {
       return _toJsonSpacer(widget);
-    } else if (widget is SduiIcon) {
+    } else if (widget is GlimpseIcon) {
       return _toJsonIcon(widget);
     }
     return {};
   }
 
-  static Map<String, dynamic> _toJsonColumn(SduiColumn widget) {
+  static Map<String, dynamic> _toJsonColumn(GlimpseColumn widget) {
     return {
       'type': 'column',
       if (widget.mainAxisAlignment != null)
@@ -1937,7 +1930,7 @@ class SduiParser {
     };
   }
 
-  static Map<String, dynamic> _toJsonRow(SduiRow widget) {
+  static Map<String, dynamic> _toJsonRow(GlimpseRow widget) {
     return {
       'type': 'row',
       if (widget.mainAxisAlignment != null)
@@ -1959,7 +1952,7 @@ class SduiParser {
     };
   }
 
-  static Map<String, dynamic> _toJsonText(SduiText widget) {
+  static Map<String, dynamic> _toJsonText(GlimpseText widget) {
     return {
       'type': 'text',
       'text': widget.text,
@@ -1997,7 +1990,7 @@ class SduiParser {
     };
   }
 
-  static Map<String, dynamic> _toJsonImage(SduiImage widget) {
+  static Map<String, dynamic> _toJsonImage(GlimpseImage widget) {
     return {
       'type': 'image',
       'src': widget.src,
@@ -2026,7 +2019,7 @@ class SduiParser {
     };
   }
 
-  static Map<String, dynamic> _toJsonSizedBox(SduiSizedBox widget) {
+  static Map<String, dynamic> _toJsonSizedBox(GlimpseSizedBox widget) {
     return {
       'type': 'sized_box',
       if (widget.width != null) 'width': widget.width,
@@ -2035,7 +2028,7 @@ class SduiParser {
     };
   }
 
-  static Map<String, dynamic> _toJsonContainer(SduiContainer widget) {
+  static Map<String, dynamic> _toJsonContainer(GlimpseContainer widget) {
     return {
       'type': 'container',
       if (widget.child != null) 'child': toJson(widget.child!),
@@ -2058,7 +2051,7 @@ class SduiParser {
     };
   }
 
-  static Map<String, dynamic> _toJsonScaffold(SduiScaffold widget) {
+  static Map<String, dynamic> _toJsonScaffold(GlimpseScaffold widget) {
     return {
       'type': 'scaffold',
       if (widget.appBar != null) 'appBar': toJson(widget.appBar!),
@@ -2095,14 +2088,14 @@ class SduiParser {
     };
   }
 
-  static Map<String, dynamic> _toJsonSpacer(SduiSpacer widget) {
+  static Map<String, dynamic> _toJsonSpacer(GlimpseSpacer widget) {
     return {
       'type': 'spacer',
       'flex': widget.flex,
     };
   }
 
-  static Map<String, dynamic> _toJsonIcon(SduiIcon widget) {
+  static Map<String, dynamic> _toJsonIcon(GlimpseIcon widget) {
     return {
       'type': 'icon',
       if (widget.icon != null) 'icon': widget.icon!.codePoint,
@@ -2291,9 +2284,9 @@ class SduiParser {
     }
   }
 
-  static SduiWidgetData columnToProto(SduiColumn col) {
-    final data = SduiWidgetData()..type = WidgetType.COLUMN;
-    data.children.addAll(col.children.map((c) => SduiParser.toProto(c)));
+  static GlimpseWidgetData columnToProto(GlimpseColumn col) {
+    final data = GlimpseWidgetData()..type = WidgetType.COLUMN;
+    data.children.addAll(col.children.map((c) => GlimpseParser.toProto(c)));
     if (col.mainAxisAlignment != null) {
       data.mainAxisAlignment =
           _mainAxisAlignmentToProto(col.mainAxisAlignment!);
@@ -2318,9 +2311,9 @@ class SduiParser {
     return data;
   }
 
-  static SduiColumn columnFromProto(SduiWidgetData data) {
-    return SduiColumn(
-      children: data.children.map((c) => SduiParser.parseProto(c)).toList(),
+  static GlimpseColumn columnFromProto(GlimpseWidgetData data) {
+    return GlimpseColumn(
+      children: data.children.map((c) => GlimpseParser.parseProto(c)).toList(),
       mainAxisAlignment: _parseProtoMainAxisAlignment(data.mainAxisAlignment),
       crossAxisAlignment:
           _parseProtoCrossAxisAlignment(data.crossAxisAlignment),
@@ -2331,31 +2324,31 @@ class SduiParser {
     );
   }
 
-  static SduiWidgetData toProto(SduiWidget widget) {
-    if (widget is SduiColumn) {
+  static GlimpseWidgetData toProto(GlimpseWidget widget) {
+    if (widget is GlimpseColumn) {
       return columnToProto(widget);
-    } else if (widget is SduiRow) {
+    } else if (widget is GlimpseRow) {
       return rowToProto(widget);
-    } else if (widget is SduiText) {
+    } else if (widget is GlimpseText) {
       return textToProto(widget);
-    } else if (widget is SduiImage) {
+    } else if (widget is GlimpseImage) {
       return imageToProto(widget);
-    } else if (widget is SduiSizedBox) {
+    } else if (widget is GlimpseSizedBox) {
       return sizedBoxToProto(widget);
-    } else if (widget is SduiContainer) {
+    } else if (widget is GlimpseContainer) {
       return containerToProto(widget);
-    } else if (widget is SduiScaffold) {
+    } else if (widget is GlimpseScaffold) {
       return scaffoldToProto(widget);
-    } else if (widget is SduiSpacer) {
+    } else if (widget is GlimpseSpacer) {
       return spacerToProto(widget);
-    } else if (widget is SduiIcon) {
+    } else if (widget is GlimpseIcon) {
       return iconToProto(widget);
     }
     throw UnimplementedError(
         'toProto not implemented for [38;5;9m${widget.runtimeType}[0m');
   }
 
-  static SduiWidget fromProto(SduiWidgetData data) {
+  static GlimpseWidget fromProto(GlimpseWidgetData data) {
     switch (data.type) {
       case WidgetType.COLUMN:
         return columnFromProto(data);
@@ -2376,14 +2369,14 @@ class SduiParser {
       case WidgetType.ICON:
         return iconFromProto(data);
       default:
-        return SduiContainer();
+        return GlimpseContainer();
     }
   }
 
-  // --- SduiRow ---
-  static SduiWidgetData rowToProto(SduiRow row) {
-    final data = SduiWidgetData()..type = WidgetType.ROW;
-    data.children.addAll(row.children.map((c) => SduiParser.toProto(c)));
+  // --- GlimpseRow ---
+  static GlimpseWidgetData rowToProto(GlimpseRow row) {
+    final data = GlimpseWidgetData()..type = WidgetType.ROW;
+    data.children.addAll(row.children.map((c) => GlimpseParser.toProto(c)));
     if (row.mainAxisAlignment != null) {
       data.mainAxisAlignment =
           _mainAxisAlignmentToProto(row.mainAxisAlignment!);
@@ -2408,9 +2401,9 @@ class SduiParser {
     return data;
   }
 
-  static SduiRow rowFromProto(SduiWidgetData data) {
-    List<SduiWidget> children =
-        data.children.map((c) => SduiParser.parseProto(c)).toList();
+  static GlimpseRow rowFromProto(GlimpseWidgetData data) {
+    List<GlimpseWidget> children =
+        data.children.map((c) => GlimpseParser.parseProto(c)).toList();
     MainAxisAlignment mainAxisAlignment =
         _parseProtoMainAxisAlignment(data.mainAxisAlignment) ??
             MainAxisAlignment.start;
@@ -2424,7 +2417,7 @@ class SduiParser {
         _parseProtoVerticalDirection(data.verticalDirection) ??
             VerticalDirection.down;
     TextBaseline? textBaseline = _parseProtoTextBaseline(data.textBaseline);
-    return SduiRow(
+    return GlimpseRow(
       children: children,
       mainAxisAlignment: mainAxisAlignment,
       crossAxisAlignment: crossAxisAlignment,
@@ -2435,9 +2428,9 @@ class SduiParser {
     );
   }
 
-  // --- SduiText ---
-  static SduiWidgetData textToProto(SduiText text) {
-    final data = SduiWidgetData()..type = WidgetType.TEXT;
+  // --- GlimpseText ---
+  static GlimpseWidgetData textToProto(GlimpseText text) {
+    final data = GlimpseWidgetData()..type = WidgetType.TEXT;
     data.stringAttributes['text'] = text.text;
     if (text.style != null) data.textStyle = _textStyleToProto(text.style!);
     if (text.textAlign != null) {
@@ -2467,7 +2460,7 @@ class SduiParser {
     return data;
   }
 
-  static SduiText textFromProto(SduiWidgetData data) {
+  static GlimpseText textFromProto(GlimpseWidgetData data) {
     String text = data.stringAttributes['text'] ?? '';
     TextStyle? style =
         data.hasTextStyle() ? _parseProtoTextStyle(data.textStyle) : null;
@@ -2495,7 +2488,7 @@ class SduiParser {
     Color? color = data.hasTextStyle() && data.textStyle.hasColor()
         ? _parseProtoColor(data.textStyle.color)
         : null;
-    return SduiText(
+    return GlimpseText(
       text,
       style: style,
       textAlign: textAlign,
@@ -2514,9 +2507,9 @@ class SduiParser {
     );
   }
 
-  // --- SduiImage ---
-  static SduiWidgetData imageToProto(SduiImage image) {
-    final data = SduiWidgetData()..type = WidgetType.IMAGE;
+  // --- GlimpseImage ---
+  static GlimpseWidgetData imageToProto(GlimpseImage image) {
+    final data = GlimpseWidgetData()..type = WidgetType.IMAGE;
     data.stringAttributes['src'] = image.src;
     if (image.width != null) data.doubleAttributes['width'] = image.width!;
     if (image.height != null) data.doubleAttributes['height'] = image.height!;
@@ -2547,11 +2540,11 @@ class SduiParser {
     if (image.cacheHeight != null) data.cacheHeight = image.cacheHeight!;
     if (image.scale != null) data.scale = image.scale!;
     if (image.semanticLabel != null) data.semanticLabel = image.semanticLabel!;
-    // errorWidget and loadingWidget are not mapped (Widget, not SduiWidget)
+    // errorWidget and loadingWidget are not mapped (Widget, not GlimpseWidget)
     return data;
   }
 
-  static SduiImage imageFromProto(SduiWidgetData data) {
+  static GlimpseImage imageFromProto(GlimpseWidgetData data) {
     String src = data.stringAttributes['src'] ?? '';
     double? width = data.doubleAttributes['width'];
     double? height = data.doubleAttributes['height'];
@@ -2574,8 +2567,8 @@ class SduiParser {
     int? cacheHeight = data.hasCacheHeight() ? data.cacheHeight : null;
     double scale = data.hasScale() ? data.scale : 1.0;
     String? semanticLabel = data.hasSemanticLabel() ? data.semanticLabel : null;
-    // errorWidget and loadingWidget are not mapped (Widget, not SduiWidget)
-    return SduiImage(
+    // errorWidget and loadingWidget are not mapped (Widget, not GlimpseWidget)
+    return GlimpseImage(
       src,
       width: width,
       height: height,
@@ -2693,26 +2686,26 @@ class SduiParser {
     }
   }
 
-  // --- SduiSizedBox ---
-  static SduiWidgetData sizedBoxToProto(SduiSizedBox box) {
-    final data = SduiWidgetData()..type = WidgetType.SIZED_BOX;
+  // --- GlimpseSizedBox ---
+  static GlimpseWidgetData sizedBoxToProto(GlimpseSizedBox box) {
+    final data = GlimpseWidgetData()..type = WidgetType.SIZED_BOX;
     if (box.width != null) data.doubleAttributes['width'] = box.width!;
     if (box.height != null) data.doubleAttributes['height'] = box.height!;
     if (box.child != null) data.child = toProto(box.child!);
     return data;
   }
 
-  static SduiSizedBox sizedBoxFromProto(SduiWidgetData data) {
+  static GlimpseSizedBox sizedBoxFromProto(GlimpseWidgetData data) {
     double? width = data.doubleAttributes['width'];
     double? height = data.doubleAttributes['height'];
-    SduiWidget? child =
-        data.hasChild() ? SduiParser.parseProto(data.child) : null;
-    return SduiSizedBox(width: width, height: height, child: child);
+    GlimpseWidget? child =
+        data.hasChild() ? GlimpseParser.parseProto(data.child) : null;
+    return GlimpseSizedBox(width: width, height: height, child: child);
   }
 
-  // --- SduiContainer ---
-  static SduiWidgetData containerToProto(SduiContainer c) {
-    final data = SduiWidgetData()..type = WidgetType.CONTAINER;
+  // --- GlimpseContainer ---
+  static GlimpseWidgetData containerToProto(GlimpseContainer c) {
+    final data = GlimpseWidgetData()..type = WidgetType.CONTAINER;
     if (c.child != null) data.child = toProto(c.child!);
     if (c.padding != null) data.padding = _edgeInsetsToProto(c.padding!);
     if (c.margin != null) data.margin = _edgeInsetsToProto(c.margin!);
@@ -2740,9 +2733,9 @@ class SduiParser {
     return data;
   }
 
-  static SduiContainer containerFromProto(SduiWidgetData data) {
-    SduiWidget? child =
-        data.hasChild() ? SduiParser.parseProto(data.child) : null;
+  static GlimpseContainer containerFromProto(GlimpseWidgetData data) {
+    GlimpseWidget? child =
+        data.hasChild() ? GlimpseParser.parseProto(data.child) : null;
     EdgeInsets? padding =
         data.hasPadding() ? _parseProtoEdgeInsets(data.padding) : null;
     EdgeInsets? margin =
@@ -2767,7 +2760,7 @@ class SduiParser {
         : null;
     Clip? clipBehavior =
         data.hasClipBehavior() ? _parseProtoClip(data.clipBehavior) : Clip.none;
-    return SduiContainer(
+    return GlimpseContainer(
       child: child,
       padding: padding,
       margin: margin,
@@ -2871,9 +2864,9 @@ class SduiParser {
     }
   }
 
-  // --- SduiScaffold ---
-  static SduiWidgetData scaffoldToProto(SduiScaffold s) {
-    final data = SduiWidgetData()..type = WidgetType.SCAFFOLD;
+  // --- GlimpseScaffold ---
+  static GlimpseWidgetData scaffoldToProto(GlimpseScaffold s) {
+    final data = GlimpseWidgetData()..type = WidgetType.SCAFFOLD;
     if (s.appBar != null) data.appBar = toProto(s.appBar!);
     if (s.body != null) data.body = toProto(s.body!);
     if (s.floatingActionButton != null) {
@@ -2915,22 +2908,24 @@ class SduiParser {
     return data;
   }
 
-  static SduiScaffold scaffoldFromProto(SduiWidgetData data) {
-    SduiWidget? appBar =
-        data.hasAppBar() ? SduiParser.parseProto(data.appBar) : null;
-    SduiWidget? body = data.hasBody() ? SduiParser.parseProto(data.body) : null;
-    SduiWidget? floatingActionButton = data.hasFloatingActionButton()
-        ? SduiParser.parseProto(data.floatingActionButton)
+  static GlimpseScaffold scaffoldFromProto(GlimpseWidgetData data) {
+    GlimpseWidget? appBar =
+        data.hasAppBar() ? GlimpseParser.parseProto(data.appBar) : null;
+    GlimpseWidget? body =
+        data.hasBody() ? GlimpseParser.parseProto(data.body) : null;
+    GlimpseWidget? floatingActionButton = data.hasFloatingActionButton()
+        ? GlimpseParser.parseProto(data.floatingActionButton)
         : null;
-    SduiWidget? bottomNavigationBar = data.hasBottomNavigationBar()
-        ? SduiParser.parseProto(data.bottomNavigationBar)
+    GlimpseWidget? bottomNavigationBar = data.hasBottomNavigationBar()
+        ? GlimpseParser.parseProto(data.bottomNavigationBar)
         : null;
-    SduiWidget? drawer =
-        data.hasDrawer() ? SduiParser.parseProto(data.drawer) : null;
-    SduiWidget? endDrawer =
-        data.hasEndDrawer() ? SduiParser.parseProto(data.endDrawer) : null;
-    SduiWidget? bottomSheet =
-        data.hasBottomSheet() ? SduiParser.parseProto(data.bottomSheet) : null;
+    GlimpseWidget? drawer =
+        data.hasDrawer() ? GlimpseParser.parseProto(data.drawer) : null;
+    GlimpseWidget? endDrawer =
+        data.hasEndDrawer() ? GlimpseParser.parseProto(data.endDrawer) : null;
+    GlimpseWidget? bottomSheet = data.hasBottomSheet()
+        ? GlimpseParser.parseProto(data.bottomSheet)
+        : null;
     Color? backgroundColor = data.hasBackgroundColor()
         ? _parseProtoColor(data.backgroundColor)
         : null;
@@ -2957,7 +2952,7 @@ class SduiParser {
         data.hasEndDrawerEnableOpenDragGesture()
             ? data.endDrawerEnableOpenDragGesture
             : true;
-    return SduiScaffold(
+    return GlimpseScaffold(
       appBar: appBar,
       body: body,
       floatingActionButton: floatingActionButton,
@@ -3020,21 +3015,21 @@ class SduiParser {
     return FloatingActionButtonLocationProto.FAB_CENTER_FLOAT;
   }
 
-  // --- SduiSpacer ---
-  static SduiWidgetData spacerToProto(SduiSpacer s) {
-    final data = SduiWidgetData()..type = WidgetType.SPACER;
+  // --- GlimpseSpacer ---
+  static GlimpseWidgetData spacerToProto(GlimpseSpacer s) {
+    final data = GlimpseWidgetData()..type = WidgetType.SPACER;
     data.intAttributes['flex'] = s.flex;
     return data;
   }
 
-  static SduiSpacer spacerFromProto(SduiWidgetData data) {
+  static GlimpseSpacer spacerFromProto(GlimpseWidgetData data) {
     int flex = data.intAttributes['flex'] ?? 1;
-    return SduiSpacer(flex: flex);
+    return GlimpseSpacer(flex: flex);
   }
 
-  // --- SduiIcon ---
-  static SduiWidgetData iconToProto(SduiIcon icon) {
-    final data = SduiWidgetData()..type = WidgetType.ICON;
+  // --- GlimpseIcon ---
+  static GlimpseWidgetData iconToProto(GlimpseIcon icon) {
+    final data = GlimpseWidgetData()..type = WidgetType.ICON;
     if (icon.icon != null) {
       data.icon = IconDataMessage()
         ..codePoint = icon.icon!.codePoint
@@ -3056,7 +3051,7 @@ class SduiParser {
     return data;
   }
 
-  static SduiIcon iconFromProto(SduiWidgetData data) {
+  static GlimpseIcon iconFromProto(GlimpseWidgetData data) {
     IconData? iconData = data.hasIcon() ? _parseProtoIconData(data.icon) : null;
     double? size = data.icon.size;
     Color? color =
@@ -3069,7 +3064,7 @@ class SduiParser {
     List<Shadow>? shadows = data.shadows.isNotEmpty
         ? data.shadows.map((s) => _parseProtoShadow(s)).toList()
         : null;
-    return SduiIcon(
+    return GlimpseIcon(
       icon: iconData,
       size: size,
       color: color,

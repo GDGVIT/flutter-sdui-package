@@ -1,10 +1,6 @@
 targets:
   $default:
     builders:
-      protoc_plugin: # Using the package name as the builder key
-        enabled: true
-        options:
-          grpc: true # Enable gRPC stub generation
-          output_directory: lib/src/generated # Specify output directory
-          generate_mixins: true # Generate mixins for classes
-          generate_kythe_info: false
+      # Note: protoc_plugin builder is not required when using protoc directly
+      # The generate_protos.ps1 script handles code generation
+      # Keeping this file for potential future build_runner integration

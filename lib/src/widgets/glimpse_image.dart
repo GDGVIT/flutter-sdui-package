@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/src/widgets/glimpse_widget.dart';
 
-/// A server-driven UI widget that represents a Flutter [Image] widget.
+/// A Glimpse widget that represents a Flutter [Image] widget.
 ///
 /// This widget supports displaying images from network URLs with comprehensive
 /// customization options for sizing, alignment, color blending, and caching.
@@ -13,7 +13,7 @@ import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 ///
 /// The widget provides loading and error handling capabilities through
 /// optional custom widgets.
-class SduiImage extends SduiWidget {
+class GlimpseImage extends GlimpseWidget {
   /// The network URL of the image to display.
   final String src;
 
@@ -68,12 +68,12 @@ class SduiImage extends SduiWidget {
   /// Widget to display while the image is loading.
   final Widget? loadingWidget;
 
-  /// Creates a new [SduiImage] widget.
+  /// Creates a new [GlimpseImage] widget.
   ///
   /// The [src] parameter is required and must be a valid network URL.
   /// All other parameters are optional and provide customization for
   /// image display and behavior.
-  SduiImage(
+  GlimpseImage(
     this.src, {
     this.width,
     this.height,
@@ -125,8 +125,7 @@ class SduiImage extends SduiWidget {
       );
     } else {
       // Return empty widget for non-network URLs with warning
-      log(
-          "Warning: SduiImage currently only supports network images. Provided src: $src");
+      log("Warning: GlimpseImage currently only supports network images. Provided src: $src");
       return const SizedBox.shrink();
     }
   }

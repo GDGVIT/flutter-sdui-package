@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/src/widgets/glimpse_widget.dart';
 
-/// A server-driven UI widget that represents a Flutter [SizedBox] widget.
+/// A Glimpse widget that represents a Flutter [SizedBox] widget.
 ///
 /// This widget forces its child to have a specific width and/or height.
 /// It's useful for creating fixed-size layouts or adding spacing between widgets.
@@ -9,7 +9,7 @@ import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 /// If no dimensions are specified, the widget will try to be as big as possible.
 /// If only one dimension is specified, the widget will try to be as big as
 /// possible in the other dimension.
-class SduiSizedBox extends SduiWidget {
+class GlimpseSizedBox extends GlimpseWidget {
   /// The width to constrain the child to.
   final double? width;
 
@@ -17,14 +17,14 @@ class SduiSizedBox extends SduiWidget {
   final double? height;
 
   /// The widget below this widget in the tree.
-  final SduiWidget? child;
+  final GlimpseWidget? child;
 
-  /// Creates a new [SduiSizedBox] widget.
+  /// Creates a new [GlimpseSizedBox] widget.
   ///
   /// All parameters are optional. If neither [width] nor [height] are
   /// specified, the child will be unconstrained. If only one dimension
   /// is specified, the child will be constrained in that dimension only.
-  SduiSizedBox({this.width, this.height, this.child});
+  GlimpseSizedBox({this.width, this.height, this.child});
 
   @override
   Widget toFlutterWidget() {

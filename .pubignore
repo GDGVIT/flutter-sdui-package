@@ -1,6 +1,6 @@
 # Files to exclude from pub.dev publishing
 
-SDUI_Flutter_Integration_Guide.txt
+Glimpse_Flutter_Integration_Guide.txt
 docs/
 .github/
 .hooks/

@@ -35,7 +35,7 @@ Write-Host "Using protoc_plugin from: $PROTOC_GEN_DART"
 
 # Run protoc to generate Dart files with our local binary
 Write-Host "Generating Protobuf files..."
-& "$protoBinDir\protoc.exe" --dart_out=grpc:lib/src/generated --proto_path=lib/src/protos lib/src/protos/sdui.proto
+& "$protoBinDir\protoc.exe" --dart_out=grpc:lib/src/generated --proto_path=lib/src/protos lib/src/protos/glimpse.proto
 
 Write-Host "Protobuf files generated in lib/src/generated/"
 

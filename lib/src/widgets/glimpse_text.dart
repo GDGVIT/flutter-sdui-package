@@ -1,14 +1,14 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/src/widgets/glimpse_widget.dart';
 
-/// A server-driven UI widget that represents a Flutter [Text] widget.
+/// A Glimpse widget that represents a Flutter [Text] widget.
 ///
 /// This widget allows displaying text with customizable styling properties
 /// that can be defined on the server side and rendered on the client.
 ///
 /// The widget supports all common text properties including font styling,
 /// alignment, overflow handling, and text direction.
-class SduiText extends SduiWidget {
+class GlimpseText extends GlimpseWidget {
   /// The text content to display.
   final String text;
 
@@ -54,12 +54,12 @@ class SduiText extends SduiWidget {
   /// The directionality of the text.
   final TextDirection? textDirection;
 
-  /// Creates a new [SduiText] widget.
+  /// Creates a new [GlimpseText] widget.
   ///
   /// The [text] parameter is required and specifies the content to display.
   /// All other parameters are optional and can be used to customize the
   /// appearance and behavior of the text.
-  SduiText(
+  GlimpseText(
     this.text, {
     this.style,
     this.textAlign,

@@ -2,7 +2,7 @@
 <a href="https://dscvit.com">
 	<img width="400" src="https://user-images.githubusercontent.com/56252312/159312411-58410727-3933-4224-b43e-4e9b627838a3.png#gh-light-mode-only" alt="GDSC VIT"/>
 </a>
-	<h2 align="center">Flutter SDUI Package</h2>
+	<h2 align="center">Flutter Glimpse</h2>
 	<h4 align="center">A Flutter package for implementing Server-Driven UI with both JSON and gRPC support<h4>
 </p>
 
@@ -38,26 +38,26 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_sdui: ^0.0.1
+  flutter_glimpse: ^0.0.1
 ```
 
 ```yaml
 # For devs
 dependencies:
-  flutter_sdui:
-    path: path/to/flutter_sdui
+  flutter_glimpse:
+    path: path/to/flutter_glimpse
 ```
 
 Or use the Flutter CLI:
 
 ```bash
-flutter pub add flutter_sdui
+flutter pub add flutter_glimpse
 ```
 
 Import the package in your Dart code:
 
 ```dart
-import 'package:flutter_sdui/flutter_sdui.dart';
+import 'package:flutter_glimpse/flutter_glimpse.dart';
 ```
 
 ## Basic Usage
@@ -70,13 +70,13 @@ For efficient, type-safe server communication:
 
 ```dart
 // Create a gRPC client
-final client = SduiGrpcClient(
+final client = GlimpseGrpcClient(
   host: 'your-server.com',
   port: 50051,
 );
 
-// Use the SduiGrpcRenderer widget
-SduiGrpcRenderer(
+// Use the GlimpseGrpcRenderer widget
+GlimpseGrpcRenderer(
   client: client,
   screenId: 'home_screen',
   loadingWidget: CircularProgressIndicator(),
@@ -89,29 +89,29 @@ SduiGrpcRenderer(
 For simpler implementation with standard HTTP requests:
 
 ```dart
-// Parse SDUI JSON to widget
+// Parse Glimpse JSON to widget
 dynamic json = ...; // Load your JSON
-final sduiWidget = SduiParser.parseJSON(json);
-final flutterWidget = sduiWidget.toFlutterWidget();
+final glimpseWidget = GlimpseParser.parseJSON(json);
+final flutterWidget = glimpseWidget.toFlutterWidget();
 ```
 
-You can also serialize SDUI widgets back to JSON:
+You can also serialize Glimpse widgets back to JSON:
 
 ```dart
-final json = SduiParser.toJson(sduiWidget);
+final json = GlimpseParser.toJson(glimpseWidget);
 ```
 
-And convert Flutter widgets to SDUI (for supported types):
+And convert Flutter widgets to Glimpse (for supported types):
 
 ```dart
-import 'package:flutter_sdui/src/flutter_to_sdui.dart';
-final sduiWidget = flutterToSdui(myFlutterWidget);
+import 'package:flutter_glimpse/src/flutter_to_glimpse.dart';
+final glimpseWidget = flutterToGlimpse(myFlutterWidget);
 ```
 
 ## Widget Coverage & Extensibility
 
 - All core layout and display widgets are supported: `Column`, `Row`, `Text`, `Image`, `SizedBox`, `Container`, `Scaffold`, `Spacer`, `Icon`.
-- Adding new widgets is straightforward: implement the SDUI widget, add proto/JSON parsing, and update the toJson and Flutter conversion logic.
+- Adding new widgets is straightforward: implement the Glimpse widget, add proto/JSON parsing, and update the toJson and Flutter conversion logic.
 - The codebase is up-to-date, with no remaining TODOs.
 
 ## Example
@@ -120,7 +120,7 @@ Here's a complete example of using the gRPC renderer:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_sdui/flutter_sdui.dart';
+import 'package:flutter_glimpse/flutter_glimpse.dart';
 
 void main() {
   runApp(const MyApp());
@@ -132,31 +132,31 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SDUI Demo',
+      title: 'Glimpse Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const SDUIDemo(),
+      home: const GlimpseDemo(),
     );
   }
 }
 
-class SDUIDemo extends StatefulWidget {
-  const SDUIDemo({super.key});
+class GlimpseDemo extends StatefulWidget {
+  const GlimpseDemo({super.key});
 
   @override
-  State<SDUIDemo> createState() => _SDUIDemoState();
+  State<GlimpseDemo> createState() => _GlimpseDemoState();
 }
 
-class _SDUIDemoState extends State<SDUIDemo> {
-  late SduiGrpcClient _grpcClient;
+class _GlimpseDemoState extends State<GlimpseDemo> {
+  late GlimpseGrpcClient _grpcClient;
   String _screenId = 'home';
 
   @override
   void initState() {
     super.initState();
-    _grpcClient = SduiGrpcClient(
+    _grpcClient = GlimpseGrpcClient(
       host: 'localhost',  // Replace with your server address
       port: 50051,        // Replace with your server port
     );
@@ -174,7 +174,7 @@ class _SDUIDemoState extends State<SDUIDemo> {
       appBar: AppBar(
         title: const Text('Server-Driven UI Demo'),
       ),
-      body: SduiGrpcRenderer(
+      body: GlimpseGrpcRenderer(
         client: _grpcClient,
         screenId: _screenId,
         loadingWidget: const Center(
@@ -211,13 +211,13 @@ Here's a basic example of a Dart server that provides UI definitions via gRPC:
 
 ```dart
 import 'package:grpc/grpc.dart';
-import 'package:flutter_sdui/src/generated/sdui.pb.dart';
-import 'package:flutter_sdui/src/generated/sdui.pbgrpc.dart';
+import 'package:flutter_glimpse/src/generated/glimpse.pb.dart';
+import 'package:flutter_glimpse/src/generated/glimpse.pbgrpc.dart';
 
 Future<void> main() async {
   final server = Server.create(
     services: [
-      SduiServiceImpl(),
+      GlimpseServiceImpl(),
     ],
   );
 
@@ -225,10 +225,10 @@ Future<void> main() async {
   print('Server listening on port 50051...');
 }
 
-class SduiServiceImpl extends SduiServiceBase {
+class GlimpseServiceImpl extends GlimpseServiceBase {
   @override
-  Future<SduiWidgetData> getSduiWidget(
-      ServiceCall call, SduiRequest request) async {
+  Future<GlimpseWidgetData> getGlimpseWidget(
+      ServiceCall call, GlimpseRequest request) async {
     // Return different UI based on the screenId
     switch (request.screenId) {
       case 'home':
@@ -238,22 +238,22 @@ class SduiServiceImpl extends SduiServiceBase {
     }
   }
 
-  SduiWidgetData _createHomeScreen() {
-    return SduiWidgetData()
+  GlimpseWidgetData _createHomeScreen() {
+    return GlimpseWidgetData()
       ..type = WidgetType.SCAFFOLD
-      ..body = (SduiWidgetData()
+      ..body = (GlimpseWidgetData()
         ..type = WidgetType.COLUMN
         ..children.addAll([
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.CONTAINER
             ..padding = (EdgeInsetsData()..all = 16)
-            ..child = (SduiWidgetData()
+            ..child = (GlimpseWidgetData()
               ..type = WidgetType.TEXT
               ..stringAttributes['text'] = 'Welcome to Server-Driven UI!'
               ..textStyle = (TextStyleData()
                 ..fontSize = 22
                 ..fontWeight = 'bold')),
-          SduiWidgetData()
+          GlimpseWidgetData()
             ..type = WidgetType.TEXT
             ..stringAttributes['text'] = 'This UI is rendered from gRPC data'
         ]));
@@ -282,7 +282,7 @@ The package currently supports these Flutter widgets:
 The package uses Protocol Buffers to define the data structures for gRPC communication. Here's a simplified version of the main message types:
 
 ```protobuf
-message SduiWidgetData {
+message GlimpseWidgetData {
   WidgetType type = 1;
   map<string, string> string_attributes = 2;
   map<string, double> double_attributes = 3;
@@ -293,16 +293,16 @@ message SduiWidgetData {
   EdgeInsetsData padding = 7;
 
   // Children widgets
-  repeated SduiWidgetData children = 12;
-  SduiWidgetData child = 13;
+  repeated GlimpseWidgetData children = 12;
+  GlimpseWidgetData child = 13;
 
   // Scaffold specific parts
-  SduiWidgetData app_bar = 14;
-  SduiWidgetData body = 15;
+  GlimpseWidgetData app_bar = 14;
+  GlimpseWidgetData body = 15;
 }
 
-service SduiService {
-  rpc GetSduiWidget (SduiRequest) returns (SduiWidgetData);
+service GlimpseService {
+  rpc GetGlimpseWidget (GlimpseRequest) returns (GlimpseWidgetData);
 }
 ```
 
@@ -330,7 +330,7 @@ pwsh ./tool/generate_protos.ps1
 
 ## Contributing
 
-See [ADDING_WIDGET.md](./ADDING_WIDGET.md) for instructions on how to add a new widget to the SDUI package.
+See [ADDING_WIDGET.md](./ADDING_WIDGET.md) for instructions on how to add a new widget to the Glimpse package.
 
 ## License
 

@@ -1,20 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sdui/src/widgets/sdui_column.dart';
-import 'package:flutter_sdui/src/widgets/sdui_row.dart';
-import 'package:flutter_sdui/src/widgets/sdui_text.dart';
-import 'package:flutter_sdui/src/widgets/sdui_image.dart';
-import 'package:flutter_sdui/src/widgets/sdui_sized_box.dart';
-import 'package:flutter_sdui/src/widgets/sdui_container.dart';
-import 'package:flutter_sdui/src/widgets/sdui_scaffold.dart';
-import 'package:flutter_sdui/src/widgets/sdui_spacer.dart';
-import 'package:flutter_sdui/src/widgets/sdui_icon.dart';
-import 'package:flutter_sdui/src/widgets/sdui_appbar.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/flutter_glimpse.dart';
 
-SduiWidget flutterToSdui(Widget widget) {
+GlimpseWidget flutterToGlimpse(Widget widget) {
   if (widget is Column) {
-    return SduiColumn(
-      children: widget.children.map(flutterToSdui).toList(),
+    return GlimpseColumn(
+      children: widget.children.map(flutterToGlimpse).toList(),
       mainAxisAlignment: widget.mainAxisAlignment,
       crossAxisAlignment: widget.crossAxisAlignment,
       mainAxisSize: widget.mainAxisSize,
@@ -23,8 +13,8 @@ SduiWidget flutterToSdui(Widget widget) {
       textBaseline: widget.textBaseline,
     );
   } else if (widget is Row) {
-    return SduiRow(
-      children: widget.children.map(flutterToSdui).toList(),
+    return GlimpseRow(
+      children: widget.children.map(flutterToGlimpse).toList(),
       mainAxisAlignment: widget.mainAxisAlignment,
       crossAxisAlignment: widget.crossAxisAlignment,
       mainAxisSize: widget.mainAxisSize,
@@ -33,7 +23,7 @@ SduiWidget flutterToSdui(Widget widget) {
       textBaseline: widget.textBaseline,
     );
   } else if (widget is Text) {
-    return SduiText(
+    return GlimpseText(
       widget.data ?? '',
       style: widget.style,
       textAlign: widget.textAlign,
@@ -46,7 +36,7 @@ SduiWidget flutterToSdui(Widget widget) {
     // Only support Image.network for now
     if (widget.image is NetworkImage) {
       final net = widget.image as NetworkImage;
-      return SduiImage(
+      return GlimpseImage(
         net.url,
         width: widget.width,
         height: widget.height,
@@ -70,14 +60,14 @@ SduiWidget flutterToSdui(Widget widget) {
       throw UnimplementedError('Only Image.network is supported');
     }
   } else if (widget is SizedBox) {
-    return SduiSizedBox(
+    return GlimpseSizedBox(
       width: widget.width,
       height: widget.height,
-      child: widget.child != null ? flutterToSdui(widget.child!) : null,
+      child: widget.child != null ? flutterToGlimpse(widget.child!) : null,
     );
   } else if (widget is Container) {
-    return SduiContainer(
-      child: widget.child != null ? flutterToSdui(widget.child!) : null,
+    return GlimpseContainer(
+      child: widget.child != null ? flutterToGlimpse(widget.child!) : null,
       padding:
           widget.padding is EdgeInsets ? widget.padding as EdgeInsets : null,
       margin: widget.margin is EdgeInsets ? widget.margin as EdgeInsets : null,
@@ -97,20 +87,20 @@ SduiWidget flutterToSdui(Widget widget) {
       clipBehavior: widget.clipBehavior,
     );
   } else if (widget is Scaffold) {
-    return SduiScaffold(
-      appBar: widget.appBar != null ? flutterToSdui(widget.appBar!) : null,
-      body: widget.body != null ? flutterToSdui(widget.body!) : null,
+    return GlimpseScaffold(
+      appBar: widget.appBar != null ? flutterToGlimpse(widget.appBar!) : null,
+      body: widget.body != null ? flutterToGlimpse(widget.body!) : null,
       floatingActionButton: widget.floatingActionButton != null
-          ? flutterToSdui(widget.floatingActionButton!)
+          ? flutterToGlimpse(widget.floatingActionButton!)
           : null,
       bottomNavigationBar: widget.bottomNavigationBar != null
-          ? flutterToSdui(widget.bottomNavigationBar!)
+          ? flutterToGlimpse(widget.bottomNavigationBar!)
           : null,
-      drawer: widget.drawer != null ? flutterToSdui(widget.drawer!) : null,
+      drawer: widget.drawer != null ? flutterToGlimpse(widget.drawer!) : null,
       endDrawer:
-          widget.endDrawer != null ? flutterToSdui(widget.endDrawer!) : null,
+          widget.endDrawer != null ? flutterToGlimpse(widget.endDrawer!) : null,
       bottomSheet: widget.bottomSheet != null
-          ? flutterToSdui(widget.bottomSheet!)
+          ? flutterToGlimpse(widget.bottomSheet!)
           : null,
       backgroundColor: widget.backgroundColor,
       resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
@@ -124,9 +114,9 @@ SduiWidget flutterToSdui(Widget widget) {
       endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture,
     );
   } else if (widget is Spacer) {
-    return SduiSpacer(flex: widget.flex);
+    return GlimpseSpacer(flex: widget.flex);
   } else if (widget is Icon) {
-    return SduiIcon(
+    return GlimpseIcon(
       icon: widget.icon,
       size: widget.size,
       color: widget.color,
@@ -137,7 +127,7 @@ SduiWidget flutterToSdui(Widget widget) {
       shadows: widget.shadows,
     );
   } else if (widget is AppBar) {
-    return SduiAppBar(
+    return GlimpseAppBar(
       title: widget.title is Text ? (widget.title as Text).data : null,
       backgroundColor: widget.backgroundColor,
       foregroundColor: widget.foregroundColor,

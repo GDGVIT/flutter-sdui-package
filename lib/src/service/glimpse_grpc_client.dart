@@ -1,7 +1,7 @@
 import 'package:grpc/grpc.dart';
-import 'package:flutter_sdui/src/generated/sdui.pbgrpc.dart';
+import 'package:flutter_glimpse/src/generated/glimpse.pbgrpc.dart';
 
-/// A gRPC client for communicating with SDUI servers.
+/// A gRPC client for communicating with Glimpse servers.
 ///
 /// This client handles the network communication between the Flutter app
 /// and the server that provides the UI definitions. It manages the gRPC
@@ -9,7 +9,7 @@ import 'package:flutter_sdui/src/generated/sdui.pbgrpc.dart';
 ///
 /// Example usage:
 /// ```dart
-/// final client = SduiGrpcClient(
+/// final client = GlimpseGrpcClient(
 ///   host: 'your-server.com',
 ///   port: 50051,
 ///   secure: true,
@@ -17,11 +17,11 @@ import 'package:flutter_sdui/src/generated/sdui.pbgrpc.dart';
 ///
 /// final widgetData = await client.getWidget('home_screen');
 /// ```
-class SduiGrpcClient {
-  late final SduiServiceClient _client;
+class GlimpseGrpcClient {
+  late final GlimpseServiceClient _client;
   late final ClientChannel _channel;
 
-  /// Creates a new SDUI gRPC client.
+  /// Creates a new Glimpse gRPC client.
   ///
   /// Parameters:
   /// * [host] - The hostname or IP address of the gRPC server
@@ -31,7 +31,7 @@ class SduiGrpcClient {
   /// The client will establish a connection to the server immediately upon
   /// construction. Call [dispose] when the client is no longer needed to
   /// properly close the connection.
-  SduiGrpcClient({
+  GlimpseGrpcClient({
     required String host,
     required int port,
     bool secure = false,
@@ -46,7 +46,7 @@ class SduiGrpcClient {
       ),
     );
 
-    _client = SduiServiceClient(_channel);
+    _client = GlimpseServiceClient(_channel);
   }
 
   /// Fetches widget data from the server for the specified screen.
@@ -57,9 +57,9 @@ class SduiGrpcClient {
   ///
   /// Returns a [Future] that completes with the widget data, or throws
   /// a [GrpcError] if the request fails.
-  Future<SduiWidgetData> getWidget(String screenId) async {
-    final request = SduiRequest()..screenId = screenId;
-    return _client.getSduiWidget(request);
+  Future<GlimpseWidgetData> getWidget(String screenId) async {
+    final request = GlimpseRequest()..screenId = screenId;
+    return _client.getGlimpseWidget(request);
   }
 
   /// Closes the connection to the server and releases all resources.

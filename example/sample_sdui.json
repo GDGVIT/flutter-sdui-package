@@ -5,7 +5,7 @@
     "padding": { "all": 16 },
     "child": {
       "type": "text",
-      "text": "Sample SDUI App",
+      "text": "Sample Glimpse App",
       "style": { "fontSize": 20, "fontWeight": "bold" }
     }
   },

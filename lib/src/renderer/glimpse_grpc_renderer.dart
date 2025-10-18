@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sdui/src/generated/sdui.pb.dart';
-import 'package:flutter_sdui/src/parser/sdui_proto_parser.dart';
-import 'package:flutter_sdui/src/service/sdui_grpc_client.dart';
-import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
+import 'package:flutter_glimpse/src/generated/glimpse.pb.dart';
+import 'package:flutter_glimpse/src/parser/glimpse_proto_parser.dart';
+import 'package:flutter_glimpse/src/service/glimpse_grpc_client.dart';
+import 'package:flutter_glimpse/src/widgets/glimpse_widget.dart';
 
 /// A Flutter widget that renders server-driven UI from a gRPC server.
 ///
@@ -15,16 +15,16 @@ import 'package:flutter_sdui/src/widgets/sdui_widget.dart';
 ///
 /// Example usage:
 /// ```dart
-/// SduiGrpcRenderer(
-///   client: sduiClient,
+/// GlimpseGrpcRenderer(
+///   client: glimpseClient,
 ///   screenId: 'home',
 ///   loadingWidget: CustomLoadingSpinner(),
 ///   errorBuilder: (context, error) => ErrorWidget(error),
 /// )
 /// ```
-class SduiGrpcRenderer extends StatefulWidget {
+class GlimpseGrpcRenderer extends StatefulWidget {
   /// The gRPC client used to fetch widget data from the server.
-  final SduiGrpcClient client;
+  final GlimpseGrpcClient client;
 
   /// The identifier for the screen/UI to fetch from the server.
   /// This should correspond to a valid screen ID on the server.
@@ -40,12 +40,12 @@ class SduiGrpcRenderer extends StatefulWidget {
   /// If not provided, a default error text widget is displayed.
   final Widget Function(BuildContext, Object)? errorBuilder;
 
-  /// Creates a new [SduiGrpcRenderer].
+  /// Creates a new [GlimpseGrpcRenderer].
   ///
   /// The [client] and [screenId] parameters are required.
   /// The [loadingWidget] and [errorBuilder] parameters are optional
   /// and provide customization for loading and error states.
-  const SduiGrpcRenderer({
+  const GlimpseGrpcRenderer({
     super.key,
     required this.client,
     required this.screenId,
@@ -54,11 +54,11 @@ class SduiGrpcRenderer extends StatefulWidget {
   });
 
   @override
-  State<SduiGrpcRenderer> createState() => _SduiGrpcRendererState();
+  State<GlimpseGrpcRenderer> createState() => _GlimpseGrpcRendererState();
 }
 
-class _SduiGrpcRendererState extends State<SduiGrpcRenderer> {
-  late Future<SduiWidgetData> _widgetFuture;
+class _GlimpseGrpcRendererState extends State<GlimpseGrpcRenderer> {
+  late Future<GlimpseWidgetData> _widgetFuture;
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class _SduiGrpcRendererState extends State<SduiGrpcRenderer> {
   }
 
   @override
-  void didUpdateWidget(SduiGrpcRenderer oldWidget) {
+  void didUpdateWidget(GlimpseGrpcRenderer oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.screenId != widget.screenId ||
         oldWidget.client != widget.client) {
@@ -82,7 +82,7 @@ class _SduiGrpcRendererState extends State<SduiGrpcRenderer> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<SduiWidgetData>(
+    return FutureBuilder<GlimpseWidgetData>(
       future: _widgetFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -95,8 +95,9 @@ class _SduiGrpcRendererState extends State<SduiGrpcRenderer> {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData) {
           // Parse the protobuf data and convert to Flutter widget
-          final SduiWidget sduiWidget = SduiParser.parseProto(snapshot.data!);
-          return sduiWidget.toFlutterWidget();
+          final GlimpseWidget glimpseWidget =
+              GlimpseParser.parseProto(snapshot.data!);
+          return glimpseWidget.toFlutterWidget();
         } else {
           return const SizedBox.shrink();
         }

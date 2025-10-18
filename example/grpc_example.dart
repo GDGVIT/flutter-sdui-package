@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sdui/flutter_sdui.dart';
+import 'package:flutter_glimpse/flutter_glimpse.dart';
 
-/// Example application demonstrating Flutter SDUI with gRPC.
+/// Example application demonstrating Flutter Glimpse with gRPC.
 ///
 /// This example shows how to:
 /// * Connect to a gRPC server
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SDUI gRPC Demo',
+      title: 'Glimpse gRPC Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
@@ -44,14 +44,14 @@ class GrpcRendererDemo extends StatefulWidget {
 }
 
 class _GrpcRendererDemoState extends State<GrpcRendererDemo> {
-  late SduiGrpcClient _grpcClient;
+  late GlimpseGrpcClient _grpcClient;
   String _screenId = 'home';
 
   @override
   void initState() {
     super.initState();
     // Initialize gRPC client with server connection details
-    _grpcClient = SduiGrpcClient(
+    _grpcClient = GlimpseGrpcClient(
       host: 'localhost',
       port: 50051,
     );
@@ -68,7 +68,7 @@ class _GrpcRendererDemoState extends State<GrpcRendererDemo> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SDUI gRPC Demo'),
+        title: const Text('Glimpse gRPC Demo'),
       ),
       body: Column(
         children: [
@@ -101,7 +101,7 @@ class _GrpcRendererDemoState extends State<GrpcRendererDemo> {
 
           // Server-driven UI renderer
           Expanded(
-            child: SduiGrpcRenderer(
+            child: GlimpseGrpcRenderer(
               client: _grpcClient,
               screenId: _screenId,
               loadingWidget: const Center(
